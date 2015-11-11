@@ -1,0 +1,9 @@
+/VST-Builds/**
+/VST3-Builds/**
+/AU-Builds/**
+/App-Builds/**
+/build-results/**
+/exported-code/**
+/Introjucer/tmp*.jucer
+/Introjucer/JuceLibraryCode/**
+

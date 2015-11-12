@@ -105,30 +105,30 @@ if tmpprojpresent:
 	tmpxmldoc = minidom.parse(tmpprojname)
 	if tmpxmldoc:
 		tmpjuceproj = tmpxmldoc.getElementsByTagName("JUCERPROJECT")
-		print "INTROJUCER PROJECT NAME: " + tmpjuceproj[0].attributes["name"].value
-		print "INTROJUCER PROJECT CHANNELCONFIG: " + tmpjuceproj[0].attributes["pluginChannelConfigs"].value
+		print("INTROJUCER PROJECT NAME: " + tmpjuceproj[0].attributes["name"].value)
+		print("INTROJUCER PROJECT CHANNELCONFIG: " + tmpjuceproj[0].attributes["pluginChannelConfigs"].value)
 		if tmpjuceproj and (tmpjuceproj[0].attributes["name"].value == args.name) and (tmpjuceproj[0].attributes["pluginChannelConfigs"].value == args.channelconf):
 			writetmpjucer = False
 else:
-	print "NO TEMP INTROJUCER PROJECT FOUND"
+	print("NO TEMP INTROJUCER PROJECT FOUND")
 
 # write out tmp.jucer
 if writetmpjucer:
-	print "WRITING TEMP INTROJUCER PROJECT"
-	fh = open(tmpprojname,"wb")
+	print("WRITING TEMP INTROJUCER PROJECT")
+	fh = open(tmpprojname,"w")
 	xmldoc.writexml(fh)
 	fh.close()
 else:
-	print "USING CACHED INTROJUCER PROJECT"
+	print("USING CACHED INTROJUCER PROJECT")
 
-print sys.platform
+print(sys.platform)
 
 # now re-create the Juce project an build it
 
 if sys.platform.startswith("darwin"):
 	if writetmpjucer:
 		cmd = "open -n "+ currentdir + "/Introjucer/Introjucer.app  --args --resave \"" + tmpprojname + "\""
-		print cmd
+		print(cmd)
 		os.system(cmd)
 		time.sleep(2)
 
@@ -151,13 +151,13 @@ if sys.platform.startswith("darwin"):
 			os.system("open /Applications/Xcode.app " + project)
 		else:
 			cmd = xcodebuildcmd + " -project " + project + " -configuration " + args.configuration
-			print cmd
+			print(cmd)
 			os.system(cmd)
 
 elif sys.platform.startswith("win"):
 	tmpprojname = tmpprojname.replace("/", "\\" )
 	cmd = '"' + currentdir + '\\Introjucer\\The Introjucer.exe" --resave ' + tmpprojname
-	print cmd
+	print(cmd)
 	os.system(cmd)
 
 	time.sleep(2)
@@ -170,10 +170,10 @@ elif sys.platform.startswith("win"):
 		project = currentdir + "/VST3-Builds/VisualStudio2013/" + args.name + ".vcxproj"
 
 	project = project.replace("/", "\\" )
-	print "trying to open project... " + project
+	print("trying to open project... " + project)
 
 	if project != "":
 		callstr = "tasklist /nh /fi \"imagename eq WDExpress.exe\" /fi \"WINDOWTITLE eq " + args.name + "*\" | find /i \"WDExpress.exe\" > nul || tasklist /nh /fi \"imagename eq devenv.exe\" /fi \"WINDOWTITLE eq " + args.name + "*\" | find /i \"devenv.exe\" > nul || (cmd.exe /c \"" + project + "\")"
 
-		print callstr
+		print(callstr)
 		os.system(callstr)

@@ -28,7 +28,8 @@ public:
 	{
 		// use a default samplerate and vector size here, reset it later
 		m_C74PluginState = (CommonState *)C74_GENPLUGIN::create(44100, 64);
-		
+		C74_GENPLUGIN::reset(m_C74PluginState);
+
 		m_InputBuffers = new t_sample *[C74_GENPLUGIN::num_inputs()];
 		m_OutputBuffers = new t_sample *[C74_GENPLUGIN::num_outputs()];
 		
@@ -76,8 +77,6 @@ public:
 		m_C74PluginState->vs = samplesPerBlockExpected;
 		
 		assureBufferSize(samplesPerBlockExpected);
-		
-		C74_GENPLUGIN::reset(m_C74PluginState);
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override

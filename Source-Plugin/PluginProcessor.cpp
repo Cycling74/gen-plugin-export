@@ -201,7 +201,7 @@ void C74GenAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 	// fill output buffers
 	for (int i = 0; i < getNumOutputChannels(); i++) {
 		if (i < C74_GENPLUGIN::num_outputs()) {
-			for (int j = 0; j < m_CurrentBufferSize; j++) {
+			for (int j = 0; j < buffer.getNumSamples(); j++) {
 				buffer.getWritePointer(i)[j] = m_OutputBuffers[i][j];
 			}
 		} else {

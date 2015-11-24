@@ -17,7 +17,8 @@ C74GenAudioProcessor::C74GenAudioProcessor()
 {
 	// use a default samplerate and vector size here, reset it later
 	m_C74PluginState = (CommonState *)C74_GENPLUGIN::create(44100, 64);
-	
+	C74_GENPLUGIN::reset(m_C74PluginState);
+
 	m_InputBuffers = new t_sample *[C74_GENPLUGIN::num_inputs()];
 	m_OutputBuffers = new t_sample *[C74_GENPLUGIN::num_outputs()];
 	
@@ -165,8 +166,6 @@ void C74GenAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 	m_C74PluginState->vs = samplesPerBlock;
 
 	assureBufferSize(samplesPerBlock);
-
-	C74_GENPLUGIN::reset(m_C74PluginState);
 }
 
 void C74GenAudioProcessor::releaseResources()

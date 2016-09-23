@@ -61,7 +61,7 @@ static int builderize (json_value * value)
 {
    if (((json_builder_value *) value)->is_builder_value)
       return 1;
-   
+
    if (value->type == json_object)
    {
       unsigned int i;
@@ -218,7 +218,7 @@ json_value * json_object_push_length (json_value * object,
 
    if (! (name_copy = (json_char *) malloc ((name_length + 1) * sizeof (json_char))))
       return NULL;
-   
+
    memcpy (name_copy, name, name_length * sizeof (json_char));
    name_copy [name_length] = 0;
 
@@ -283,7 +283,7 @@ json_value * json_string_new_length (unsigned int length, const json_char * buf)
 
    if (!copy)
       return NULL;
-   
+
    memcpy (copy, buf, length * sizeof (json_char));
    copy [length] = 0;
 
@@ -299,7 +299,7 @@ json_value * json_string_new_length (unsigned int length, const json_char * buf)
 json_value * json_string_new_nocopy (unsigned int length, json_char * buf)
 {
    json_value * value = (json_value *) calloc (1, sizeof (json_builder_value));
-   
+
    if (!value)
       return NULL;
 
@@ -315,7 +315,7 @@ json_value * json_string_new_nocopy (unsigned int length, json_char * buf)
 json_value * json_integer_new (json_int_t integer)
 {
    json_value * value = (json_value *) calloc (1, sizeof (json_builder_value));
-   
+
    if (!value)
       return NULL;
 
@@ -330,7 +330,7 @@ json_value * json_integer_new (json_int_t integer)
 json_value * json_double_new (double dbl)
 {
    json_value * value = (json_value *) calloc (1, sizeof (json_builder_value));
-   
+
    if (!value)
       return NULL;
 
@@ -345,7 +345,7 @@ json_value * json_double_new (double dbl)
 json_value * json_boolean_new (int b)
 {
    json_value * value = (json_value *) calloc (1, sizeof (json_builder_value));
-   
+
    if (!value)
       return NULL;
 
@@ -360,7 +360,7 @@ json_value * json_boolean_new (int b)
 json_value * json_null_new ()
 {
    json_value * value = (json_value *) calloc (1, sizeof (json_builder_value));
-   
+
    if (!value)
       return NULL;
 
@@ -674,7 +674,7 @@ size_t json_measure_ex (json_value * value, json_serialize_opts opts)
 
          case json_boolean:
 
-            total += value->u.boolean ? 
+            total += value->u.boolean ?
                4:  /* `true` */
                5;  /* `false` */
 
@@ -986,6 +986,7 @@ void json_builder_free (json_value * value)
       free (cur_value);
    }
 }
+
 
 
 

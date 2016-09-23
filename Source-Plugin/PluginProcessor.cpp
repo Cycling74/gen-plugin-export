@@ -49,7 +49,7 @@ int C74GenAudioProcessor::getNumParameters()
 
 float C74GenAudioProcessor::getParameter (int index)
 {
-	double value;
+	t_param value;
 	t_param min = C74_GENPLUGIN::getparametermin(m_C74PluginState, index);
 	t_param range = fabs(C74_GENPLUGIN::getparametermax(m_C74PluginState, index) - min);
 	

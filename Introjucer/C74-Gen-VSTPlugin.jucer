@@ -13,14 +13,16 @@
   <MAINGROUP id="j0DzSh" name="C74GenPlugin">
     <GROUP id="{F0566F66-1E06-0640-9035-6D16F5EC007D}" name="Source">
       <GROUP id="{D858CDE4-A7B1-9228-042D-12B84C8895C0}" name="exported-code">
-        <FILE compile="0" file="../exported-code/gen_dsp/genlib.h" id="Cj7XvF"
-              name="genlib.h" resource="0"/>
         <FILE compile="0" file="../exported-code/C74_GENPLUGIN.h" id="c1pCx7"
               name="C74_GENPLUGIN.h" resource="0"/>
-        <FILE compile="1" file="../exported-code/gen_dsp/genlib.cpp" id="dVPsjM"
-              name="genlib.cpp" resource="0"/>
         <FILE compile="1" file="../exported-code/C74_GENPLUGIN.cpp" id="uAnME2"
               name="C74_GENPLUGIN.cpp" resource="0"/>
+        <FILE compile="0" file="../exported-code/gen_dsp/genlib.h" id="Cj7XvF"
+              name="genlib.h" resource="0"/>
+        <FILE compile="1" file="../exported-code/gen_dsp/genlib.cpp" id="dVPsjM"
+              name="genlib.cpp" resource="0"/>
+        <FILE id="ic7W9Y" name="json.c" compile="1" resource="0" file="../exported-code/gen_dsp/json.c"/>
+        <FILE id="GckYkb" name="json_builder.c" compile="1" resource="0" file="../exported-code/gen_dsp/json_builder.c"/>
       </GROUP>
       <FILE compile="1" file="../Source-Plugin/PluginProcessor.cpp" id="vZbc4u"
             name="PluginProcessor.cpp" resource="0"/>

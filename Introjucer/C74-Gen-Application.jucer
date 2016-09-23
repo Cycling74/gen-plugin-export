@@ -11,12 +11,14 @@
       <FILE compile="0" file="../Source-App/UIComponent.h" id="VAHIjd" name="UIComponent.h"
             resource="0"/>
       <GROUP id="{598798BA-3E10-3837-6577-9A599A5ABF93}" name="exported-code">
-        <FILE id="o8PvOP" name="genlib.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib.h"/>
         <FILE id="nuOieU" name="C74_GENPLUGIN.h" compile="0" resource="0" file="../exported-code/C74_GENPLUGIN.h"/>
-        <FILE compile="1" file="../exported-code/gen_dsp/genlib.cpp" id="SNYHY4"
-              name="genlib.cpp" resource="0"/>
         <FILE compile="1" file="../exported-code/C74_GENPLUGIN.cpp" id="aMCDKD"
               name="C74_GENPLUGIN.cpp" resource="0"/>
+        <FILE id="o8PvOP" name="genlib.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib.h"/>
+        <FILE compile="1" file="../exported-code/gen_dsp/genlib.cpp" id="SNYHY4"
+              name="genlib.cpp" resource="0"/>
+        <FILE id="uA5meq" name="json.c" compile="1" resource="0" file="../exported-code/gen_dsp/json.c"/>
+        <FILE id="bBSlZk" name="json_builder.c" compile="1" resource="0" file="../exported-code/gen_dsp/json_builder.c"/>
       </GROUP>
       <FILE compile="1" file="../Source-App/MainComponent.cpp" id="IhplWM"
             name="MainComponent.cpp" resource="0"/>

@@ -67,6 +67,11 @@ typedef unsigned long long t_ptr_uint;
 typedef long long t_ptr_int;
 typedef double t_atom_float;
 typedef t_ptr_uint t_getbytes_size;
+#elif defined(__GNUC__) && !defined(MSP_ON_CLANG)
+typedef uintptr_t t_ptr_uint;
+typedef intptr_t t_ptr_int;
+typedef float t_atom_float;
+typedef t_ptr_uint t_getbytes_size;
 #else
 typedef unsigned long t_ptr_uint;
 typedef long t_ptr_int;

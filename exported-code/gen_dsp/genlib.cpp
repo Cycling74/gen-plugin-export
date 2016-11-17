@@ -42,8 +42,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #	include "json.c"
 #	include "json_builder.c"
 #endif
-#include "json.h"
-#include "json_builder.h"
+#if GENLIB_USE_JSON
+#	include "json.h"
+#	include "json_builder.h"
+#endif
 
 // DATA_MAXIMUM_ELEMENTS * 8 bytes = 256 mb limit
 #define DATA_MAXIMUM_ELEMENTS	(33554432)
@@ -391,6 +393,7 @@ void genlib_reset_complete(void *data)
 {
 }
 
+#if GENLIB_USE_JSON
 void genlib_build_json(CommonState *cself, json_value **jsonvalue, getparameter_method getmethod)
 {
 	int i;
@@ -480,4 +483,4 @@ short genlib_setstate(CommonState *cself, const char *state, setparameter_method
 
 	return 0;
 }
-
+#endif // GENLIB_USE_JSON

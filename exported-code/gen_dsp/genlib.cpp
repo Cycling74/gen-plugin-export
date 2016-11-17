@@ -28,7 +28,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <cstring>
 
 #ifndef MSP_ON_CLANG
-#	include <cmath>
+#	include <math.h>
 #endif
 
 #ifdef __APPLE__

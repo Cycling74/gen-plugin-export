@@ -64,6 +64,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #	else
 #		ifdef WIN32
 #			define __FLT_MIN__	(FLT_MIN)
+#			define __FLT_MAX__	(FLT_MAX)
 #		endif
 #		define GENLIB_IS_DENORM_FLOAT(v)	((v)!=0.&&fabs(v)<__FLT_MIN__)
 #		define GENLIB_FIX_DENORM_FLOAT(v)	((v)=GENLIB_IS_DENORM_FLOAT(v)?0.f:(v))

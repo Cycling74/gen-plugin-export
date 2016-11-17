@@ -50,9 +50,14 @@ typedef unsigned __INT64_TYPE__ uint64_t;
 #	endif
 #endif
 
+#ifdef GENLIB_USE_FLOAT32
+#define inf				(__FLT_MAX__)
+#else
 #define inf				(__DBL_MAX__)
+#endif
+
 #define GEN_UINT_MAX	(4294967295)
-#define TWO_TO_32		(4294967296.0)
+#define TWO_TO_32		(t_sample(4294967296.0))
 
 #define C74_CONST const
 

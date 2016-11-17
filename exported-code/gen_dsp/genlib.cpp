@@ -148,11 +148,13 @@ unsigned long systime_ticks(void)
 	return 0;	// Gen code can deal with this
 }
 
+#ifdef GEN_WINDOWS
 // NEED THIS FOR WINDOWS:
 void *operator new(size_t size) { return sysmem_newptr(size); }
 void *operator new[](size_t size) { return sysmem_newptr(size); }
 void operator delete(void *p) throw() { sysmem_freeptr(p); }
 void operator delete[](void *p) throw() { sysmem_freeptr(p); }
+#endif
 
 void *genlib_obtain_reference_from_string(const char *name)
 {

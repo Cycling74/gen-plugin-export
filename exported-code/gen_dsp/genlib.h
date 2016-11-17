@@ -149,8 +149,8 @@ extern "C" {
 #	define atan2(x,y)	fasteratan2(x,y)
 #	define tanh(x)		fastertanh(x)
 #	if !defined(GENLIB_USE_ARMMATH)
-#		define sin(x)	fastersinfull(x);
-#		define cos(x)	fastercosfull(x);
+#		define sin(x)	fastersinfull(x)
+#		define cos(x)	fastercosfull(x)
 #	endif
 #endif // GENLIB_USE_FASTMATH
 

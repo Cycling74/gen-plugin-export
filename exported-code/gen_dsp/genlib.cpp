@@ -201,11 +201,7 @@ void genlib_buffer_perform_end(t_genlib_buffer *b)
 
 t_sample gen_msp_pow(t_sample value, t_sample power)
 {
-#ifdef GENLIB_USE_FLOAT32
-	return powf(value, power);
-#else
 	return pow(value, power);
-#endif
 }
 
 void genlib_data_setbuffer(t_genlib_data *b, void *ref)

@@ -27,10 +27,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <cstdio>
 #include <cstring>
 
-#ifndef MSP_ON_CLANG
-#	include <cmath>
-#endif
-
 #ifdef __APPLE__
 #	include <malloc/malloc.h>
 #elif !defined(GEN_WINDOWS) // WIN32?
@@ -42,8 +38,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #	include "json.c"
 #	include "json_builder.c"
 #endif
-#include "json.h"
-#include "json_builder.h"
+#if GENLIB_USE_JSON
+#	include "json.h"
+#	include "json_builder.h"
+#endif
 
 // DATA_MAXIMUM_ELEMENTS * 8 bytes = 256 mb limit
 #define DATA_MAXIMUM_ELEMENTS	(33554432)
@@ -148,11 +146,13 @@ unsigned long systime_ticks(void)
 	return 0;	// Gen code can deal with this
 }
 
+#ifdef GEN_WINDOWS
 // NEED THIS FOR WINDOWS:
 void *operator new(size_t size) { return sysmem_newptr(size); }
 void *operator new[](size_t size) { return sysmem_newptr(size); }
 void operator delete(void *p) throw() { sysmem_freeptr(p); }
 void operator delete[](void *p) throw() { sysmem_freeptr(p); }
+#endif
 
 void *genlib_obtain_reference_from_string(const char *name)
 {
@@ -385,6 +385,7 @@ void genlib_reset_complete(void *data)
 {
 }
 
+#if GENLIB_USE_JSON
 void genlib_build_json(CommonState *cself, json_value **jsonvalue, getparameter_method getmethod)
 {
 	int i;
@@ -474,4 +475,4 @@ short genlib_setstate(CommonState *cself, const char *state, setparameter_method
 
 	return 0;
 }
-
+#endif // GENLIB_USE_JSON

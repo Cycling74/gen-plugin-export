@@ -27,7 +27,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "genlib_common_win.h"
 
 #if defined(ARM_MATH_CM4) || defined(ARM_MATH_CM7) // embedded ARM cortex support
-#define GENLIB_NO_STDLIB
 #define GENLIB_USE_ARMMATH
 #define GENLIB_USE_FASTMATH
 #endif // defined(ARM_MATH_CM4) || defined(ARM_MATH_CM7)

@@ -32,6 +32,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define DSP_GEN_MAX_SIGNALS 16
 
+// json is enabled by default, but can be disabled if not needed
+#ifndef GENLIB_USE_JSON
+#define GENLIB_USE_JSON 1
+#endif
+
 #ifdef GENLIB_USE_FLOAT32
 typedef float t_sample;
 typedef float t_param;

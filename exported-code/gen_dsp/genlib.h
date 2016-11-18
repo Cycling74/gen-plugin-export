@@ -26,6 +26,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "genlib_common.h"
 
+#ifndef MSP_ON_CLANG
+#	include <math.h>
+#endif
+
 //////////// genlib.h ////////////
 // genlib.h -- max (gen~) version
 
@@ -50,9 +54,14 @@ typedef unsigned __INT64_TYPE__ uint64_t;
 #	endif
 #endif
 
+#ifdef GENLIB_USE_FLOAT32
+#define inf				(__FLT_MAX__)
+#else
 #define inf				(__DBL_MAX__)
+#endif
+
 #define GEN_UINT_MAX	(4294967295)
-#define TWO_TO_32		(4294967296.0)
+#define TWO_TO_32		(t_sample(4294967296.0))
 
 #define C74_CONST const
 
@@ -61,6 +70,11 @@ typedef unsigned __INT64_TYPE__ uint64_t;
 typedef unsigned long long t_ptr_uint;
 typedef long long t_ptr_int;
 typedef double t_atom_float;
+typedef t_ptr_uint t_getbytes_size;
+#elif defined(__GNUC__) && !defined(MSP_ON_CLANG)
+typedef uintptr_t t_ptr_uint;
+typedef intptr_t t_ptr_int;
+typedef float t_atom_float;
 typedef t_ptr_uint t_getbytes_size;
 #else
 typedef unsigned long t_ptr_uint;
@@ -139,8 +153,8 @@ extern "C" {
 #	define atan2(x,y)	fasteratan2(x,y)
 #	define tanh(x)		fastertanh(x)
 #	if !defined(GENLIB_USE_ARMMATH)
-#		define sin(x)	fastersinfull(x);
-#		define cos(x)	fastercosfull(x);
+#		define sin(x)	fastersinfull(x)
+#		define cos(x)	fastercosfull(x)
 #	endif
 #endif // GENLIB_USE_FASTMATH
 

@@ -27,10 +27,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <cstdio>
 #include <cstring>
 
-#ifndef MSP_ON_CLANG
-#	include <math.h>
-#endif
-
 #ifdef __APPLE__
 #	include <malloc/malloc.h>
 #elif !defined(GEN_WINDOWS) // WIN32?

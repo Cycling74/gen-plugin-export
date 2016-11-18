@@ -27,10 +27,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "genlib_common.h"
 #include "genlib.h"
 
-#ifndef MSP_ON_CLANG
-#	include <math.h>
-#endif
-
 //////////// genlib_ops.h ////////////
 
 // system constants

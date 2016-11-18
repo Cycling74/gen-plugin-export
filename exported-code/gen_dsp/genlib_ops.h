@@ -147,7 +147,7 @@ inline t_sample safepow(t_sample base, t_sample exponent) {
 inline t_sample absdiff(t_sample a, t_sample b) { return fabs(a-b); }
 
 #ifndef WIN32
-inline t_sample exp2(t_sample v) { return pow(2., v); }
+inline t_sample exp2(t_sample v) { return pow(t_sample(2.), v); }
 
 inline t_sample trunc(t_sample v) {
 	t_sample epsilon = (v<0.0) * -2 * 1E-9 + 1E-9;

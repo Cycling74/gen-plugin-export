@@ -4,8 +4,7 @@
 
 */
 
-#ifndef BINARYDATA_H_134119534_INCLUDED
-#define BINARYDATA_H_134119534_INCLUDED
+#pragma once
 
 namespace BinaryData
 {
@@ -22,7 +21,7 @@ namespace BinaryData
     const int            icons_zipSize = 83876;
 
     extern const char*   juce_icon_png;
-    const int            juce_icon_pngSize = 83091;
+    const int            juce_icon_pngSize = 45854;
 
     extern const char*   juce_module_info;
     const int            juce_module_infoSize = 1404;
@@ -46,5 +45,3 @@ namespace BinaryData
     // return the corresponding data and its size (or a null pointer if the name isn't found).
     const char* getNamedResource (const char* resourceNameUTF8, int& dataSizeInBytes) throw();
 }
-
-#endif

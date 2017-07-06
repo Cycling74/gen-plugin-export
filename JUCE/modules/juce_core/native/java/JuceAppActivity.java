@@ -2,22 +2,20 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-   ------------------------------------------------------------------------------
-
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -30,27 +28,38 @@ import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.Handler;
+import android.os.ParcelUuid;
+import android.os.Environment;
 import android.view.*;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.graphics.*;
-import android.opengl.*;
 import android.text.ClipboardManager;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Pair;
+import java.lang.Runnable;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.*;
+import java.util.*;
 import java.io.*;
 import java.net.URL;
 import java.net.HttpURLConnection;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 import android.media.AudioManager;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
+import android.Manifest;
+$$JuceAndroidMidiImports$$ // If you get an error here, you need to re-save your project with the Projucer!
+
 
 //==============================================================================
 public class JuceAppActivity   extends Activity
@@ -61,16 +70,107 @@ public class JuceAppActivity   extends Activity
         System.loadLibrary ("juce_jni");
     }
 
+    //==============================================================================
+    public boolean isPermissionDeclaredInManifest (int permissionID)
+    {
+        String permissionToCheck = getAndroidPermissionName(permissionID);
+
+        try
+        {
+            PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), PackageManager.GET_PERMISSIONS);
+
+            if (info.requestedPermissions != null)
+                for (String permission : info.requestedPermissions)
+                    if (permission.equals (permissionToCheck))
+                        return true;
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            Log.d ("JUCE", "isPermissionDeclaredInManifest: PackageManager.NameNotFoundException = " + e.toString());
+        }
+
+        Log.d ("JUCE", "isPermissionDeclaredInManifest: could not find requested permission " + permissionToCheck);
+        return false;
+    }
+
+    //==============================================================================
+    // these have to match the values of enum PermissionID in C++ class RuntimePermissions:
+    private static final int JUCE_PERMISSIONS_RECORD_AUDIO = 1;
+    private static final int JUCE_PERMISSIONS_BLUETOOTH_MIDI = 2;
+
+    private static String getAndroidPermissionName (int permissionID)
+    {
+        switch (permissionID)
+        {
+            case JUCE_PERMISSIONS_RECORD_AUDIO:     return Manifest.permission.RECORD_AUDIO;
+            case JUCE_PERMISSIONS_BLUETOOTH_MIDI:   return Manifest.permission.ACCESS_COARSE_LOCATION;
+        }
+
+        // unknown permission ID!
+        assert false;
+        return new String();
+    }
+
+    public boolean isPermissionGranted (int permissionID)
+    {
+        return getApplicationContext().checkCallingOrSelfPermission (getAndroidPermissionName (permissionID)) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private Map<Integer, Long> permissionCallbackPtrMap;
+
+    public void requestRuntimePermission (int permissionID, long ptrToCallback)
+    {
+        String permissionName = getAndroidPermissionName (permissionID);
+
+        if (getApplicationContext().checkCallingOrSelfPermission (permissionName) != PackageManager.PERMISSION_GRANTED)
+        {
+            // remember callbackPtr, request permissions, and let onRequestPermissionResult call callback asynchronously
+            permissionCallbackPtrMap.put (permissionID, ptrToCallback);
+            requestPermissionsCompat (new String[]{permissionName}, permissionID);
+        }
+        else
+        {
+            // permissions were already granted before, we can call callback directly
+            androidRuntimePermissionsCallback (true, ptrToCallback);
+        }
+    }
+
+    private native void androidRuntimePermissionsCallback (boolean permissionWasGranted, long ptrToCallback);
+
+    $$JuceAndroidRuntimePermissionsCode$$ // If you get an error here, you need to re-save your project with the Projucer!
+
+    //==============================================================================
+    public interface JuceMidiPort
+    {
+        boolean isInputPort();
+
+        // start, stop does nothing on an output port
+        void start();
+        void stop();
+
+        void close();
+
+        // send will do nothing on an input port
+        void sendMidi (byte[] msg, int offset, int count);
+    }
+
+    //==============================================================================
+    $$JuceAndroidMidiCode$$ // If you get an error here, you need to re-save your project with the Projucer!
+
+    //==============================================================================
     @Override
     public void onCreate (Bundle savedInstanceState)
     {
         super.onCreate (savedInstanceState);
 
         isScreenSaverEnabled = true;
+        hideActionBar();
         viewHolder = new ViewHolder (this);
         setContentView (viewHolder);
 
         setVolumeControlStream (AudioManager.STREAM_MUSIC);
+
+        permissionCallbackPtrMap = new HashMap<Integer, Long>();
     }
 
     @Override
@@ -85,10 +185,14 @@ public class JuceAppActivity   extends Activity
     @Override
     protected void onPause()
     {
-        if (viewHolder != null)
-            viewHolder.onPause();
-
         suspendApp();
+
+        try
+        {
+            Thread.sleep (1000); // This is a bit of a hack to avoid some hard-to-track-down
+                                 // openGL glitches when pausing/resuming apps..
+        } catch (InterruptedException e) {}
+
         super.onPause();
     }
 
@@ -96,10 +200,6 @@ public class JuceAppActivity   extends Activity
     protected void onResume()
     {
         super.onResume();
-
-        if (viewHolder != null)
-            viewHolder.onResume();
-
         resumeApp();
     }
 
@@ -114,6 +214,70 @@ public class JuceAppActivity   extends Activity
     {
         launchApp (getApplicationInfo().publicSourceDir,
                    getApplicationInfo().dataDir);
+    }
+
+    private void hideActionBar()
+    {
+        // get "getActionBar" method
+        java.lang.reflect.Method getActionBarMethod = null;
+        try
+        {
+            getActionBarMethod = this.getClass().getMethod ("getActionBar");
+        }
+        catch (SecurityException e)     { return; }
+        catch (NoSuchMethodException e) { return; }
+        if (getActionBarMethod == null) return;
+
+        // invoke "getActionBar" method
+        Object actionBar = null;
+        try
+        {
+            actionBar = getActionBarMethod.invoke (this);
+        }
+        catch (java.lang.IllegalArgumentException e) { return; }
+        catch (java.lang.IllegalAccessException e) { return; }
+        catch (java.lang.reflect.InvocationTargetException e) { return; }
+        if (actionBar == null) return;
+
+        // get "hide" method
+        java.lang.reflect.Method actionBarHideMethod = null;
+        try
+        {
+            actionBarHideMethod = actionBar.getClass().getMethod ("hide");
+        }
+        catch (SecurityException e)     { return; }
+        catch (NoSuchMethodException e) { return; }
+        if (actionBarHideMethod == null) return;
+
+        // invoke "hide" method
+        try
+        {
+            actionBarHideMethod.invoke (actionBar);
+        }
+        catch (java.lang.IllegalArgumentException e) {}
+        catch (java.lang.IllegalAccessException e) {}
+        catch (java.lang.reflect.InvocationTargetException e) {}
+    }
+
+    void requestPermissionsCompat (String[] permissions, int requestCode)
+    {
+        Method requestPermissionsMethod = null;
+        try
+        {
+            requestPermissionsMethod = this.getClass().getMethod ("requestPermissions",
+                                                                  String[].class, int.class);
+        }
+        catch (SecurityException e)     { return; }
+        catch (NoSuchMethodException e) { return; }
+        if (requestPermissionsMethod == null) return;
+
+        try
+        {
+            requestPermissionsMethod.invoke (this, permissions, requestCode);
+        }
+        catch (java.lang.IllegalArgumentException e) {}
+        catch (java.lang.IllegalAccessException e) {}
+        catch (java.lang.reflect.InvocationTargetException e) {}
     }
 
     //==============================================================================
@@ -142,7 +306,10 @@ public class JuceAppActivity   extends Activity
 
     //==============================================================================
     private ViewHolder viewHolder;
+    private MidiDeviceManager midiDeviceManager = null;
+    private BluetoothManager bluetoothManager = null;
     private boolean isScreenSaverEnabled;
+    private java.util.Timer keepAliveTimer;
 
     public final ComponentPeerView createNewView (boolean opaque, long host)
     {
@@ -159,7 +326,7 @@ public class JuceAppActivity   extends Activity
             group.removeView (view);
     }
 
-    public final void deleteOpenGLView (OpenGLView view)
+    public final void deleteNativeSurfaceView (NativeSurfaceView view)
     {
         ViewGroup group = (ViewGroup) (view.getParent());
 
@@ -187,28 +354,6 @@ public class JuceAppActivity   extends Activity
             }
         }
 
-        public final void onPause()
-        {
-            for (int i = getChildCount(); --i >= 0;)
-            {
-                View v = getChildAt (i);
-
-                if (v instanceof ComponentPeerView)
-                    ((ComponentPeerView) v).onPause();
-            }
-        }
-
-        public final void onResume()
-        {
-            for (int i = getChildCount(); --i >= 0;)
-            {
-                View v = getChildAt (i);
-
-                if (v instanceof ComponentPeerView)
-                    ((ComponentPeerView) v).onResume();
-             }
-         }
-
         private final int getDPI()
         {
             DisplayMetrics metrics = new DisplayMetrics();
@@ -230,14 +375,46 @@ public class JuceAppActivity   extends Activity
         if (isScreenSaverEnabled != enabled)
         {
             isScreenSaverEnabled = enabled;
+
+            if (keepAliveTimer != null)
+            {
+                keepAliveTimer.cancel();
+                keepAliveTimer = null;
+            }
+
             if (enabled)
+            {
                 getWindow().clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
             else
+            {
                 getWindow().addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+                // If no user input is received after about 3 seconds, the OS will lower the
+                // task's priority, so this timer forces it to be kept active.
+                keepAliveTimer = new java.util.Timer();
+
+                keepAliveTimer.scheduleAtFixedRate (new TimerTask()
+                {
+                    @Override
+                    public void run()
+                    {
+                        android.app.Instrumentation instrumentation = new android.app.Instrumentation();
+
+                        try
+                        {
+                            instrumentation.sendKeyDownUpSync (KeyEvent.KEYCODE_UNKNOWN);
+                        }
+                        catch (Exception e)
+                        {
+                        }
+                    }
+                }, 2000, 2000);
+            }
         }
     }
 
-    public final boolean getScreenSaver ()
+    public final boolean getScreenSaver()
     {
         return isScreenSaverEnabled;
     }
@@ -274,13 +451,14 @@ public class JuceAppActivity   extends Activity
         builder.create().show();
     }
 
-    public final void showOkCancelBox (String title, String message, final long callback)
+    public final void showOkCancelBox (String title, String message, final long callback,
+                                       String okButtonText, String cancelButtonText)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder (this);
         builder.setTitle (title)
                .setMessage (message)
                .setCancelable (true)
-               .setPositiveButton ("OK", new DialogInterface.OnClickListener()
+               .setPositiveButton (okButtonText.isEmpty() ? "OK" : okButtonText, new DialogInterface.OnClickListener()
                     {
                         public void onClick (DialogInterface dialog, int id)
                         {
@@ -288,7 +466,7 @@ public class JuceAppActivity   extends Activity
                             JuceAppActivity.this.alertDismissed (callback, 1);
                         }
                     })
-               .setNegativeButton ("Cancel", new DialogInterface.OnClickListener()
+               .setNegativeButton (cancelButtonText.isEmpty() ? "Cancel" : cancelButtonText, new DialogInterface.OnClickListener()
                     {
                         public void onClick (DialogInterface dialog, int id)
                         {
@@ -539,6 +717,26 @@ public class JuceAppActivity   extends Activity
 
         public void setViewName (String newName)    {}
 
+        public void setSystemUiVisibilityCompat (int visibility)
+        {
+            Method systemUIVisibilityMethod = null;
+            try
+            {
+                systemUIVisibilityMethod = this.getClass().getMethod ("setSystemUiVisibility", int.class);
+            }
+            catch (SecurityException e)     { return; }
+            catch (NoSuchMethodException e) { return; }
+            if (systemUIVisibilityMethod == null) return;
+
+            try
+            {
+                systemUIVisibilityMethod.invoke (this, visibility);
+            }
+            catch (java.lang.IllegalArgumentException e) {}
+            catch (java.lang.IllegalAccessException e) {}
+            catch (java.lang.reflect.InvocationTargetException e) {}
+        }
+
         public boolean isVisible()                  { return getVisibility() == VISIBLE; }
         public void setVisible (boolean b)          { setVisibility (b ? VISIBLE : INVISIBLE); }
 
@@ -546,77 +744,92 @@ public class JuceAppActivity   extends Activity
         {
             return true; //xxx needs to check overlapping views
         }
-
-        public final void onPause()
-        {
-            for (int i = getChildCount(); --i >= 0;)
-            {
-                View v = getChildAt (i);
-
-                if (v instanceof OpenGLView)
-                    ((OpenGLView) v).onPause();
-            }
-        }
-
-        public final void onResume()
-        {
-            for (int i = getChildCount(); --i >= 0;)
-            {
-                View v = getChildAt (i);
-
-                if (v instanceof OpenGLView)
-                    ((OpenGLView) v).onResume();
-            }
-        }
-
-        public OpenGLView createGLView()
-        {
-            OpenGLView glView = new OpenGLView (getContext());
-            addView (glView);
-            return glView;
-        }
     }
 
     //==============================================================================
-    public final class OpenGLView   extends GLSurfaceView
-                                    implements GLSurfaceView.Renderer
+    public static class NativeSurfaceView    extends SurfaceView
+                                          implements SurfaceHolder.Callback
     {
-        OpenGLView (Context context)
+        private long nativeContext = 0;
+
+        NativeSurfaceView (Context context, long nativeContextPtr)
         {
             super (context);
-            setEGLContextClientVersion (2);
-            setRenderer (this);
-            setRenderMode (RENDERMODE_WHEN_DIRTY);
+            nativeContext = nativeContextPtr;
+        }
+
+        public Surface getNativeSurface()
+        {
+            Surface retval = null;
+
+            SurfaceHolder holder = getHolder();
+            if (holder != null)
+                retval = holder.getSurface();
+
+            return retval;
+        }
+
+        //==============================================================================
+        @Override
+        public void surfaceChanged (SurfaceHolder holder, int format, int width, int height)
+        {
+            surfaceChangedNative (nativeContext, holder, format, width, height);
         }
 
         @Override
-        public void onSurfaceCreated (GL10 unused, EGLConfig config)
+        public void surfaceCreated (SurfaceHolder holder)
         {
-            contextCreated();
+            surfaceCreatedNative (nativeContext, holder);
         }
 
         @Override
-        public void onSurfaceChanged (GL10 unused, int width, int height)
+        public void surfaceDestroyed (SurfaceHolder holder)
         {
-            contextChangedSize();
+            surfaceDestroyedNative (nativeContext, holder);
         }
 
         @Override
-        public void onDrawFrame (GL10 unused)
+        protected void dispatchDraw (Canvas canvas)
         {
-            render();
+            super.dispatchDraw (canvas);
+            dispatchDrawNative (nativeContext, canvas);
         }
 
-        private native void contextCreated();
-        private native void contextChangedSize();
-        private native void render();
+        //==============================================================================
+        @Override
+        protected void onAttachedToWindow ()
+        {
+            super.onAttachedToWindow();
+            getHolder().addCallback (this);
+        }
+
+        @Override
+        protected void onDetachedFromWindow ()
+        {
+            super.onDetachedFromWindow();
+            getHolder().removeCallback (this);
+        }
+
+        //==============================================================================
+        private native void dispatchDrawNative (long nativeContextPtr, Canvas canvas);
+        private native void surfaceCreatedNative (long nativeContextptr, SurfaceHolder holder);
+        private native void surfaceDestroyedNative (long nativeContextptr, SurfaceHolder holder);
+        private native void surfaceChangedNative (long nativeContextptr, SurfaceHolder holder,
+                                                  int format, int width, int height);
+    }
+
+    public NativeSurfaceView createNativeSurfaceView (long nativeSurfacePtr)
+    {
+        return new NativeSurfaceView (this, nativeSurfacePtr);
     }
 
     //==============================================================================
-    public final int[] renderGlyph (char glyph, Paint paint, android.graphics.Matrix matrix, Rect bounds)
+    public final int[] renderGlyph (char glyph1, char glyph2, Paint paint, android.graphics.Matrix matrix, Rect bounds)
     {
         Path p = new Path();
-        paint.getTextPath (String.valueOf (glyph), 0, 1, 0.0f, 0.0f, p);
+
+        char[] str = { glyph1, glyph2 };
+        paint.getTextPath (str, 0, (glyph2 != 0 ? 2 : 1), 0.0f, 0.0f, p);
 
         RectF boundsF = new RectF();
         p.computeBounds (boundsF, true);
@@ -829,9 +1042,20 @@ public class JuceAppActivity   extends Activity
     {
         java.util.Locale locale = java.util.Locale.getDefault();
 
-        return isRegion ? locale.getDisplayCountry  (java.util.Locale.US)
-                        : locale.getDisplayLanguage (java.util.Locale.US);
+        return isRegion ? locale.getCountry()
+                        : locale.getLanguage();
     }
+
+    private static final String getFileLocation (String type)
+    {
+        return Environment.getExternalStoragePublicDirectory (type).getAbsolutePath();
+    }
+
+    public static final String getDocumentsFolder()  { return Environment.getDataDirectory().getAbsolutePath(); }
+    public static final String getPicturesFolder()   { return getFileLocation (Environment.DIRECTORY_PICTURES); }
+    public static final String getMusicFolder()      { return getFileLocation (Environment.DIRECTORY_MUSIC); }
+    public static final String getMoviesFolder()     { return getFileLocation (Environment.DIRECTORY_MOVIES); }
+    public static final String getDownloadsFolder()  { return getFileLocation (Environment.DIRECTORY_DOWNLOADS); }
 
     //==============================================================================
     private final class SingleMediaScanner  implements MediaScannerConnectionClient
@@ -943,5 +1167,44 @@ public class JuceAppActivity   extends Activity
         }
 
         return null;
+    }
+
+    public final int getAndroidSDKVersion()
+    {
+        return android.os.Build.VERSION.SDK_INT;
+    }
+
+    public final String audioManagerGetProperty (String property)
+    {
+        Object obj = getSystemService (AUDIO_SERVICE);
+        if (obj == null)
+            return null;
+
+        java.lang.reflect.Method method;
+
+        try
+        {
+            method = obj.getClass().getMethod ("getProperty", String.class);
+        }
+        catch (SecurityException e)     { return null; }
+        catch (NoSuchMethodException e) { return null; }
+
+        if (method == null)
+            return null;
+
+        try
+        {
+            return (String) method.invoke (obj, property);
+        }
+        catch (java.lang.IllegalArgumentException e) {}
+        catch (java.lang.IllegalAccessException e) {}
+        catch (java.lang.reflect.InvocationTargetException e) {}
+
+        return null;
+    }
+
+    public final boolean hasSystemFeature (String property)
+    {
+        return getPackageManager().hasSystemFeature (property);
     }
 }

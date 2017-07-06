@@ -1,11 +1,28 @@
 /*
   ==============================================================================
 
-    JUCE demo code - use at your own risk!
+   This file is part of the JUCE library.
+   Copyright (c) 2017 - ROLI Ltd.
+
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
+
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
+
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
+
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
+
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
-
 
 class SpectrogramComponent   : public AudioAppComponent,
                                private Timer
@@ -28,7 +45,7 @@ public:
         shutdownAudio();
     }
 
-    //=======================================================================
+    //==============================================================================
     void prepareToPlay (int /*samplesPerBlockExpected*/, double /*newSampleRate*/) override
     {
         // (nothing to do here)
@@ -50,13 +67,13 @@ public:
         }
     }
 
-    //=======================================================================
+    //==============================================================================
     void paint (Graphics& g) override
     {
         g.fillAll (Colours::black);
 
         g.setOpacity (1.0f);
-        g.drawImageWithin (spectrogramImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::stretchToFit);
+        g.drawImage (spectrogramImage, getLocalBounds().toFloat());
     }
 
     void timerCallback() override
@@ -103,7 +120,7 @@ public:
         // show up the detail clearly
         Range<float> maxLevel = FloatVectorOperations::findMinAndMax (fftData, fftSize / 2);
 
-        for (int y = 0; y < imageHeight; ++y)
+        for (int y = 1; y < imageHeight; ++y)
         {
             const float skewedProportionY = 1.0f - std::exp (std::log (y / (float) imageHeight) * 0.2f);
             const int fftDataIndex = jlimit (0, fftSize / 2, (int) (skewedProportionY * fftSize / 2));

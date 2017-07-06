@@ -2,22 +2,24 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -51,10 +53,10 @@ struct OpenGLDemoClasses
     {
         Attributes (OpenGLContext& openGLContext, OpenGLShaderProgram& shader)
         {
-            position      = createAttribute (openGLContext, shader, "position");
-            normal        = createAttribute (openGLContext, shader, "normal");
-            sourceColour  = createAttribute (openGLContext, shader, "sourceColour");
-            texureCoordIn = createAttribute (openGLContext, shader, "texureCoordIn");
+            position       = createAttribute (openGLContext, shader, "position");
+            normal         = createAttribute (openGLContext, shader, "normal");
+            sourceColour   = createAttribute (openGLContext, shader, "sourceColour");
+            textureCoordIn = createAttribute (openGLContext, shader, "textureCoordIn");
         }
 
         void enable (OpenGLContext& openGLContext)
@@ -77,10 +79,10 @@ struct OpenGLDemoClasses
                 openGLContext.extensions.glEnableVertexAttribArray (sourceColour->attributeID);
             }
 
-            if (texureCoordIn != nullptr)
+            if (textureCoordIn != nullptr)
             {
-                openGLContext.extensions.glVertexAttribPointer (texureCoordIn->attributeID, 2, GL_FLOAT, GL_FALSE, sizeof (Vertex), (GLvoid*) (sizeof (float) * 10));
-                openGLContext.extensions.glEnableVertexAttribArray (texureCoordIn->attributeID);
+                openGLContext.extensions.glVertexAttribPointer (textureCoordIn->attributeID, 2, GL_FLOAT, GL_FALSE, sizeof (Vertex), (GLvoid*) (sizeof (float) * 10));
+                openGLContext.extensions.glEnableVertexAttribArray (textureCoordIn->attributeID);
             }
         }
 
@@ -89,10 +91,10 @@ struct OpenGLDemoClasses
             if (position != nullptr)       openGLContext.extensions.glDisableVertexAttribArray (position->attributeID);
             if (normal != nullptr)         openGLContext.extensions.glDisableVertexAttribArray (normal->attributeID);
             if (sourceColour != nullptr)   openGLContext.extensions.glDisableVertexAttribArray (sourceColour->attributeID);
-            if (texureCoordIn != nullptr)  openGLContext.extensions.glDisableVertexAttribArray (texureCoordIn->attributeID);
+            if (textureCoordIn != nullptr)  openGLContext.extensions.glDisableVertexAttribArray (textureCoordIn->attributeID);
         }
 
-        ScopedPointer<OpenGLShaderProgram::Attribute> position, normal, sourceColour, texureCoordIn;
+        ScopedPointer<OpenGLShaderProgram::Attribute> position, normal, sourceColour, textureCoordIn;
 
     private:
         static OpenGLShaderProgram::Attribute* createAttribute (OpenGLContext& openGLContext,
@@ -344,7 +346,6 @@ struct OpenGLDemoClasses
         {
             addAndMakeVisible (statusLabel);
             statusLabel.setJustificationType (Justification::topLeft);
-            statusLabel.setColour (Label::textColourId, Colours::black);
             statusLabel.setFont (Font (14.0f));
 
             addAndMakeVisible (sizeSlider);
@@ -367,16 +368,11 @@ struct OpenGLDemoClasses
             addAndMakeVisible (showBackgroundToggle);
             showBackgroundToggle.addListener (this);
 
-            Colour editorBackground (Colours::white.withAlpha (0.6f));
-
             addAndMakeVisible (tabbedComp);
             tabbedComp.setTabBarDepth (25);
             tabbedComp.setColour (TabbedButtonBar::tabTextColourId, Colours::grey);
-            tabbedComp.addTab ("Vertex", editorBackground, &vertexEditorComp, false);
-            tabbedComp.addTab ("Fragment", editorBackground, &fragmentEditorComp, false);
-
-            vertexEditorComp.setColour (CodeEditorComponent::backgroundColourId, editorBackground);
-            fragmentEditorComp.setColour (CodeEditorComponent::backgroundColourId, editorBackground);
+            tabbedComp.addTab ("Vertex", Colours::transparentBlack, &vertexEditorComp, false);
+            tabbedComp.addTab ("Fragment", Colours::transparentBlack, &fragmentEditorComp, false);
 
             vertexDocument.addListener (this);
             fragmentDocument.addListener (this);
@@ -406,6 +402,8 @@ struct OpenGLDemoClasses
             addAndMakeVisible (textureLabel);
             textureLabel.setText ("Texture:", dontSendNotification);
             textureLabel.attachToComponent (&textureBox, true);
+
+            lookAndFeelChanged();
         }
 
         void initialise()
@@ -513,6 +511,11 @@ struct OpenGLDemoClasses
            #endif
         }
 
+        void updateShader()
+        {
+            startTimer (10);
+        }
+
         Label statusLabel;
 
     private:
@@ -554,6 +557,18 @@ struct OpenGLDemoClasses
                 selectTexture (textureBox.getSelectedId());
         }
 
+        void lookAndFeelChanged() override
+        {
+            auto editorBackground = getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::windowBackground,
+                                                            Colours::white);
+
+            for (int i = tabbedComp.getNumTabs(); i >= 0; --i)
+                tabbedComp.setTabBackgroundColour (i, editorBackground);
+
+            vertexEditorComp.setColour (CodeEditorComponent::backgroundColourId, editorBackground);
+            fragmentEditorComp.setColour (CodeEditorComponent::backgroundColourId, editorBackground);
+        }
+
         OpenGLDemo& demo;
 
         Label speedLabel, zoomLabel;
@@ -584,7 +599,7 @@ struct OpenGLDemoClasses
         OpenGLDemo()
             : doBackgroundDrawing (false),
               scale (0.5f), rotationSpeed (0.0f), rotation (0.0f),
-              textureToUse (nullptr)
+              textureToUse (nullptr), lastTexture (nullptr)
         {
             if (MainAppWindow* mw = MainAppWindow::getMainAppWindow())
                 mw->setRenderingEngine (0);
@@ -609,6 +624,9 @@ struct OpenGLDemoClasses
             // nothing to do in this case - we'll initialise our shaders + textures
             // on demand, during the render callback.
             freeAllContextObjects();
+
+            if (controlsOverlay != nullptr)
+                controlsOverlay->updateShader();
         }
 
         void openGLContextClosing() override
@@ -616,6 +634,9 @@ struct OpenGLDemoClasses
             // When the context is about to close, you must use this callback to delete
             // any GPU resources while the context is still current.
             freeAllContextObjects();
+
+            if (lastTexture != nullptr)
+                setTexture (lastTexture);
         }
 
         void freeAllContextObjects()
@@ -634,7 +655,9 @@ struct OpenGLDemoClasses
             jassert (OpenGLHelpers::isContextActive());
 
             const float desktopScale = (float) openGLContext.getRenderingScale();
-            OpenGLHelpers::clear (Colours::lightblue);
+
+            OpenGLHelpers::clear (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::windowBackground,
+                                                          Colours::lightblue));
 
             if (textureToUse != nullptr)
                 if (! textureToUse->applyTo (texture))
@@ -711,7 +734,7 @@ struct OpenGLDemoClasses
 
         void setTexture (DemoTexture* t)
         {
-            textureToUse = t;
+            lastTexture = textureToUse = t;
         }
 
         void setShaderProgram (const String& vertexShader, const String& fragmentShader)
@@ -781,7 +804,7 @@ struct OpenGLDemoClasses
         ScopedPointer<Uniforms> uniforms;
 
         OpenGLTexture texture;
-        DemoTexture* textureToUse;
+        DemoTexture* textureToUse, *lastTexture;
 
         String newVertexShader, newFragmentShader;
 
@@ -825,8 +848,8 @@ struct OpenGLDemoClasses
                 controlsOverlay->statusLabel.setText (statusText, dontSendNotification);
 
 
-                newVertexShader = String::empty;
-                newFragmentShader = String::empty;
+                newVertexShader = String();
+                newFragmentShader = String();
             }
         }
 
@@ -858,7 +881,7 @@ struct OpenGLDemoClasses
                 "attribute vec4 position;\n"
                 "attribute vec4 normal;\n"
                 "attribute vec4 sourceColour;\n"
-                "attribute vec2 texureCoordIn;\n"
+                "attribute vec2 textureCoordIn;\n"
                 "\n"
                 "uniform mat4 projectionMatrix;\n"
                 "uniform mat4 viewMatrix;\n"
@@ -871,7 +894,7 @@ struct OpenGLDemoClasses
                 "void main()\n"
                 "{\n"
                 "    destinationColour = sourceColour;\n"
-                "    textureCoordOut = texureCoordIn;\n"
+                "    textureCoordOut = textureCoordIn;\n"
                 "\n"
                 "    vec4 light = viewMatrix * lightPosition;\n"
                 "    lightIntensity = dot (light, normal);\n"
@@ -911,7 +934,7 @@ struct OpenGLDemoClasses
                 SHADER_DEMO_HEADER
                 "attribute vec4 position;\n"
                 "attribute vec4 sourceColour;\n"
-                "attribute vec2 texureCoordIn;\n"
+                "attribute vec2 textureCoordIn;\n"
                 "\n"
                 "uniform mat4 projectionMatrix;\n"
                 "uniform mat4 viewMatrix;\n"
@@ -922,7 +945,7 @@ struct OpenGLDemoClasses
                 "void main()\n"
                 "{\n"
                 "    destinationColour = sourceColour;\n"
-                "    textureCoordOut = texureCoordIn;\n"
+                "    textureCoordOut = textureCoordIn;\n"
                 "    gl_Position = projectionMatrix * viewMatrix * position;\n"
                 "}\n",
 
@@ -949,7 +972,7 @@ struct OpenGLDemoClasses
                 SHADER_DEMO_HEADER
                 "attribute vec4 position;\n"
                 "attribute vec4 sourceColour;\n"
-                "attribute vec2 texureCoordIn;\n"
+                "attribute vec2 textureCoordIn;\n"
                 "\n"
                 "uniform mat4 projectionMatrix;\n"
                 "uniform mat4 viewMatrix;\n"
@@ -960,7 +983,7 @@ struct OpenGLDemoClasses
                 "void main()\n"
                 "{\n"
                 "    destinationColour = sourceColour;\n"
-                "    textureCoordOut = texureCoordIn;\n"
+                "    textureCoordOut = textureCoordIn;\n"
                 "    gl_Position = projectionMatrix * viewMatrix * position;\n"
                 "}\n",
 
@@ -985,7 +1008,7 @@ struct OpenGLDemoClasses
                 SHADER_DEMO_HEADER
                 "attribute vec4 position;\n"
                 "attribute vec4 sourceColour;\n"
-                "attribute vec2 texureCoordIn;\n"
+                "attribute vec2 textureCoordIn;\n"
                 "\n"
                 "uniform mat4 projectionMatrix;\n"
                 "uniform mat4 viewMatrix;\n"
@@ -1032,7 +1055,7 @@ struct OpenGLDemoClasses
 
                 SHADER_DEMO_HEADER
                 "attribute vec4 position;\n"
-                "attribute vec2 texureCoordIn;\n"
+                "attribute vec2 textureCoordIn;\n"
                 "\n"
                 "uniform mat4 projectionMatrix;\n"
                 "uniform mat4 viewMatrix;\n"
@@ -1041,7 +1064,7 @@ struct OpenGLDemoClasses
                 "\n"
                 "void main()\n"
                 "{\n"
-                "    textureCoordOut = texureCoordIn;\n"
+                "    textureCoordOut = textureCoordIn;\n"
                 "    gl_Position = projectionMatrix * viewMatrix * position;\n"
                 "}\n",
 

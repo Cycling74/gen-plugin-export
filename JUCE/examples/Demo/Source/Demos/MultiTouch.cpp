@@ -2,22 +2,24 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -36,9 +38,11 @@ public:
 
     void paint (Graphics& g) override
     {
-        g.fillAll (Colour::greyLevel (0.4f));
+        g.fillAll (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::windowBackground,
+                                           Colour::greyLevel (0.4f)));
 
-        g.setColour (Colours::lightgrey);
+        g.setColour (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::defaultText,
+                                             Colours::lightgrey));
         g.setFont (14.0f);
         g.drawFittedText ("Drag here with as many fingers as you have!",
                           getLocalBounds().reduced (30), Justification::centred, 4);
@@ -58,7 +62,7 @@ public:
             trails.add (t);
         }
 
-        t->pushPoint (e.position, e.mods);
+        t->pushPoint (e.position, e.mods, e.pressure);
         repaint();
     }
 
@@ -74,22 +78,26 @@ public:
             : source (ms), colour (getRandomBrightColour().withAlpha (0.6f))
         {}
 
-        void pushPoint (Point<float> p, ModifierKeys newMods)
+        void pushPoint (Point<float> newPoint, ModifierKeys newMods, float pressure)
         {
-            currentPosition = p;
+            currentPosition = newPoint;
             modifierKeys = newMods;
 
-            if (lastPoint.getDistanceFrom(p) > 5.0f)
+            if (lastPoint.getDistanceFrom (newPoint) > 5.0f)
             {
                 if (lastPoint != Point<float>())
                 {
-                    path.quadraticTo (lastPoint, p);
-                    lastPoint = Point<float>();
+                    Path newSegment;
+                    newSegment.startNewSubPath (lastPoint);
+                    newSegment.lineTo (newPoint);
+
+                    float diameter = 20.0f * (pressure > 0 && pressure < 1.0f ? pressure : 1.0f);
+
+                    PathStrokeType (diameter, PathStrokeType::curved, PathStrokeType::rounded).createStrokedPath (newSegment, newSegment);
+                    path.addPath (newSegment);
                 }
-                else
-                {
-                    lastPoint = p;
-                }
+
+                lastPoint = newPoint;
             }
         }
 
@@ -107,7 +115,7 @@ public:
     void drawTrail (Trail& trail, Graphics& g)
     {
         g.setColour (trail.colour);
-        g.strokePath (trail.path, PathStrokeType (20.0f, PathStrokeType::curved, PathStrokeType::rounded));
+        g.fillPath (trail.path);
 
         const float radius = 40.0f;
 
@@ -120,6 +128,11 @@ public:
 
         String desc ("Mouse #");
         desc << trail.source.getIndex();
+
+        float pressure = trail.source.getCurrentPressure();
+
+        if (pressure > 0.0f && pressure < 1.0f)
+            desc << "  (pressure: " << (int) (pressure * 100.0f) << "%)";
 
         if (trail.modifierKeys.isCommandDown()) desc << " (CMD)";
         if (trail.modifierKeys.isShiftDown())   desc << " (SHIFT)";

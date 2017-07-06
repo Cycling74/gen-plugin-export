@@ -2,22 +2,24 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -30,19 +32,27 @@ struct AudioThumbnail::MinMaxValue
         values[1] = 0;
     }
 
-    inline void set (const char newMin, const char newMax) noexcept
+    inline void set (const int8 newMin, const int8 newMax) noexcept
     {
         values[0] = newMin;
         values[1] = newMax;
     }
 
-    inline char getMinValue() const noexcept        { return values[0]; }
-    inline char getMaxValue() const noexcept        { return values[1]; }
+    inline int8 getMinValue() const noexcept        { return values[0]; }
+    inline int8 getMaxValue() const noexcept        { return values[1]; }
 
     inline void setFloat (Range<float> newRange) noexcept
     {
-        values[0] = (char) jlimit (-128, 127, roundFloatToInt (newRange.getStart() * 127.0f));
-        values[1] = (char) jlimit (-128, 127, roundFloatToInt (newRange.getEnd()   * 127.0f));
+        // Workaround for an ndk armeabi compiler bug which crashes on signed saturation
+       #if JUCE_ANDROID
+        Range<float> limitedRange (jlimit (-1.0f, 1.0f, newRange.getStart()),
+                                   jlimit (-1.0f, 1.0f, newRange.getEnd()));
+        values[0] = (int8) (limitedRange.getStart() * 127.0f);
+        values[1] = (int8) (limitedRange.getEnd()   * 127.0f);
+       #else
+        values[0] = (int8) jlimit (-128, 127, roundFloatToInt (newRange.getStart() * 127.0f));
+        values[1] = (int8) jlimit (-128, 127, roundFloatToInt (newRange.getEnd()   * 127.0f));
+       #endif
 
         if (values[0] == values[1])
         {
@@ -68,7 +78,7 @@ struct AudioThumbnail::MinMaxValue
     inline void write (OutputStream& output)   { output.write (values, 2); }
 
 private:
-    char values[2];
+    int8 values[2];
 };
 
 //==============================================================================
@@ -287,8 +297,8 @@ public:
         {
             endSample = jmin (endSample, data.size() - 1);
 
-            char mx = -128;
-            char mn = 127;
+            int8 mx = -128;
+            int8 mn = 127;
 
             while (startSample <= endSample)
             {
@@ -693,7 +703,9 @@ int64 AudioThumbnail::getHashCode() const
 void AudioThumbnail::addBlock (const int64 startSample, const AudioSampleBuffer& incoming,
                                int startOffsetInBuffer, int numSamples)
 {
-    jassert (startSample >= 0);
+    jassert (startSample >= 0
+              && startOffsetInBuffer >= 0
+              && startOffsetInBuffer + numSamples <= incoming.getNumSamples());
 
     const int firstThumbIndex = (int) (startSample / samplesPerThumbSample);
     const int lastThumbIndex  = (int) ((startSample + numSamples + (samplesPerThumbSample - 1)) / samplesPerThumbSample);

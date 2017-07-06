@@ -10,11 +10,12 @@
 
 */
 
-#ifndef __APPHEADERFILE_3T6YQETY1__
-#define __APPHEADERFILE_3T6YQETY1__
+#pragma once
 
 #include "AppConfig.h"
-#include "modules/juce_core/juce_core.h"
+
+#include <juce_core/juce_core.h>
+
 
 #if ! DONT_SET_USING_JUCE_NAMESPACE
  // If your code uses a lot of JUCE classes, then this will obviously save you
@@ -30,5 +31,3 @@ namespace ProjectInfo
     const int          versionNumber  = 0x10000;
 }
 #endif
-
-#endif   // __APPHEADERFILE_3T6YQETY1__

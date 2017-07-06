@@ -1,27 +1,21 @@
 /*
   ==============================================================================
 
-   This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
-   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
-   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   ------------------------------------------------------------------------------
-
-   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
-   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
-   using any other modules, be sure to check that you also comply with their license.
-
-   For more details, visit www.juce.com
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -53,7 +47,7 @@ public:
     virtual String getName() const
     {
         jassertfalse; // You shouldn't call this for an expression that's not actually a function!
-        return String();
+        return {};
     }
 
     virtual void renameSymbol (const Symbol& oldSymbol, const String& newName, const Scope& scope, int recursionDepth)
@@ -397,7 +391,7 @@ struct Expression::Helpers
             JUCE_DECLARE_NON_COPYABLE (SymbolRenamingVisitor)
         };
 
-        SymbolTerm* getSymbol() const  { return static_cast <SymbolTerm*> (left.get()); }
+        SymbolTerm* getSymbol() const  { return static_cast<SymbolTerm*> (left.get()); }
 
         JUCE_DECLARE_NON_COPYABLE (DotOperator)
     };
@@ -427,7 +421,7 @@ struct Expression::Helpers
 
         TermPtr createTermToEvaluateInput (const Scope& scope, const Term* t, double overallTarget, Term* topLevelTerm) const
         {
-            (void) t;
+            ignoreUnused (t);
             jassert (t == input);
 
             const Term* const dest = findDestinationFor (topLevelTerm, this);
@@ -956,18 +950,16 @@ Expression& Expression::operator= (const Expression& other)
     return *this;
 }
 
-#if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
 Expression::Expression (Expression&& other) noexcept
-    : term (static_cast <ReferenceCountedObjectPtr<Term>&&> (other.term))
+    : term (static_cast<ReferenceCountedObjectPtr<Term>&&> (other.term))
 {
 }
 
 Expression& Expression::operator= (Expression&& other) noexcept
 {
-    term = static_cast <ReferenceCountedObjectPtr<Term>&&> (other.term);
+    term = static_cast<ReferenceCountedObjectPtr<Term>&&> (other.term);
     return *this;
 }
-#endif
 
 Expression::Expression (const String& stringToParse, String& parseError)
 {
@@ -992,7 +984,8 @@ double Expression::evaluate() const
 
 double Expression::evaluate (const Expression::Scope& scope) const
 {
-    return term->resolve (scope, 0)->toDouble();
+    String err;
+    return evaluate (scope, err);
 }
 
 double Expression::evaluate (const Scope& scope, String& evaluationError) const
@@ -1038,20 +1031,16 @@ Expression Expression::adjustedToGiveNewResult (const double targetValue, const 
 
     jassert (termToAdjust != nullptr);
 
-    const Term* const parent = Helpers::findDestinationFor (newTerm, termToAdjust);
-
-    if (parent == nullptr)
+    if (const Term* parent = Helpers::findDestinationFor (newTerm, termToAdjust))
     {
-        termToAdjust->value = targetValue;
+        if (const Helpers::TermPtr reverseTerm = parent->createTermToEvaluateInput (scope, termToAdjust, targetValue, newTerm))
+            termToAdjust->value = Expression (reverseTerm).evaluate (scope);
+        else
+            return Expression (targetValue);
     }
     else
     {
-        const Helpers::TermPtr reverseTerm (parent->createTermToEvaluateInput (scope, termToAdjust, targetValue, newTerm));
-
-        if (reverseTerm == nullptr)
-            return Expression (targetValue);
-
-        termToAdjust->value = reverseTerm->resolve (scope, 0)->toDouble();
+        termToAdjust->value = targetValue;
     }
 
     return Expression (newTerm.release());
@@ -1176,5 +1165,5 @@ void Expression::Scope::visitRelativeScope (const String& scopeName, Visitor&) c
 
 String Expression::Scope::getScopeUID() const
 {
-    return String();
+    return {};
 }

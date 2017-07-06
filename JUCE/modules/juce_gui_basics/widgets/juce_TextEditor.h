@@ -2,28 +2,29 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_TEXTEDITOR_H_INCLUDED
-#define JUCE_TEXTEDITOR_H_INCLUDED
+#pragma once
 
 
 //==============================================================================
@@ -51,7 +52,7 @@ public:
                                     for a black splodge (not all fonts include this, though), or 0x2022,
                                     which is a bullet (probably the best choice for linux).
     */
-    explicit TextEditor (const String& componentName = String::empty,
+    explicit TextEditor (const String& componentName = String(),
                          juce_wchar passwordCharacter = 0);
 
     /** Destructor. */
@@ -123,7 +124,7 @@ public:
     void setReadOnly (bool shouldBeReadOnly);
 
     /** Returns true if the editor is in read-only mode. */
-    bool isReadOnly() const;
+    bool isReadOnly() const noexcept;
 
     //==============================================================================
     /** Makes the caret visible or invisible.
@@ -135,7 +136,7 @@ public:
     /** Returns true if the caret is enabled.
         @see setCaretVisible
     */
-    bool isCaretVisible() const noexcept                            { return caret != nullptr; }
+    bool isCaretVisible() const noexcept                            { return caretVisible && ! isReadOnly(); }
 
     //==============================================================================
     /** Enables/disables a vertical scrollbar.
@@ -328,7 +329,7 @@ public:
         @param newText                  the text to add
         @param sendTextChangeMessage    if true, this will cause a change message to
                                         be sent to all the listeners.
-        @see insertText
+        @see insertTextAtCaret
     */
     void setText (const String& newText,
                   bool sendTextChangeMessage = true);
@@ -347,7 +348,7 @@ public:
         this string, otherwise it will be inserted.
 
         To delete a section of text, you can use setHighlightedRegion() to
-        highlight it, and call insertTextAtCursor (String::empty).
+        highlight it, and call insertTextAtCaret (String()).
 
         @see setCaretPosition, getCaretPosition, setHighlightedRegion
     */
@@ -463,6 +464,16 @@ public:
     */
     void setScrollToShowCursor (bool shouldScrollToShowCaret);
 
+    /** Sets the line spacing of the TextEditor.
+
+        The default (and minimum) value is 1.0 and values > 1.0 will increase the line spacing as a
+        multiple of the line height e.g. for double-spacing call this method with an argument of 2.0.
+    */
+    void setLineSpacing (float newLineSpacing) noexcept             { lineSpacing = jmax (1.0f, newLineSpacing); }
+
+    /** Returns the current line spacing of the TextEditor. */
+    float getLineSpacing() const noexcept                           { return lineSpacing; }
+
     //==============================================================================
     void moveCaretToEnd();
     bool moveCaretLeft (bool moveInWholeWordSteps, bool selecting);
@@ -554,11 +565,11 @@ public:
         */
         LengthAndCharacterRestriction (int maxNumChars, const String& allowedCharacters);
 
+        String filterNewText (TextEditor&, const String&) override;
+
     private:
         String allowedCharacters;
         int maxLength;
-
-        String filterNewText (TextEditor&, const String&) override;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LengthAndCharacterRestriction)
     };
@@ -583,7 +594,7 @@ public:
                                     this string are allowed to be entered into the editor.
     */
     void setInputRestrictions (int maxTextLength,
-                               const String& allowedCharacters = String::empty);
+                               const String& allowedCharacters = String());
 
     void setKeyboardType (VirtualKeyboardType type) noexcept    { keyboardType = type; }
 
@@ -633,6 +644,8 @@ public:
     /** @internal */
     void lookAndFeelChanged() override;
     /** @internal */
+    void parentHierarchyChanged() override;
+    /** @internal */
     bool isTextInputActive() const override;
     /** @internal */
     void setTemporaryUnderlining (const Array<Range<int> >&) override;
@@ -668,30 +681,32 @@ private:
 
     ScopedPointer<Viewport> viewport;
     TextHolderComponent* textHolder;
-    BorderSize<int> borderSize;
+    BorderSize<int> borderSize { 1, 1, 1, 3 };
 
-    bool readOnly                   : 1;
-    bool multiline                  : 1;
-    bool wordWrap                   : 1;
-    bool returnKeyStartsNewLine     : 1;
-    bool popupMenuEnabled           : 1;
-    bool selectAllTextWhenFocused   : 1;
-    bool scrollbarVisible           : 1;
-    bool wasFocused                 : 1;
-    bool keepCaretOnScreen          : 1;
-    bool tabKeyUsed                 : 1;
-    bool menuActive                 : 1;
-    bool valueTextNeedsUpdating     : 1;
-    bool consumeEscAndReturnKeys    : 1;
+    bool readOnly = false;
+    bool caretVisible = true;
+    bool multiline = false;
+    bool wordWrap = false;
+    bool returnKeyStartsNewLine = false;
+    bool popupMenuEnabled = true;
+    bool selectAllTextWhenFocused = false;
+    bool scrollbarVisible = true;
+    bool wasFocused = false;
+    bool keepCaretOnScreen = true;
+    bool tabKeyUsed = false;
+    bool menuActive = false;
+    bool valueTextNeedsUpdating = false;
+    bool consumeEscAndReturnKeys = true;
+    bool styleChanged = false;
 
     UndoManager undoManager;
     ScopedPointer<CaretComponent> caret;
     Range<int> selection;
-    int leftIndent, topIndent;
-    unsigned int lastTransactionTime;
-    Font currentFont;
-    mutable int totalNumChars;
-    int caretPosition;
+    int leftIndent = 4, topIndent = 4;
+    unsigned int lastTransactionTime = 0;
+    Font currentFont { 14.0f };
+    mutable int totalNumChars = 0;
+    int caretPosition = 0;
     OwnedArray<UniformTextSection> sections;
     String textToShowWhenEmpty;
     Colour colourForTextWhenEmpty;
@@ -699,6 +714,7 @@ private:
     OptionalScopedPointer<InputFilter> inputFilter;
     Value textValue;
     VirtualKeyboardType keyboardType;
+    float lineSpacing = 1.0f;
 
     enum
     {
@@ -712,6 +728,7 @@ private:
 
     void moveCaret (int newCaretPos);
     void moveCaretTo (int newPosition, bool isSelecting);
+    void recreateCaret();
     void handleCommandMessage (int) override;
     void coalesceSimilarSections();
     void splitSection (int sectionIndex, int charToSplitAt);
@@ -743,6 +760,3 @@ private:
 
 /** This typedef is just for compatibility with old code - newer code should use the TextEditor::Listener class directly. */
 typedef TextEditor::Listener TextEditorListener;
-
-
-#endif   // JUCE_TEXTEDITOR_H_INCLUDED

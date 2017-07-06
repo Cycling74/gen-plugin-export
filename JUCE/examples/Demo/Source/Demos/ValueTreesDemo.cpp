@@ -2,22 +2,24 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -48,7 +50,8 @@ public:
 
     void paintItem (Graphics& g, int width, int height) override
     {
-        g.setColour (Colours::black);
+        g.setColour (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::defaultText,
+                                             Colours::black));
         g.setFont (15.0f);
 
         g.drawText (tree["name"].toString(),
@@ -76,12 +79,13 @@ public:
 
     void itemDropped (const DragAndDropTarget::SourceDetails&, int insertIndex) override
     {
-        moveItems (*getOwnerView(),
-                   getSelectedTreeViewItems (*getOwnerView()),
-                   tree, insertIndex, undoManager);
+        OwnedArray<ValueTree> selectedTrees;
+        getSelectedTreeViewItems (*getOwnerView(), selectedTrees);
+
+        moveItems (*getOwnerView(), selectedTrees, tree, insertIndex, undoManager);
     }
 
-    static void moveItems (TreeView& treeView, const Array<ValueTree>& items,
+    static void moveItems (TreeView& treeView, const OwnedArray<ValueTree>& items,
                            ValueTree newParent, int insertIndex, UndoManager& undoManager)
     {
         if (items.size() > 0)
@@ -90,7 +94,7 @@ public:
 
             for (int i = items.size(); --i >= 0;)
             {
-                ValueTree& v = items.getReference(i);
+                ValueTree& v = *items.getUnchecked(i);
 
                 if (v.getParent().isValid() && newParent != v && ! newParent.isAChildOf (v))
                 {
@@ -107,17 +111,13 @@ public:
         }
     }
 
-    static Array<ValueTree> getSelectedTreeViewItems (TreeView& treeView)
+    static void getSelectedTreeViewItems (TreeView& treeView, OwnedArray<ValueTree>& items)
     {
-        Array<ValueTree> items;
-
         const int numSelected = treeView.getNumSelectedItems();
 
         for (int i = 0; i < numSelected; ++i)
             if (const ValueTreeItem* vti = dynamic_cast<ValueTreeItem*> (treeView.getSelectedItem (i)))
-                items.add (vti->tree);
-
-        return items;
+                items.add (new ValueTree (vti->tree));
     }
 
 private:
@@ -171,7 +171,6 @@ public:
         tree.setDefaultOpenness (true);
         tree.setMultiSelectEnabled (true);
         tree.setRootItem (rootItem = new ValueTreeItem (createRootValueTree(), undoManager));
-        tree.setColour (TreeView::backgroundColourId, Colours::white);
 
         addAndMakeVisible (undoButton);
         addAndMakeVisible (redoButton);
@@ -188,7 +187,7 @@ public:
 
     void paint (Graphics& g) override
     {
-        fillTiledBackground (g);
+        g.fillAll (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::windowBackground));
     }
 
     void resized() override
@@ -237,11 +236,12 @@ public:
 
     void deleteSelectedItems()
     {
-        Array<ValueTree> selectedItems (ValueTreeItem::getSelectedTreeViewItems (tree));
+        OwnedArray<ValueTree> selectedItems;
+        ValueTreeItem::getSelectedTreeViewItems (tree, selectedItems);
 
         for (int i = selectedItems.size(); --i >= 0;)
         {
-            ValueTree& v = selectedItems.getReference(i);
+            ValueTree& v = *selectedItems.getUnchecked(i);
 
             if (v.getParent().isValid())
                 v.getParent().removeChild (v, &undoManager);

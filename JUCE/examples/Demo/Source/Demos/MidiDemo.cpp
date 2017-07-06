@@ -2,54 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
 #include "../JuceDemoHeader.h"
 
-static String getMidiMessageDescription (const MidiMessage& m)
-{
-    if (m.isNoteOn())           return "Note on "  + MidiMessage::getMidiNoteName (m.getNoteNumber(), true, true, 3);
-    if (m.isNoteOff())          return "Note off " + MidiMessage::getMidiNoteName (m.getNoteNumber(), true, true, 3);
-    if (m.isProgramChange())    return "Program change " + String (m.getProgramChangeNumber());
-    if (m.isPitchWheel())       return "Pitch wheel " + String (m.getPitchWheelValue());
-    if (m.isAftertouch())       return "After touch " + MidiMessage::getMidiNoteName (m.getNoteNumber(), true, true, 3) +  ": " + String (m.getAfterTouchValue());
-    if (m.isChannelPressure())  return "Channel pressure " + String (m.getChannelPressureValue());
-    if (m.isAllNotesOff())      return "All notes off";
-    if (m.isAllSoundOff())      return "All sound off";
-    if (m.isMetaEvent())        return "Meta event";
-
-    if (m.isController())
-    {
-        String name (MidiMessage::getControllerName (m.getControllerNumber()));
-
-        if (name.isEmpty())
-            name = "[" + String (m.getControllerNumber()) + "]";
-
-        return "Controler " + name + ": " + String (m.getControllerValue());
-    }
-
-    return String::toHexString (m.getRawData(), m.getRawDataSize());
-}
-
-//==============================================================================
 /** Simple list box that just displays a StringArray. */
 class MidiLogListBoxModel   : public ListBoxModel
 {
@@ -68,7 +44,8 @@ public:
 
         if (isPositiveAndBelow (row, midiMessageList.size()))
         {
-            g.setColour (Colours::black);
+            g.setColour (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::defaultText,
+                                                 Colours::black));
 
             const MidiMessage& message = midiMessageList.getReference (row);
             double time = message.getTimeStamp();
@@ -77,7 +54,7 @@ public:
                                            ((int) (time / 3600.0)) % 24,
                                            ((int) (time / 60.0)) % 60,
                                            ((int) time) % 60)
-                            + "  -  " + getMidiMessageDescription (message),
+                            + "  -  " + message.getDescription(),
                         Rectangle<int> (width, height).reduced (4, 0),
                         Justification::centredLeft, true);
         }
@@ -105,6 +82,7 @@ public:
     {
         setOpaque (true);
 
+        // MIDI Inputs
         addAndMakeVisible (midiInputListLabel);
         midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
         midiInputListLabel.attachToComponent (&midiInputList, true);
@@ -115,7 +93,7 @@ public:
         midiInputList.addItemList (midiInputs, 1);
         midiInputList.addListener (this);
 
-        // find the first enabled device and use that bu default
+        // find the first enabled device and use that by default
         for (int i = 0; i < midiInputs.size(); ++i)
         {
             if (deviceManager.isMidiInputEnabled (midiInputs[i]))
@@ -129,13 +107,22 @@ public:
         if (midiInputList.getSelectedId() == 0)
             setMidiInput (0);
 
+
+        // MIDI Outputs
+        addAndMakeVisible (midiOutputListLabel);
+        midiOutputListLabel.setText ("MIDI Output:", dontSendNotification);
+        midiOutputListLabel.attachToComponent (&midiOutputList, true);
+
+        addAndMakeVisible (midiOutputList);
+        midiOutputList.setTextWhenNoChoicesAvailable ("No MIDI Output Enabled");
+        midiOutputList.addItemList (MidiOutput::getDevices(), 1);
+        midiOutputList.addListener (this);
+
         addAndMakeVisible (keyboardComponent);
         keyboardState.addListener (this);
 
         addAndMakeVisible (messageListBox);
         messageListBox.setModel (&midiLogListBoxModel);
-        messageListBox.setColour (ListBox::backgroundColourId, Colour (0x32ffffff));
-        messageListBox.setColour (ListBox::outlineColourId, Colours::black);
     }
 
     ~MidiDemo()
@@ -147,21 +134,22 @@ public:
 
     void paint (Graphics& g) override
     {
-        fillTiledBackground (g);
+        g.fillAll (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::windowBackground));
     }
 
     void resized() override
     {
         Rectangle<int> area (getLocalBounds());
         midiInputList.setBounds (area.removeFromTop (36).removeFromRight (getWidth() - 150).reduced (8));
+        midiOutputList.setBounds (area.removeFromTop (36).removeFromRight (getWidth() - 150).reduced (8));
         keyboardComponent.setBounds (area.removeFromTop (80).reduced(8));
         messageListBox.setBounds (area.reduced (8));
     }
 
 private:
     AudioDeviceManager& deviceManager;
-    ComboBox midiInputList;
-    Label midiInputListLabel;
+    ComboBox midiInputList, midiOutputList;
+    Label midiInputListLabel, midiOutputListLabel;
     int lastInputIndex;
     bool isAddingFromMidiInput;
 
@@ -171,6 +159,7 @@ private:
     ListBox messageListBox;
     Array<MidiMessage> midiMessageList;
     MidiLogListBoxModel midiLogListBoxModel;
+    ScopedPointer<MidiOutput> currentMidiOutput;
 
     //==============================================================================
     /** Starts listening to a MIDI input device, enabling it if necessary. */
@@ -191,10 +180,22 @@ private:
         lastInputIndex = index;
     }
 
+    //==============================================================================
+    void setMidiOutput (int index)
+    {
+        currentMidiOutput = nullptr;
+
+        if (MidiOutput::getDevices() [index].isNotEmpty())
+        {
+            currentMidiOutput = MidiOutput::openDevice (index);
+            jassert (currentMidiOutput);
+        }
+    }
+
     void comboBoxChanged (ComboBox* box) override
     {
-        if (box == &midiInputList)
-            setMidiInput (midiInputList.getSelectedItemIndex());
+        if (box == &midiInputList)    setMidiInput  (midiInputList.getSelectedItemIndex());
+        if (box == &midiOutputList)   setMidiOutput (midiOutputList.getSelectedItemIndex());
     }
 
     // These methods handle callbacks from the midi device + on-screen keyboard..
@@ -243,6 +244,9 @@ private:
 
     void postMessageToList (const MidiMessage& message)
     {
+        if (currentMidiOutput != nullptr)
+            currentMidiOutput->sendMessageNow (message);
+
         (new IncomingMessageCallback (this, message))->post();
     }
 

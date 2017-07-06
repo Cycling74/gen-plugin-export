@@ -2,22 +2,24 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -51,7 +53,9 @@ class ColourSelectorWindow   : public DocumentWindow,
 public:
     ColourSelectorWindow (const String& name, Colour backgroundColour, int buttonsNeeded)
         : DocumentWindow (name, backgroundColour, buttonsNeeded),
-          selector (ColourSelector::showColourAtTop | ColourSelector::showSliders | ColourSelector::showColourspace)
+          selector (ColourSelector::showColourAtTop
+                     | ColourSelector::showSliders
+                     | ColourSelector::showColourspace)
     {
         selector.setCurrentColour (backgroundColour);
         selector.setColour (ColourSelector::backgroundColourId, Colours::transparentWhite);
@@ -108,13 +112,13 @@ public:
         startTimer (60);
     }
 
-    void paint (Graphics& g)
+    void paint (Graphics& g) override
     {
         g.setColour (colour);
         g.fillEllipse (ballBounds - getPosition().toFloat());
     }
 
-    void timerCallback()
+    void timerCallback() override
     {
         ballBounds += direction;
 
@@ -148,18 +152,18 @@ public:
         }
     }
 
-    void mouseDown (const MouseEvent& e)
+    void mouseDown (const MouseEvent& e) override
     {
         dragger.startDraggingComponent (this, e);
     }
 
-    void mouseDrag (const MouseEvent& e)
+    void mouseDrag (const MouseEvent& e) override
     {
         // as there's no titlebar we have to manage the dragging ourselves
         dragger.dragComponent (this, e, 0);
     }
 
-    void paint (Graphics& g)
+    void paint (Graphics& g) override
     {
         if (isOpaque())
             g.fillAll (Colours::white);
@@ -210,6 +214,15 @@ public:
 
     ~WindowsDemo()
     {
+        if (dialogWindow != nullptr)
+        {
+            dialogWindow->exitModalState (0);
+
+            // we are shutting down: can't wait for the message manager
+            // to eventually delete this
+            delete dialogWindow;
+        }
+
         closeAllWindows();
 
         closeWindowsButton.removeListener (this);
@@ -218,7 +231,8 @@ public:
 
     void paint (Graphics& g) override
     {
-        g.fillAll (Colours::grey);
+        g.fillAll (getUIColourIfAvailable (LookAndFeel_V4::ColourScheme::UIColour::windowBackground,
+                                           Colours::grey));
     }
 
     void resized() override
@@ -237,6 +251,7 @@ private:
     // null when the component that it points to is deleted.
     Array< Component::SafePointer<Component> > windows;
     TextButton showWindowsButton, closeWindowsButton;
+    SafePointer<DialogWindow> dialogWindow;
 
     void showAllWindows()
     {
@@ -271,6 +286,7 @@ private:
         options.content.setOwned (label);
 
         Rectangle<int> area (0, 0, 300, 200);
+
         options.content->setSize (area.getWidth(), area.getHeight());
 
         options.dialogTitle                   = "Dialog Window";
@@ -279,10 +295,10 @@ private:
         options.useNativeTitleBar             = false;
         options.resizable                     = true;
 
-        const RectanglePlacement placement (RectanglePlacement::xRight + RectanglePlacement::yBottom + RectanglePlacement::doNotResize);
+        dialogWindow = options.launchAsync();
 
-        DialogWindow* dw = options.launchAsync();
-        dw->centreWithSize (300, 200);
+        if (dialogWindow != nullptr)
+            dialogWindow->centreWithSize (300, 200);
     }
 
     void showDocumentWindow (bool native)
@@ -291,9 +307,14 @@ private:
         windows.add (dw);
 
         Rectangle<int> area (0, 0, 300, 400);
-        const RectanglePlacement placement ((native ? RectanglePlacement::xLeft : RectanglePlacement::xRight)
-                                            + RectanglePlacement::yTop + RectanglePlacement::doNotResize);
-        Rectangle<int> result (placement.appliedTo (area, Desktop::getInstance().getDisplays().getMainDisplay().userArea.reduced (20)));
+
+        RectanglePlacement placement ((native ? RectanglePlacement::xLeft
+                                              : RectanglePlacement::xRight)
+                                       | RectanglePlacement::yTop
+                                       | RectanglePlacement::doNotResize);
+
+        Rectangle<int> result (placement.appliedTo (area, Desktop::getInstance().getDisplays()
+                                                            .getMainDisplay().userArea.reduced (20)));
         dw->setBounds (result);
 
         dw->setResizable (true, ! native);
@@ -308,8 +329,13 @@ private:
         windows.add (balls);
 
         Rectangle<int> area (0, 0, 200, 200);
-        const RectanglePlacement placement (RectanglePlacement::xLeft + RectanglePlacement::yBottom + RectanglePlacement::doNotResize);
-        Rectangle<int> result (placement.appliedTo (area, Desktop::getInstance().getDisplays().getMainDisplay().userArea.reduced (20)));
+
+        RectanglePlacement placement (RectanglePlacement::xLeft
+                                       | RectanglePlacement::yBottom
+                                       | RectanglePlacement::doNotResize);
+
+        Rectangle<int> result (placement.appliedTo (area, Desktop::getInstance().getDisplays()
+                                                            .getMainDisplay().userArea.reduced (20)));
         balls->setBounds (result);
 
         balls->setVisible (true);

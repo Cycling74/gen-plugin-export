@@ -2,22 +2,24 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -25,9 +27,10 @@
 #include "../JuceDemoHeader.h"
 
 
-static void showBubbleMessage (Component* targetComponent, const String& textToShow)
+static void showBubbleMessage (Component* targetComponent, const String& textToShow,
+                               ScopedPointer<BubbleMessageComponent>& bmc)
 {
-    BubbleMessageComponent* bmc = new BubbleMessageComponent();
+    bmc = new BubbleMessageComponent();
 
     if (Desktop::canUseSemiTransparentWindows())
     {
@@ -41,8 +44,9 @@ static void showBubbleMessage (Component* targetComponent, const String& textToS
 
     AttributedString text (textToShow);
     text.setJustification (Justification::centred);
+    text.setColour (targetComponent->findColour (TextButton::textColourOffId));
 
-    bmc->showAt (targetComponent, text, 2000, true, true);
+    bmc->showAt (targetComponent, text, 2000, true, false);
 }
 
 //==============================================================================
@@ -89,7 +93,7 @@ public:
 
     void changeListenerCallback (ChangeBroadcaster* source) override
     {
-        if (ColourSelector* cs = dynamic_cast <ColourSelector*> (source))
+        if (ColourSelector* cs = dynamic_cast<ColourSelector*> (source))
             setColour (TextButton::buttonColourId, cs->getCurrentColour());
     }
 };
@@ -277,6 +281,8 @@ struct ButtonsPage   : public Component,
 
             tb->setClickingTogglesState (true);
             tb->setRadioGroupId (34567);
+            tb->setColour (TextButton::textColourOffId, Colours::black);
+            tb->setColour (TextButton::textColourOnId, Colours::black);
             tb->setColour (TextButton::buttonColourId, Colours::white);
             tb->setColour (TextButton::buttonOnColourId, Colours::blueviolet.brighter());
 
@@ -390,6 +396,7 @@ struct ButtonsPage   : public Component,
 
 private:
     OwnedArray<Component> components;
+    ScopedPointer<BubbleMessageComponent> bubbleMessage;
 
     // This little function avoids a bit of code-duplication by adding a component to
     // our list as well as calling addAndMakeVisible on it..
@@ -406,7 +413,8 @@ private:
         showBubbleMessage (button,
                            "This is a demo of the BubbleMessageComponent, which lets you pop up a message pointing "
                            "at a component or somewhere on the screen.\n\n"
-                           "The message bubbles will disappear after a timeout period, or when the mouse is clicked.");
+                           "The message bubbles will disappear after a timeout period, or when the mouse is clicked.",
+                           bubbleMessage);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ButtonsPage)
@@ -439,6 +447,12 @@ struct MiscPage   : public Component
         comboBox.setSelectedId (1);
     }
 
+    void lookAndFeelChanged() override
+    {
+        textEditor1.applyFontToAllText (textEditor1.getFont());
+        textEditor2.applyFontToAllText (textEditor2.getFont());
+    }
+
     TextEditor textEditor1, textEditor2;
     ComboBox comboBox;
 };
@@ -450,11 +464,11 @@ class ToolbarDemoComp   : public Component,
 {
 public:
     ToolbarDemoComp()
-        : depthLabel (String::empty, "Toolbar depth:"),
-          infoLabel (String::empty, "As well as showing off toolbars, this demo illustrates how to store "
-                                    "a set of SVG files in a Zip file, embed that in your application, and read "
-                                    "them back in at runtime.\n\nThe icon images here are taken from the open-source "
-                                    "Tango icon project."),
+        : depthLabel (String(), "Toolbar depth:"),
+          infoLabel (String(), "As well as showing off toolbars, this demo illustrates how to store "
+                               "a set of SVG files in a Zip file, embed that in your application, and read "
+                               "them back in at runtime.\n\nThe icon images here are taken from the open-source "
+                                "Tango icon project."),
           orientationButton ("Vertical/Horizontal"),
           customiseButton ("Customise...")
     {
@@ -608,7 +622,7 @@ private:
                 default:                break;
             }
 
-            return 0;
+            return nullptr;
         }
 
     private:
@@ -629,7 +643,7 @@ private:
                 {
                     ScopedPointer<InputStream> svgFileStream (icons.createStreamForEntry (i));
 
-                    if (svgFileStream != 0)
+                    if (svgFileStream != nullptr)
                     {
                         iconNames.add (icons.getEntry(i)->filename);
                         iconsFromZipFile.add (Drawable::createFromImageDataStream (*svgFileStream));
@@ -742,10 +756,12 @@ public:
     // This is overloaded from TableListBoxModel, and should fill in the background of the whole row
     void paintRowBackground (Graphics& g, int rowNumber, int /*width*/, int /*height*/, bool rowIsSelected) override
     {
+        const Colour alternateColour (getLookAndFeel().findColour (ListBox::backgroundColourId)
+                                                      .interpolatedWith (getLookAndFeel().findColour (ListBox::textColourId), 0.03f));
         if (rowIsSelected)
             g.fillAll (Colours::lightblue);
         else if (rowNumber % 2)
-            g.fillAll (Colour (0xffeeeeee));
+            g.fillAll (alternateColour);
     }
 
     // This is overloaded from TableListBoxModel, and must paint any cells that aren't using custom
@@ -753,19 +769,17 @@ public:
     void paintCell (Graphics& g, int rowNumber, int columnId,
                     int width, int height, bool /*rowIsSelected*/) override
     {
-        g.setColour (Colours::black);
+        g.setColour (getLookAndFeel().findColour (ListBox::textColourId));
         g.setFont (font);
 
-        const XmlElement* rowElement = dataList->getChildElement (rowNumber);
-
-        if (rowElement != 0)
+        if (const XmlElement* rowElement = dataList->getChildElement (rowNumber))
         {
             const String text (rowElement->getStringAttribute (getAttributeNameForColumnId (columnId)));
 
             g.drawText (text, 2, 0, width - 4, height, Justification::centredLeft, true);
         }
 
-        g.setColour (Colours::black.withAlpha (0.2f));
+        g.setColour (getLookAndFeel().findColour (ListBox::backgroundColourId));
         g.fillRect (width - 1, 0, 1, height);
     }
 
@@ -788,34 +802,32 @@ public:
     {
         if (columnId == 1 || columnId == 7) // The ID and Length columns do not have a custom component
         {
-            jassert (existingComponentToUpdate == 0);
-            return 0;
+            jassert (existingComponentToUpdate == nullptr);
+            return nullptr;
         }
-        else if (columnId == 5) // For the ratings column, we return the custom combobox component
+
+        if (columnId == 5) // For the ratings column, we return the custom combobox component
         {
-            RatingColumnCustomComponent* ratingsBox = (RatingColumnCustomComponent*) existingComponentToUpdate;
+            RatingColumnCustomComponent* ratingsBox = static_cast<RatingColumnCustomComponent*> (existingComponentToUpdate);
 
             // If an existing component is being passed-in for updating, we'll re-use it, but
             // if not, we'll have to create one.
-            if (ratingsBox == 0)
+            if (ratingsBox == nullptr)
                 ratingsBox = new RatingColumnCustomComponent (*this);
 
             ratingsBox->setRowAndColumn (rowNumber, columnId);
-
             return ratingsBox;
         }
-        else // The other columns are editable text columns, for which we use the custom Label component
-        {
-            EditableTextCustomComponent* textLabel = (EditableTextCustomComponent*) existingComponentToUpdate;
 
-            // same as above...
-            if (textLabel == 0)
-                textLabel = new EditableTextCustomComponent (*this);
+        // The other columns are editable text columns, for which we use the custom Label component
+        EditableTextCustomComponent* textLabel = static_cast<EditableTextCustomComponent*> (existingComponentToUpdate);
 
-            textLabel->setRowAndColumn (rowNumber, columnId);
+        // same as above...
+        if (textLabel == nullptr)
+            textLabel = new EditableTextCustomComponent (*this);
 
-            return textLabel;
-        }
+        textLabel->setRowAndColumn (rowNumber, columnId);
+        return textLabel;
     }
 
     // This is overloaded from TableListBoxModel, and should choose the best width for the specified
@@ -830,9 +842,7 @@ public:
         // find the widest bit of text in this column..
         for (int i = getNumRows(); --i >= 0;)
         {
-            const XmlElement* rowElement = dataList->getChildElement (i);
-
-            if (rowElement != 0)
+            if (const XmlElement* rowElement = dataList->getChildElement (i))
             {
                 const String text (rowElement->getStringAttribute (getAttributeNameForColumnId (columnId)));
 
@@ -884,15 +894,13 @@ private:
 
     //==============================================================================
     // This is a custom Label component, which we use for the table's editable text columns.
-    class EditableTextCustomComponent : public Label
+    class EditableTextCustomComponent  : public Label
     {
     public:
-        EditableTextCustomComponent (TableDemoComponent& owner_)
-            : owner (owner_)
+        EditableTextCustomComponent (TableDemoComponent& td)  : owner (td)
         {
             // double click to edit the label text; single click handled below
             setEditable (false, true, false);
-            setColour (textColourId, Colours::black);
         }
 
         void mouseDown (const MouseEvent& event) override
@@ -916,21 +924,29 @@ private:
             setText (owner.getText(columnId, row), dontSendNotification);
         }
 
+        void paint (Graphics& g) override
+        {
+            auto& lf = getLookAndFeel();
+            if (! dynamic_cast<LookAndFeel_V4*> (&lf))
+                lf.setColour (textColourId, Colours::black);
+
+            Label::paint (g);
+        }
+
     private:
         TableDemoComponent& owner;
         int row, columnId;
+        Colour textColour;
     };
-
 
     //==============================================================================
     // This is a custom component containing a combo box, which we're going to put inside
     // our table's "rating" column.
     class RatingColumnCustomComponent    : public Component,
-                                           public ComboBoxListener
+                                           private ComboBoxListener
     {
     public:
-        RatingColumnCustomComponent (TableDemoComponent& owner_)
-            : owner (owner_)
+        RatingColumnCustomComponent (TableDemoComponent& td)  : owner (td)
         {
             // just put a combo box inside this component
             addAndMakeVisible (comboBox);
@@ -953,14 +969,14 @@ private:
         }
 
         // Our demo code will call this when we may need to update our contents
-        void setRowAndColumn (const int newRow, const int newColumn)
+        void setRowAndColumn (int newRow, int newColumn)
         {
             row = newRow;
             columnId = newColumn;
             comboBox.setSelectedId (owner.getRating (row), dontSendNotification);
         }
 
-        void comboBoxChanged (ComboBox* /*comboBoxThatHasChanged*/) override
+        void comboBoxChanged (ComboBox*) override
         {
             owner.setRating (row, comboBox.getSelectedId());
         }
@@ -976,8 +992,8 @@ private:
     class DemoDataSorter
     {
     public:
-        DemoDataSorter (const String attributeToSort_, bool forwards)
-            : attributeToSort (attributeToSort_),
+        DemoDataSorter (const String& attributeToSortBy, bool forwards)
+            : attributeToSort (attributeToSortBy),
               direction (forwards ? 1 : -1)
         {
         }
@@ -1003,10 +1019,9 @@ private:
     // this loads the embedded database XML file into memory
     void loadData()
     {
-        XmlDocument dataDoc (String ((const char*) BinaryData::demo_table_data_xml));
-        demoData = dataDoc.getDocumentElement();
+        demoData = XmlDocument::parse (BinaryData::demo_table_data_xml);
 
-        dataList = demoData->getChildByName ("DATA");
+        dataList   = demoData->getChildByName ("DATA");
         columnList = demoData->getChildByName ("COLUMNS");
 
         numRows = dataList->getNumChildElements();
@@ -1021,7 +1036,7 @@ private:
                 return columnXml->getStringAttribute ("name");
         }
 
-        return String::empty;
+        return String();
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TableDemoComponent)
@@ -1069,7 +1084,7 @@ private:
             if (rowIsSelected)
                 g.fillAll (Colours::lightblue);
 
-            g.setColour (Colours::black);
+            g.setColour (LookAndFeel::getDefaultLookAndFeel().findColour (Label::textColourId));
             g.setFont (height * 0.7f);
 
             g.drawText ("Draggable Thing #" + String (rowNumber + 1),
@@ -1116,7 +1131,7 @@ private:
                 g.drawRect (getLocalBounds(), 3);
             }
 
-            g.setColour (Colours::black);
+            g.setColour (getLookAndFeel().findColour (Label::textColourId));
             g.setFont (14.0f);
             g.drawFittedText (message, getLocalBounds().reduced (10, 0), Justification::centred, 4);
         }
@@ -1241,6 +1256,7 @@ private:
 //==============================================================================
 class MenusDemo : public Component,
                   public MenuBarModel,
+                  public ChangeBroadcaster,
                   private Button::Listener
 {
 public:
@@ -1302,6 +1318,15 @@ public:
             menu.addCommandItem (commandManager, MainAppWindow::useLookAndFeelV1);
             menu.addCommandItem (commandManager, MainAppWindow::useLookAndFeelV2);
             menu.addCommandItem (commandManager, MainAppWindow::useLookAndFeelV3);
+
+            PopupMenu v4SubMenu;
+            v4SubMenu.addCommandItem (commandManager, MainAppWindow::useLookAndFeelV4Dark);
+            v4SubMenu.addCommandItem (commandManager, MainAppWindow::useLookAndFeelV4Midnight);
+            v4SubMenu.addCommandItem (commandManager, MainAppWindow::useLookAndFeelV4Grey);
+            v4SubMenu.addCommandItem (commandManager, MainAppWindow::useLookAndFeelV4Light);
+
+            menu.addSubMenu ("Use LookAndFeel_V4", v4SubMenu);
+
             menu.addSeparator();
             menu.addCommandItem (commandManager, MainAppWindow::useNativeTitleBar);
 
@@ -1376,6 +1401,10 @@ public:
 
                 tabs->setOrientation (o);
             }
+        }
+        else if (menuItemID >= 12298 && menuItemID <= 12305)
+        {
+            sendChangeMessage();
         }
     }
 
@@ -1472,26 +1501,35 @@ private:
 };
 
 //==============================================================================
-class DemoTabbedComponent  : public TabbedComponent
+class DemoTabbedComponent  : public TabbedComponent,
+                             private ChangeListener
 {
 public:
     DemoTabbedComponent()
         : TabbedComponent (TabbedButtonBar::TabsAtTop)
     {
-        addTab ("Menus",            getRandomTabBackgroundColour(), new MenusDemo(),           true);
-        addTab ("Buttons",          getRandomTabBackgroundColour(), new ButtonsPage(),         true);
-        addTab ("Sliders",          getRandomTabBackgroundColour(), new SlidersPage(),         true);
-        addTab ("Toolbars",         getRandomTabBackgroundColour(), new ToolbarDemoComp(),     true);
-        addTab ("Misc",             getRandomTabBackgroundColour(), new MiscPage(),            true);
-        addTab ("Tables",           getRandomTabBackgroundColour(), new TableDemoComponent(),  true);
-        addTab ("Drag & Drop",      getRandomTabBackgroundColour(), new DragAndDropDemo(),     true);
+        // Register this class as a ChangeListener to the menus demo so we can update the tab colours when the LookAndFeel is changed
+        menusDemo = new MenusDemo();
+        menusDemo->addChangeListener (this);
+
+        const Colour c;
+        addTab ("Menus",       c, menusDemo,                true);
+        addTab ("Buttons",     c, new ButtonsPage(),        true);
+        addTab ("Sliders",     c, new SlidersPage(),        true);
+        addTab ("Toolbars",    c, new ToolbarDemoComp(),    true);
+        addTab ("Misc",        c, new MiscPage(),           true);
+        addTab ("Tables",      c, new TableDemoComponent(), true);
+        addTab ("Drag & Drop", c, new DragAndDropDemo(),    true);
+
+        updateTabColours();
 
         getTabbedButtonBar().getTabButton (5)->setExtraComponent (new CustomTabButton(), TabBarButton::afterText);
     }
 
-    static Colour getRandomTabBackgroundColour()
+    void changeListenerCallback (ChangeBroadcaster* source) override
     {
-        return Colour (Random::getSystemRandom().nextFloat(), 0.1f, 0.97f, 1.0f);
+        if (dynamic_cast<MenusDemo*> (source) != nullptr)
+            updateTabColours();
     }
 
     // This is a small star button that is put inside one of the tabs. You can
@@ -1519,15 +1557,37 @@ public:
                                "This is a custom tab component\n"
                                "\n"
                                "You can use these to implement things like close-buttons "
-                               "or status displays for your tabs.");
+                               "or status displays for your tabs.",
+                               bubbleMessage);
         }
+    private:
+        ScopedPointer<BubbleMessageComponent> bubbleMessage;
     };
+
+private:
+    ScopedPointer<MenusDemo> menusDemo; //need to have keep a pointer around to register this class as a ChangeListener
+
+    void updateTabColours()
+    {
+        bool randomiseColours = ! dynamic_cast<LookAndFeel_V4*> (&LookAndFeel::getDefaultLookAndFeel());
+        for (int i = 0; i < getNumTabs(); ++i)
+        {
+            if (randomiseColours)
+                setTabBackgroundColour (i, Colour (Random::getSystemRandom().nextFloat(), 0.1f, 0.97f, 1.0f));
+            else
+                setTabBackgroundColour (i, getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+        }
+    }
+
+    void lookAndFeelChanged() override
+    {
+        updateTabColours();
+    }
 };
 
 //==============================================================================
-class WidgetsDemo   : public Component
+struct WidgetsDemo   : public Component
 {
-public:
     WidgetsDemo()
     {
         setOpaque (true);
@@ -1544,7 +1604,6 @@ public:
         tabs.setBounds (getLocalBounds().reduced (4));
     }
 
-private:
     DemoTabbedComponent tabs;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WidgetsDemo)

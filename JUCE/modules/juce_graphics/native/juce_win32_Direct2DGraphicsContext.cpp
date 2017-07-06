@@ -2,22 +2,24 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -40,7 +42,7 @@ public:
         if (factories->d2dFactory != nullptr)
         {
             HRESULT hr = factories->d2dFactory->CreateHwndRenderTarget (props, propsHwnd, renderingTarget.resetAndGetPointerAddress());
-            jassert (SUCCEEDED (hr)); (void) hr;
+            jassert (SUCCEEDED (hr)); ignoreUnused (hr);
             hr = renderingTarget->CreateSolidColorBrush (D2D1::ColorF::ColorF (0.0f, 0.0f, 0.0f, 1.0f), colourBrush.resetAndGetPointerAddress());
         }
     }
@@ -191,14 +193,14 @@ public:
 
     void fillRectList (const RectangleList<float>& list)
     {
-        for (const Rectangle<float>* r = list.begin(), * const e = list.end(); r != e; ++r)
-            fillRect (*r);
+        for (auto& r : list)
+            fillRect (r);
     }
 
     void fillPath (const Path& p, const AffineTransform& transform)
     {
         currentState->createBrush();
-        ComSmartPtr <ID2D1Geometry> geometry (pathToPathGeometry (p, transform.followedBy (currentState->transform)));
+        ComSmartPtr<ID2D1Geometry> geometry (pathToPathGeometry (p, transform.followedBy (currentState->transform)));
 
         if (renderingTarget != nullptr)
             renderingTarget->FillGeometry (geometry, currentState->currentBrush);
@@ -220,7 +222,7 @@ public:
         bp.pixelFormat.alphaMode = D2D1_ALPHA_MODE_PREMULTIPLIED;
 
         {
-            ComSmartPtr <ID2D1Bitmap> tempBitmap;
+            ComSmartPtr<ID2D1Bitmap> tempBitmap;
             renderingTarget->CreateBitmap (size, bd.data, bd.lineStride, bp, tempBitmap.resetAndGetPointerAddress());
             if (tempBitmap != nullptr)
                 renderingTarget->DrawBitmap (tempBitmap);
@@ -286,7 +288,7 @@ public:
     {
         renderingTarget->SetTransform (transformToMatrix (currentState->transform));
 
-        DirectWriteTypeLayout::drawToD2DContext (text, area, renderingTarget, factories->directWriteFactory,
+        DirectWriteTypeLayout::drawToD2DContext (text, area, *renderingTarget, factories->directWriteFactory,
                                                  factories->d2dFactory, factories->systemFonts);
 
         renderingTarget->SetTransform (D2D1::IdentityMatrix());
@@ -654,38 +656,38 @@ public:
         Font font;
         float fontHeightToEmSizeFactor;
         IDWriteFontFace* currentFontFace;
-        ComSmartPtr <IDWriteFontFace> localFontFace;
+        ComSmartPtr<IDWriteFontFace> localFontFace;
 
         FillType fillType;
 
         Image image;
-        ComSmartPtr <ID2D1Bitmap> bitmap; // xxx needs a better name - what is this for??
+        ComSmartPtr<ID2D1Bitmap> bitmap; // xxx needs a better name - what is this for??
 
         Rectangle<int> clipRect;
         bool clipsRect, shouldClipRect;
 
-        ComSmartPtr <ID2D1Geometry> complexClipGeometry;
+        ComSmartPtr<ID2D1Geometry> complexClipGeometry;
         D2D1_LAYER_PARAMETERS complexClipLayerParams;
-        ComSmartPtr <ID2D1Layer> complexClipLayer;
+        ComSmartPtr<ID2D1Layer> complexClipLayer;
         bool clipsComplex, shouldClipComplex;
 
-        ComSmartPtr <ID2D1Geometry> rectListGeometry;
+        ComSmartPtr<ID2D1Geometry> rectListGeometry;
         D2D1_LAYER_PARAMETERS rectListLayerParams;
-        ComSmartPtr <ID2D1Layer> rectListLayer;
+        ComSmartPtr<ID2D1Layer> rectListLayer;
         bool clipsRectList, shouldClipRectList;
 
         Image maskImage;
         D2D1_LAYER_PARAMETERS imageMaskLayerParams;
-        ComSmartPtr <ID2D1Layer> bitmapMaskLayer;
-        ComSmartPtr <ID2D1Bitmap> maskBitmap;
-        ComSmartPtr <ID2D1BitmapBrush> bitmapMaskBrush;
+        ComSmartPtr<ID2D1Layer> bitmapMaskLayer;
+        ComSmartPtr<ID2D1Bitmap> maskBitmap;
+        ComSmartPtr<ID2D1BitmapBrush> bitmapMaskBrush;
         bool clipsBitmap, shouldClipBitmap;
 
         ID2D1Brush* currentBrush;
-        ComSmartPtr <ID2D1BitmapBrush> bitmapBrush;
-        ComSmartPtr <ID2D1LinearGradientBrush> linearGradient;
-        ComSmartPtr <ID2D1RadialGradientBrush> radialGradient;
-        ComSmartPtr <ID2D1GradientStopCollection> gradientStops;
+        ComSmartPtr<ID2D1BitmapBrush> bitmapBrush;
+        ComSmartPtr<ID2D1LinearGradientBrush> linearGradient;
+        ComSmartPtr<ID2D1RadialGradientBrush> radialGradient;
+        ComSmartPtr<ID2D1GradientStopCollection> gradientStops;
 
     private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SavedState)
@@ -695,8 +697,8 @@ public:
 private:
     SharedResourcePointer<Direct2DFactories> factories;
     HWND hwnd;
-    ComSmartPtr <ID2D1HwndRenderTarget> renderingTarget;
-    ComSmartPtr <ID2D1SolidColorBrush> colourBrush;
+    ComSmartPtr<ID2D1HwndRenderTarget> renderingTarget;
+    ComSmartPtr<ID2D1SolidColorBrush> colourBrush;
     Rectangle<int> bounds;
 
     SavedState* currentState;
@@ -734,7 +736,7 @@ private:
         ID2D1PathGeometry* p = nullptr;
         factories->d2dFactory->CreatePathGeometry (&p);
 
-        ComSmartPtr <ID2D1GeometrySink> sink;
+        ComSmartPtr<ID2D1GeometrySink> sink;
         HRESULT hr = p->Open (sink.resetAndGetPointerAddress()); // xxx handle error
         sink->SetFillMode (D2D1_FILL_MODE_WINDING);
 
@@ -812,7 +814,7 @@ private:
         ID2D1PathGeometry* p = nullptr;
         factories->d2dFactory->CreatePathGeometry (&p);
 
-        ComSmartPtr <ID2D1GeometrySink> sink;
+        ComSmartPtr<ID2D1GeometrySink> sink;
         HRESULT hr = p->Open (sink.resetAndGetPointerAddress());
         sink->SetFillMode (D2D1_FILL_MODE_WINDING); // xxx need to check Path::isUsingNonZeroWinding()
 

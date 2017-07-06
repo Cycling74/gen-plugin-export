@@ -1,33 +1,26 @@
 /*
   ==============================================================================
 
-   This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
-   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
-   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   ------------------------------------------------------------------------------
-
-   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
-   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
-   using any other modules, be sure to check that you also comply with their license.
-
-   For more details, visit www.juce.com
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_ANDROID_JNIHELPERS_H_INCLUDED
-#define JUCE_ANDROID_JNIHELPERS_H_INCLUDED
+#pragma once
 
 #if ! (defined (JUCE_ANDROID_ACTIVITY_CLASSNAME) && defined (JUCE_ANDROID_ACTIVITY_CLASSPATH))
  #error "The JUCE_ANDROID_ACTIVITY_CLASSNAME and JUCE_ANDROID_ACTIVITY_CLASSPATH macros must be set!"
@@ -35,6 +28,10 @@
 
 //==============================================================================
 extern JNIEnv* getEnv() noexcept;
+
+// You should rarely need to use this function. Only if you expect callbacks
+// on a java thread which you did not create yourself.
+extern void setEnv (JNIEnv* env) noexcept;
 
 //==============================================================================
 class GlobalRef
@@ -144,7 +141,7 @@ private:
 //==============================================================================
 namespace
 {
-    String juceString (JNIEnv* env, jstring s)
+    inline String juceString (JNIEnv* env, jstring s)
     {
         const char* const utf8 = env->GetStringUTFChars (s, nullptr);
         CharPointer_UTF8 utf8CP (utf8);
@@ -153,17 +150,17 @@ namespace
         return result;
     }
 
-    String juceString (jstring s)
+    inline String juceString (jstring s)
     {
         return juceString (getEnv(), s);
     }
 
-    LocalRef<jstring> javaString (const String& s)
+    inline LocalRef<jstring> javaString (const String& s)
     {
         return LocalRef<jstring> (getEnv()->NewStringUTF (s.toUTF8()));
     }
 
-    LocalRef<jstring> javaStringFromChar (const juce_wchar c)
+    inline LocalRef<jstring> javaStringFromChar (const juce_wchar c)
     {
         char utf8[8] = { 0 };
         CharPointer_UTF8 (utf8).write (c);
@@ -218,6 +215,7 @@ private:
     \
         void initialiseFields (JNIEnv* env) \
         { \
+            ignoreUnused (env); \
             JNI_CLASS_MEMBERS (CREATE_JNI_METHOD, CREATE_JNI_STATICMETHOD, CREATE_JNI_FIELD, CREATE_JNI_STATICFIELD); \
         } \
     \
@@ -235,6 +233,8 @@ private:
 
 #define JUCE_JNI_CALLBACK(className, methodName, returnType, params) \
   extern "C" __attribute__ ((visibility("default"))) JUCE_ARM_SOFT_FLOAT_ABI returnType JUCE_JOIN_MACRO (JUCE_JOIN_MACRO (Java_, className), _ ## methodName) params
+
+
 
 //==============================================================================
 class AndroidSystem
@@ -254,158 +254,42 @@ public:
 extern AndroidSystem android;
 
 //==============================================================================
-class ThreadLocalJNIEnvHolder
-{
-public:
-    ThreadLocalJNIEnvHolder() noexcept
-        : jvm (nullptr)
-    {
-        zeromem (threads, sizeof (threads));
-        zeromem (envs, sizeof (envs));
-    }
-
-    void initialise (JNIEnv* env)
-    {
-        // NB: the DLL can be left loaded by the JVM, so the same static
-        // objects can end up being reused by subsequent runs of the app
-        zeromem (threads, sizeof (threads));
-        zeromem (envs, sizeof (envs));
-
-        env->GetJavaVM (&jvm);
-        addEnv (env);
-    }
-
-    JNIEnv* attach() noexcept
-    {
-        if (android.activity != nullptr)
-        {
-            if (JNIEnv* env = attachToCurrentThread())
-            {
-                SpinLock::ScopedLockType sl (addRemoveLock);
-                return addEnv (env);
-            }
-
-            jassertfalse;
-        }
-
-        return nullptr;
-    }
-
-    void detach() noexcept
-    {
-        if (android.activity != nullptr)
-        {
-            jvm->DetachCurrentThread();
-            removeCurrentThreadFromCache();
-        }
-    }
-
-    void removeCurrentThreadFromCache()
-    {
-        const pthread_t thisThread = pthread_self();
-
-        SpinLock::ScopedLockType sl (addRemoveLock);
-
-        for (int i = 0; i < maxThreads; ++i)
-        {
-            if (threads[i] == thisThread)
-            {
-                threads[i] = 0;
-                envs[i] = nullptr;
-            }
-        }
-    }
-
-    JNIEnv* getOrAttach() noexcept
-    {
-        if (JNIEnv* env = get())
-            return env;
-
-        SpinLock::ScopedLockType sl (addRemoveLock);
-
-        if (JNIEnv* env = get())
-            return env;
-
-        if (JNIEnv* env = attachToCurrentThread())
-            return addEnv (env);
-
-        return nullptr;
-    }
-
-private:
-    JavaVM* jvm;
-    enum { maxThreads = 32 };
-    pthread_t threads [maxThreads];
-    JNIEnv* envs [maxThreads];
-    SpinLock addRemoveLock;
-
-    JNIEnv* addEnv (JNIEnv* env) noexcept
-    {
-        const pthread_t thisThread = pthread_self();
-
-        for (int i = 0; i < maxThreads; ++i)
-        {
-            if (threads[i] == 0)
-            {
-                envs[i] = env;
-                threads[i] = thisThread;
-                return env;
-            }
-        }
-
-        jassertfalse; // too many threads!
-        return nullptr;
-    }
-
-    JNIEnv* get() const noexcept
-    {
-        const pthread_t thisThread = pthread_self();
-
-        for (int i = 0; i < maxThreads; ++i)
-            if (threads[i] == thisThread)
-                return envs[i];
-
-        return nullptr;
-    }
-
-    JNIEnv* attachToCurrentThread()
-    {
-        JNIEnv* env = nullptr;
-        jvm->AttachCurrentThread (&env, nullptr);
-        return env;
-    }
-};
-
-extern ThreadLocalJNIEnvHolder threadLocalJNIEnvHolder;
-
-struct AndroidThreadScope
-{
-    AndroidThreadScope()   { threadLocalJNIEnvHolder.attach(); }
-    ~AndroidThreadScope()  { threadLocalJNIEnvHolder.detach(); }
-};
-
-//==============================================================================
 #define JNI_CLASS_MEMBERS(METHOD, STATICMETHOD, FIELD, STATICFIELD) \
  METHOD (createNewView,          "createNewView",        "(ZJ)L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$ComponentPeerView;") \
  METHOD (deleteView,             "deleteView",           "(L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$ComponentPeerView;)V") \
- METHOD (deleteOpenGLView,       "deleteOpenGLView",     "(L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$OpenGLView;)V") \
+ METHOD (createNativeSurfaceView, "createNativeSurfaceView", "(J)L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$NativeSurfaceView;") \
  METHOD (postMessage,            "postMessage",          "(J)V") \
  METHOD (finish,                 "finish",               "()V") \
+ METHOD (setRequestedOrientation,"setRequestedOrientation", "(I)V") \
  METHOD (getClipboardContent,    "getClipboardContent",  "()Ljava/lang/String;") \
  METHOD (setClipboardContent,    "setClipboardContent",  "(Ljava/lang/String;)V") \
  METHOD (excludeClipRegion,      "excludeClipRegion",    "(Landroid/graphics/Canvas;FFFF)V") \
- METHOD (renderGlyph,            "renderGlyph",          "(CLandroid/graphics/Paint;Landroid/graphics/Matrix;Landroid/graphics/Rect;)[I") \
+ METHOD (renderGlyph,            "renderGlyph",          "(CCLandroid/graphics/Paint;Landroid/graphics/Matrix;Landroid/graphics/Rect;)[I") \
  STATICMETHOD (createHTTPStream, "createHTTPStream",     "(Ljava/lang/String;Z[BLjava/lang/String;I[ILjava/lang/StringBuffer;ILjava/lang/String;)L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$HTTPStream;") \
  METHOD (launchURL,              "launchURL",            "(Ljava/lang/String;)V") \
  METHOD (showMessageBox,         "showMessageBox",       "(Ljava/lang/String;Ljava/lang/String;J)V") \
- METHOD (showOkCancelBox,        "showOkCancelBox",      "(Ljava/lang/String;Ljava/lang/String;J)V") \
+ METHOD (showOkCancelBox,        "showOkCancelBox",      "(Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;)V") \
  METHOD (showYesNoCancelBox,     "showYesNoCancelBox",   "(Ljava/lang/String;Ljava/lang/String;J)V") \
  STATICMETHOD (getLocaleValue,   "getLocaleValue",       "(Z)Ljava/lang/String;") \
+ STATICMETHOD (getDocumentsFolder, "getDocumentsFolder", "()Ljava/lang/String;") \
+ STATICMETHOD (getPicturesFolder,  "getPicturesFolder",  "()Ljava/lang/String;") \
+ STATICMETHOD (getMusicFolder,     "getMusicFolder",     "()Ljava/lang/String;") \
+ STATICMETHOD (getDownloadsFolder, "getDownloadsFolder", "()Ljava/lang/String;") \
+ STATICMETHOD (getMoviesFolder,    "getMoviesFolder",    "()Ljava/lang/String;") \
  METHOD (scanFile,               "scanFile",             "(Ljava/lang/String;)V") \
  METHOD (getTypeFaceFromAsset,   "getTypeFaceFromAsset", "(Ljava/lang/String;)Landroid/graphics/Typeface;") \
  METHOD (getTypeFaceFromByteArray,"getTypeFaceFromByteArray","([B)Landroid/graphics/Typeface;") \
  METHOD (setScreenSaver,          "setScreenSaver",       "(Z)V") \
- METHOD (getScreenSaver,          "getScreenSaver",       "()Z")
+ METHOD (getScreenSaver,          "getScreenSaver",       "()Z") \
+ METHOD (getAndroidMidiDeviceManager, "getAndroidMidiDeviceManager", "()L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$MidiDeviceManager;") \
+ METHOD (getAndroidBluetoothManager, "getAndroidBluetoothManager", "()L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$BluetoothManager;") \
+ METHOD (getAndroidSDKVersion,    "getAndroidSDKVersion", "()I") \
+ METHOD (audioManagerGetProperty, "audioManagerGetProperty", "(Ljava/lang/String;)Ljava/lang/String;") \
+ METHOD (hasSystemFeature,         "hasSystemFeature", "(Ljava/lang/String;)Z" ) \
+ METHOD (requestRuntimePermission, "requestRuntimePermission", "(IJ)V" ) \
+ METHOD (isPermissionGranted,     "isPermissionGranted", "(I)Z" ) \
+ METHOD (isPermissionDeclaredInManifest, "isPermissionDeclaredInManifest", "(I)Z" ) \
+ METHOD (getSystemService,        "getSystemService",     "(Ljava/lang/String;)Ljava/lang/Object;") \
 
 DECLARE_JNI_CLASS (JuceAppActivity, JUCE_ANDROID_ACTIVITY_CLASSPATH);
 #undef JNI_CLASS_MEMBERS
@@ -445,5 +329,3 @@ DECLARE_JNI_CLASS (Matrix, "android/graphics/Matrix");
 
 DECLARE_JNI_CLASS (RectClass, "android/graphics/Rect");
 #undef JNI_CLASS_MEMBERS
-
-#endif   // JUCE_ANDROID_JNIHELPERS_H_INCLUDED

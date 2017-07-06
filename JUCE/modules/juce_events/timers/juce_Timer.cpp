@@ -2,22 +2,20 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-   ------------------------------------------------------------------------------
-
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
@@ -31,14 +29,15 @@ public:
 
     TimerThread()
         : Thread ("Juce Timer"),
-          firstTimer (nullptr),
-          callbackNeeded (0)
+          firstTimer (nullptr)
     {
         triggerAsyncUpdate();
     }
 
     ~TimerThread() noexcept
     {
+        signalThreadShouldExit();
+        callbackArrived.signal();
         stopThread (4000);
 
         jassert (instance == this || instance == nullptr);
@@ -55,12 +54,6 @@ public:
         {
             const uint32 now = Time::getMillisecondCounter();
 
-            if (now == lastTime)
-            {
-                wait (1);
-                continue;
-            }
-
             const int elapsed = (int) (now >= lastTime ? (now - lastTime)
                                                        : (std::numeric_limits<uint32>::max() - (lastTime - now)));
             lastTime = now;
@@ -69,47 +62,37 @@ public:
 
             if (timeUntilFirstTimer <= 0)
             {
-                /* If we managed to set the atomic boolean to true then send a message, this is needed
-                   as a memory barrier so the message won't be sent before callbackNeeded is set to true,
-                   but if it fails it means the message-thread changed the value from under us so at least
-                   some processing is happenening and we can just loop around and try again
-                */
-                if (callbackNeeded.compareAndSetBool (1, 0))
+                if (callbackArrived.wait (0))
+                {
+                    // already a message in flight - do nothing..
+                }
+                else
                 {
                     messageToSend->post();
 
-                    /* Sometimes our message can get discarded by the OS (e.g. when running as an RTAS
-                       when the app has a modal loop), so this is how long to wait before assuming the
-                       message has been lost and trying again.
-                    */
-                    const uint32 messageDeliveryTimeout = now + 300;
-
-                    while (callbackNeeded.get() != 0)
+                    if (! callbackArrived.wait (300))
                     {
-                        wait (4);
-
-                        if (threadShouldExit())
-                            return;
-
-                        if (Time::getMillisecondCounter() > messageDeliveryTimeout)
-                        {
-                            messageToSend->post();
-                            break;
-                        }
+                        // Sometimes our message can get discarded by the OS (e.g. when running as an RTAS
+                        // when the app has a modal loop), so this is how long to wait before assuming the
+                        // message has been lost and trying again.
+                        messageToSend->post();
                     }
+
+                    continue;
                 }
             }
-            else
-            {
-                // don't wait for too long because running this loop also helps keep the
-                // Time::getApproximateMillisecondTimer value stay up-to-date
-                wait (jlimit (1, 50, timeUntilFirstTimer));
-            }
+
+            // don't wait for too long because running this loop also helps keep the
+            // Time::getApproximateMillisecondTimer value stay up-to-date
+            wait (jlimit (1, 100, timeUntilFirstTimer));
         }
     }
 
     void callTimers()
     {
+        // avoid getting stuck in a loop if a timer callback repeatedly takes too long
+        const uint32 timeout = Time::getMillisecondCounter() + 100;
+
         const LockType::ScopedLockType sl (lock);
 
         while (firstTimer != nullptr && firstTimer->timerCountdownMs <= 0)
@@ -127,15 +110,12 @@ public:
                 t->timerCallback();
             }
             JUCE_CATCH_EXCEPTION
+
+            if (Time::getMillisecondCounter() > timeout)
+                break;
         }
 
-        /* This is needed as a memory barrier to make sure all processing of current timers is done
-           before the boolean is set. This set should never fail since if it was false in the first place,
-           we wouldn't get a message (so it can't be changed from false to true from under us), and if we
-           get a message then the value is true and the other thread can only set it to true again and
-           we will get another callback to set it to false.
-        */
-        callbackNeeded.set (0);
+        callbackArrived.signal();
     }
 
     void callTimersSynchronously()
@@ -186,7 +166,7 @@ public:
 
 private:
     Timer* volatile firstTimer;
-    Atomic<int> callbackNeeded;
+    WaitableEvent callbackArrived;
 
     struct CallTimersMessage  : public MessageManager::MessageBase
     {
@@ -318,6 +298,10 @@ Timer::~Timer()
 
 void Timer::startTimer (const int interval) noexcept
 {
+    // If you're calling this before (or after) the MessageManager is
+    // running, then you're not going to get any timer callbacks!
+    jassert (MessageManager::getInstanceWithoutCreating() != nullptr);
+
     const TimerThread::LockType::ScopedLockType sl (TimerThread::lock);
 
     if (timerPeriodMs == 0)
@@ -355,4 +339,28 @@ void JUCE_CALLTYPE Timer::callPendingTimersSynchronously()
 {
     if (TimerThread::instance != nullptr)
         TimerThread::instance->callTimersSynchronously();
+}
+
+struct LambdaInvoker  : private Timer
+{
+    LambdaInvoker (int milliseconds, std::function<void()> f)  : function (f)
+    {
+        startTimer (milliseconds);
+    }
+
+    void timerCallback() override
+    {
+        auto f = function;
+        delete this;
+        f();
+    }
+
+    std::function<void()> function;
+
+    JUCE_DECLARE_NON_COPYABLE (LambdaInvoker)
+};
+
+void JUCE_CALLTYPE Timer::callAfterDelay (int milliseconds, std::function<void()> f)
+{
+    new LambdaInvoker (milliseconds, f);
 }

@@ -2,28 +2,29 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef __FILTERGRAPH_JUCEHEADER__
-#define __FILTERGRAPH_JUCEHEADER__
+#pragma once
 
 class FilterInGraph;
 class FilterGraph;
@@ -35,7 +36,7 @@ const char* const filenameWildcard = "*.filtergraph";
 /**
     A collection of filters and some connections between them.
 */
-class FilterGraph   : public FileBasedDocument
+class FilterGraph   : public FileBasedDocument, public AudioProcessorListener
 {
 public:
     //==============================================================================
@@ -46,18 +47,22 @@ public:
     AudioProcessorGraph& getGraph() noexcept         { return graph; }
 
     int getNumFilters() const noexcept;
-    const AudioProcessorGraph::Node::Ptr getNode (const int index) const noexcept;
-    const AudioProcessorGraph::Node::Ptr getNodeForId (const uint32 uid) const noexcept;
+    AudioProcessorGraph::Node::Ptr getNode (int index) const noexcept;
 
-    void addFilter (const PluginDescription* desc, double x, double y);
+    AudioProcessorGraph::Node::Ptr getNodeForId (uint32 uid) const;
+    AudioProcessorGraph::Node::Ptr getNodeForName (const String& name) const;
+
+    void addFilter (const PluginDescription*, double x, double y);
+
+    void addFilterCallback (AudioPluginInstance* instance, const String& error, double x, double y);
 
     void removeFilter (const uint32 filterUID);
     void disconnectFilter (const uint32 filterUID);
 
     void removeIllegalConnections();
 
-    void setNodePosition (const int nodeId, double x, double y);
-    void getNodePosition (const int nodeId, double& x, double& y) const;
+    void setNodePosition (uint32 nodeId, double x, double y);
+    Point<double> getNodePosition (uint32 nodeId) const;
 
     //==============================================================================
     int getNumConnections() const noexcept;
@@ -81,17 +86,23 @@ public:
 
 
     //==============================================================================
+    void audioProcessorParameterChanged (AudioProcessor*, int, float) override {}
+    void audioProcessorChanged (AudioProcessor*) override { changed(); }
 
+    //==============================================================================
     XmlElement* createXml() const;
     void restoreFromXml (const XmlElement& xml);
 
     //==============================================================================
     void newDocument();
-    String getDocumentTitle();
-    Result loadDocument (const File& file);
-    Result saveDocument (const File& file);
-    File getLastDocumentOpened();
-    void setLastDocumentOpened (const File& file);
+    String getDocumentTitle() override;
+    Result loadDocument (const File& file) override;
+    Result saveDocument (const File& file) override;
+    File getLastDocumentOpened() override;
+    void setLastDocumentOpened (const File& file) override;
+
+    //==============================================================================
+
 
     /** The special channel index used to refer to a filter's midi channel.
     */
@@ -109,6 +120,3 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterGraph)
 };
-
-
-#endif   // __FILTERGRAPH_JUCEHEADER__

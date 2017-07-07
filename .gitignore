@@ -7,4 +7,5 @@
 /exported-code/**
 /Jucer/tmp*.jucer
 /Jucer/JuceLibraryCode/**
+C74_GENPLUGIN.cpp
 

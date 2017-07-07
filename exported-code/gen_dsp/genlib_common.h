@@ -30,7 +30,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 // common data structure header file -- this is the stuff required by the
 // common code and accessed by the export and max code
 
-#define DSP_GEN_MAX_SIGNALS 16
+#define DSP_GEN_MAX_SIGNALS 128
 
 #ifdef GENLIB_USE_FLOAT32
 typedef float t_sample;

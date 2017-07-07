@@ -65,7 +65,7 @@ else:
 
 # now edit it to adapt it to our command line options
 
-xmldoc = minidom.parse(currentdir + "/Introjucer/" + jucername)
+xmldoc = minidom.parse(currentdir + "/Jucer/" + jucername)
 juceproject = xmldoc.getElementsByTagName("JUCERPROJECT")
 
 juceproject[0].attributes["name"] = args.name
@@ -98,7 +98,7 @@ if vs2013:
 
 writetmpjucer = True
 
-tmpprojname = currentdir + "/Introjucer/tmp-" + jucername
+tmpprojname = currentdir + "/Jucer/tmp-" + jucername
 tmpprojpresent = os.path.isfile(tmpprojname)
 
 if tmpprojpresent:
@@ -127,7 +127,7 @@ print(sys.platform)
 
 if sys.platform.startswith("darwin"):
 	if writetmpjucer:
-		cmd = "open -n "+ currentdir + "/Introjucer/Introjucer.app  --args --resave \"" + tmpprojname + "\""
+		cmd = "open -n "+ currentdir + "/JUCE/Projucer.app  --args --resave \"" + tmpprojname + "\""
 		print(cmd)
 		os.system(cmd)
 		time.sleep(2)
@@ -156,7 +156,7 @@ if sys.platform.startswith("darwin"):
 
 elif sys.platform.startswith("win"):
 	tmpprojname = tmpprojname.replace("/", "\\" )
-	cmd = '"' + currentdir + '\\Introjucer\\The Introjucer.exe" --resave ' + tmpprojname
+	cmd = '"' + currentdir + '\\JUCE\\Projucer.exe" --resave ' + tmpprojname
 	print(cmd)
 	os.system(cmd)
 

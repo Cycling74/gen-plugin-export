@@ -5,6 +5,6 @@
 /App-Builds/**
 /build-results/**
 /exported-code/**
-/Introjucer/tmp*.jucer
-/Introjucer/JuceLibraryCode/**
+/Jucer/tmp*.jucer
+/Jucer/JuceLibraryCode/**
 

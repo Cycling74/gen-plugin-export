@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT aaxIdentifier="com.cycling74.C74GenApp" bundleIdentifier="com.cycling74.C74GenApp"
+              id="vLsUbE" includeBinaryInAppConfig="1" jucerVersion="3.2.0"
+              name="C74GenApp" pluginAUExportPrefix="C74GenAppAU" pluginChannelConfigs="{1,1}, {2,2}"
+              pluginName="C74GenApp" projectType="guiapp" version="1.0.0">
+  <MAINGROUP id="j0DzSh" name="C74GenApp">
+    <GROUP id="{F0566F66-1E06-0640-9035-6D16F5EC007D}" name="Source">
+      <GROUP id="{8D6E7480-D2D6-CFA2-615B-25B9B99C4CEC}" name="exported-code">
+        <GROUP id="{54B7E54D-B865-A0D7-0C0D-29A08CDCE512}" name="gen_dsp">
+          <FILE id="T9CFQy" name="genlib.cpp" compile="1" resource="0" file="../exported-code/gen_dsp/genlib.cpp"/>
+          <FILE id="DINnjJ" name="genlib.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib.h"/>
+          <FILE id="SmxmxM" name="genlib_common.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib_common.h"/>
+          <FILE id="XjXBvi" name="genlib_common_win.h" compile="0" resource="0"
+                file="../exported-code/gen_dsp/genlib_common_win.h"/>
+          <FILE id="Iis6AT" name="genlib_exportfunctions.h" compile="0" resource="0"
+                file="../exported-code/gen_dsp/genlib_exportfunctions.h"/>
+          <FILE id="xB8rxt" name="genlib_ops.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib_ops.h"/>
+          <FILE id="cG4JJH" name="genlib_platform.h" compile="0" resource="0"
+                file="../exported-code/gen_dsp/genlib_platform.h"/>
+          <FILE id="ffDms1" name="json.c" compile="1" resource="0" file="../exported-code/gen_dsp/json.c"/>
+          <FILE id="PwaWMp" name="json.h" compile="0" resource="0" file="../exported-code/gen_dsp/json.h"/>
+          <FILE id="ETQ7rS" name="json_builder.c" compile="1" resource="0" file="../exported-code/gen_dsp/json_builder.c"/>
+          <FILE id="IbjEx6" name="json_builder.h" compile="0" resource="0" file="../exported-code/gen_dsp/json_builder.h"/>
+        </GROUP>
+        <FILE id="wgj3wm" name="C74_GENPLUGIN.cpp" compile="1" resource="0"
+              file="../exported-code/C74_GENPLUGIN.cpp"/>
+        <FILE id="XQa5GH" name="C74_GENPLUGIN.h" compile="0" resource="0" file="../exported-code/C74_GENPLUGIN.h"/>
+      </GROUP>
+      <FILE compile="1" file="../Source-Plugin/PluginProcessor.cpp" id="vZbc4u"
+            name="PluginProcessor.cpp" resource="0"/>
+      <FILE compile="0" file="../Source-Plugin/PluginProcessor.h" id="SsF2q8"
+            name="PluginProcessor.h" resource="0"/>
+      <FILE compile="1" file="../Source-Plugin/PluginEditor.cpp" id="j8yRAi"
+            name="PluginEditor.cpp" resource="0"/>
+      <FILE compile="0" file="../Source-Plugin/PluginEditor.h" id="M9ClQO"
+            name="PluginEditor.h" resource="0"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_IPHONE targetFolder="../App-Builds/iOS">
+      <CONFIGURATIONS>
+        <CONFIGURATION headerPath="$(SOURCE_DIR)/../../exported-code&#10;$(SOURCE_DIR)/../../exported-code/gen_dsp&#10;"
+                       iosCompatibility="default" isDebug="1" name="Debug" optimisation="1"
+                       targetName="C74GenApp"/>
+        <CONFIGURATION headerPath="$(SOURCE_DIR)/../../exported-code&#10;$(SOURCE_DIR)/../../exported-code/gen_dsp&#10;"
+                       iosCompatibility="default" isDebug="0" name="Release" optimisation="2"
+                       targetName="C74GenApp"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_IPHONE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>

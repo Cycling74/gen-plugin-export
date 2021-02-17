@@ -2,33 +2,36 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2020 - Raw Material Software Limited
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 6 End-User License
+   Agreement and JUCE Privacy Policy (both effective as of the 16th June 2020).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-6-licence
+   Privacy Policy: www.juce.com/juce-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_FAKEMOUSEMOVEGENERATOR_H_INCLUDED
-#define JUCE_FAKEMOUSEMOVEGENERATOR_H_INCLUDED
+namespace juce
+{
 
-#if JUCE_MAC && JUCE_SUPPORT_CARBON
+#ifndef DOXYGEN
+
+#if JUCE_MAC
 
 //==============================================================================
-// Helper class to workaround carbon windows not getting mouse-moves..
+// Helper class to workaround windows not getting mouse-moves...
 class FakeMouseMoveGenerator  : private Timer
 {
 public:
@@ -37,30 +40,80 @@ public:
         startTimer (1000 / 30);
     }
 
+    static bool componentContainsAudioProcessorEditor (Component* comp) noexcept
+    {
+        if (dynamic_cast<AudioProcessorEditor*> (comp) != nullptr)
+            return true;
+
+        for (auto* child : comp->getChildren())
+            if (componentContainsAudioProcessorEditor (child))
+                return true;
+
+        return false;
+    }
+
     void timerCallback() override
     {
-        // workaround for carbon windows not getting mouse-moves..
-        const Point<float> screenPos (Desktop::getInstance().getMainMouseSource().getScreenPosition());
+        // Workaround for windows not getting mouse-moves...
+        auto screenPos = Desktop::getInstance().getMainMouseSource().getScreenPosition();
 
         if (screenPos != lastScreenPos)
         {
             lastScreenPos = screenPos;
-            const ModifierKeys mods (ModifierKeys::getCurrentModifiers());
+            auto mods = ModifierKeys::currentModifiers;
 
             if (! mods.isAnyMouseButtonDown())
-                if (Component* const comp = Desktop::getInstance().findComponentAt (screenPos.roundToInt()))
-                    if (ComponentPeer* const peer = comp->getPeer())
-                        if (! peer->isFocused())
-                            peer->handleMouseEvent (0, peer->globalToLocal (screenPos), mods, Time::currentTimeMillis());
+            {
+                if (auto* comp = Desktop::getInstance().findComponentAt (screenPos.roundToInt()))
+                {
+                    if (componentContainsAudioProcessorEditor (comp->getTopLevelComponent()))
+                    {
+                        safeOldComponent = comp;
+
+                        if (auto* peer = comp->getPeer())
+                        {
+                            if (! peer->isFocused())
+                            {
+                                peer->handleMouseEvent (MouseInputSource::InputSourceType::mouse,
+                                                        peer->globalToLocal (Desktop::getInstance().getMainMouseSource().getRawScreenPosition()),
+                                                        mods,
+                                                        MouseInputSource::invalidPressure,
+                                                        MouseInputSource::invalidOrientation,
+                                                        Time::currentTimeMillis());
+                            }
+                        }
+
+                        return;
+                    }
+                }
+
+                if (safeOldComponent != nullptr)
+                {
+                    if (auto* peer = safeOldComponent->getPeer())
+                    {
+                        peer->handleMouseEvent (MouseInputSource::InputSourceType::mouse,
+                                                MouseInputSource::offscreenMousePos,
+                                                mods,
+                                                MouseInputSource::invalidPressure,
+                                                MouseInputSource::invalidOrientation,
+                                                Time::currentTimeMillis());
+                    }
+                }
+
+                safeOldComponent = nullptr;
+            }
         }
     }
 
 private:
     Point<float> lastScreenPos;
+    WeakReference<Component> safeOldComponent;
 };
 
 #else
 struct FakeMouseMoveGenerator {};
 #endif
 
-#endif   // JUCE_FAKEMOUSEMOVEGENERATOR_H_INCLUDED
+#endif
+
+} // namespace juce

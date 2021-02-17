@@ -29,7 +29,7 @@ b2DynamicTree::b2DynamicTree()
 	m_nodeCapacity = 16;
 	m_nodeCount = 0;
 	m_nodes = (b2TreeNode*)b2Alloc(m_nodeCapacity * sizeof(b2TreeNode));
-	memset(m_nodes, 0, m_nodeCapacity * sizeof(b2TreeNode));
+	memset((void*)m_nodes, 0, m_nodeCapacity * sizeof(b2TreeNode));
 
 	// Build a linked list for the free list.
 	for (int32 i = 0; i < m_nodeCapacity - 1; ++i)
@@ -642,6 +642,7 @@ void b2DynamicTree::ValidateMetrics(int32 index) const
 	int32 height;
 	height = 1 + b2Max(height1, height2);
 	b2Assert(node->height == height);
+    juce::ignoreUnused (height);
 
 	b2AABB aabb;
 	aabb.Combine(m_nodes[child1].aabb, m_nodes[child2].aabb);

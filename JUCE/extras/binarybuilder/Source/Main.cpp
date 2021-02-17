@@ -1,6 +1,31 @@
 /*
   ==============================================================================
 
+   This file is part of the JUCE library.
+   Copyright (c) 2020 - Raw Material Software Limited
+
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
+
+   By using JUCE, you agree to the terms of both the JUCE 6 End-User License
+   Agreement and JUCE Privacy Policy (both effective as of the 16th June 2020).
+
+   End User License Agreement: www.juce.com/juce-6-licence
+   Privacy Policy: www.juce.com/juce-privacy-policy
+
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
+
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
+
+  ==============================================================================
+*/
+
+/*
+  ==============================================================================
+
    Utility to turn a bunch of binary files into a .cpp file and .h file full of
    data so they can be built directly into an executable.
 
@@ -9,7 +34,7 @@
   ==============================================================================
 */
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 
 //==============================================================================
@@ -55,7 +80,7 @@ static int addFile (const File& file,
     cppStream << "const char* " << classname << "::" << name
               << " = (const char*) temp" << tempNum << ";\r\n\r\n";
 
-    return mb.getSize();
+    return (int) mb.getSize();
 }
 
 static bool isHiddenFile (const File& f, const File& root)
@@ -120,11 +145,10 @@ int main (int argc, char* argv[])
               << " from files in " << sourceDirectory.getFullPathName()
               << "..." << std::endl << std::endl;
 
-    Array<File> files;
-    sourceDirectory.findChildFiles (files, File::findFiles, true,
-                                    (argc > 4) ? argv[4] : "*");
+    auto files = sourceDirectory.findChildFiles (File::findFiles, true,
+                                                 (argc > 4) ? argv[4] : "*");
 
-    if (files.size() == 0)
+    if (files.isEmpty())
     {
         std::cout << "Didn't find any source files in: "
                   << sourceDirectory.getFullPathName() << std::endl << std::endl;
@@ -134,7 +158,7 @@ int main (int argc, char* argv[])
     headerFile.deleteFile();
     cppFile.deleteFile();
 
-    ScopedPointer<OutputStream> header (headerFile.createOutputStream());
+    std::unique_ptr<OutputStream> header (headerFile.createOutputStream());
 
     if (header == nullptr)
     {
@@ -143,7 +167,7 @@ int main (int argc, char* argv[])
         return 0;
     }
 
-    ScopedPointer<OutputStream> cpp (cppFile.createOutputStream());
+    std::unique_ptr<OutputStream> cpp (cppFile.createOutputStream());
 
     if (cpp == nullptr)
     {
@@ -153,8 +177,7 @@ int main (int argc, char* argv[])
     }
 
     *header << "/* (Auto-generated binary data file). */\r\n\r\n"
-               "#ifndef BINARY_" << className.toUpperCase() << "_H\r\n"
-               "#define BINARY_" << className.toUpperCase() << "_H\r\n\r\n"
+               "#pragma once\r\n\r\n"
                "namespace " << className << "\r\n"
                "{\r\n";
 
@@ -187,8 +210,7 @@ int main (int argc, char* argv[])
         }
     }
 
-    *header << "}\r\n\r\n"
-               "#endif\r\n";
+    *header << "}\r\n";
 
     header = nullptr;
     cpp = nullptr;

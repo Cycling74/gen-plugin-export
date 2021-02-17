@@ -2,27 +2,28 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2020 - Raw Material Software Limited
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 6 End-User License
+   Agreement and JUCE Privacy Policy (both effective as of the 16th June 2020).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-6-licence
+   Privacy Policy: www.juce.com/juce-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#if defined (JUCE_GUI_EXTRA_H_INCLUDED) && ! JUCE_AMALGAMATED_INCLUDE
+#ifdef JUCE_GUI_EXTRA_H_INCLUDED
  /* When you add this cpp file to your project, you mustn't include it in a file where you've
     already included any other headers - just put it inside a file on its own, possibly with your config
     flags preceding it, but don't include anything else. That also includes avoiding any automatic prefix
@@ -31,11 +32,22 @@
  #error "Incorrect use of JUCE cpp file"
 #endif
 
-// Your project must contain an AppConfig.h file with your project-specific settings in it,
-// and your header search path must make it accessible to the module's files.
-#include "AppConfig.h"
+#define JUCE_CORE_INCLUDE_OBJC_HELPERS 1
+#define JUCE_CORE_INCLUDE_COM_SMART_PTR 1
+#define JUCE_CORE_INCLUDE_JNI_HELPERS 1
+#define JUCE_CORE_INCLUDE_NATIVE_HEADERS 1
+#define JUCE_EVENTS_INCLUDE_WIN32_MESSAGE_WINDOW 1
+#define JUCE_GRAPHICS_INCLUDE_COREGRAPHICS_HELPERS 1
+#define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 
-#include "../juce_core/native/juce_BasicNativeHeaders.h"
+#if JUCE_USE_WIN_WEBVIEW2
+ #define JUCE_EVENTS_INCLUDE_WINRT_WRAPPER 1
+#endif
+
+#ifndef JUCE_PUSH_NOTIFICATIONS
+ #define JUCE_PUSH_NOTIFICATIONS 0
+#endif
+
 #include "juce_gui_extra.h"
 
 //==============================================================================
@@ -47,7 +59,29 @@
  #import <IOKit/hid/IOHIDKeys.h>
  #import <IOKit/pwr_mgt/IOPMLib.h>
 
+ #if JUCE_PUSH_NOTIFICATIONS
+  #import <Foundation/NSUserNotification.h>
+
+  #include "native/juce_mac_PushNotifications.cpp"
+ #endif
+
+//==============================================================================
 #elif JUCE_IOS
+ #import <WebKit/WebKit.h>
+
+ #if JUCE_PUSH_NOTIFICATIONS
+  #if defined (__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+   #import <UserNotifications/UserNotifications.h>
+  #endif
+
+  #include "native/juce_ios_PushNotifications.cpp"
+ #endif
+
+//==============================================================================
+#elif JUCE_ANDROID
+ #if JUCE_PUSH_NOTIFICATIONS
+  #include "native/juce_android_PushNotifications.cpp"
+ #endif
 
 //==============================================================================
 #elif JUCE_WINDOWS
@@ -58,25 +92,43 @@
  #if JUCE_WEB_BROWSER
   #include <exdisp.h>
   #include <exdispid.h>
+
+  #if JUCE_USE_WIN_WEBVIEW2
+   #include <windows.foundation.h>
+   #include <windows.foundation.collections.h>
+
+   #pragma warning (push)
+   #pragma warning (disable: 4265)
+   #include <wrl.h>
+   #include <wrl/wrappers/corewrappers.h>
+   #pragma warning (pop)
+
+   #include "WebView2.h"
+
+   #pragma warning (push)
+   #pragma warning (disable: 4458)
+   #include "WebView2EnvironmentOptions.h"
+   #pragma warning (pop)
+  #endif
+
  #endif
 
 //==============================================================================
-#elif JUCE_LINUX
- #include <X11/Xlib.h>
- #include <X11/Xatom.h>
- #include <X11/Xutil.h>
- #undef SIZEOF
- #undef KeyPress
+#elif JUCE_LINUX && JUCE_WEB_BROWSER
+ JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wzero-as-null-pointer-constant", "-Wparentheses")
+
+ // If you're missing this header, you need to install the webkit2gtk-4.0 package
+ #include <gtk/gtk.h>
+
+ JUCE_END_IGNORE_WARNINGS_GCC_LIKE
+
+ // If you're missing these headers, you need to install the webkit2gtk-4.0 package
+ #include <gtk/gtkx.h>
+ #include <glib-unix.h>
+ #include <webkit2/webkit2.h>
 #endif
 
 //==============================================================================
-namespace juce
-{
-
-#if JUCE_MAC || JUCE_IOS
- #include "../juce_core/native/juce_osx_ObjCHelpers.h"
-#endif
-
 #include "documents/juce_FileBasedDocument.cpp"
 #include "code_editor/juce_CodeDocument.cpp"
 #include "code_editor/juce_CodeEditorComponent.cpp"
@@ -87,23 +139,15 @@ namespace juce
 #include "misc/juce_ColourSelector.cpp"
 #include "misc/juce_KeyMappingEditorComponent.cpp"
 #include "misc/juce_PreferencesPanel.cpp"
+#include "misc/juce_PushNotifications.cpp"
 #include "misc/juce_RecentlyOpenedFilesList.cpp"
 #include "misc/juce_SplashScreen.cpp"
 #include "misc/juce_SystemTrayIconComponent.cpp"
 #include "misc/juce_LiveConstantEditor.cpp"
 #include "misc/juce_AnimatedAppComponent.cpp"
 
-}
-
-using namespace juce;
-
-namespace juce
-{
-
 //==============================================================================
 #if JUCE_MAC || JUCE_IOS
- #include "../juce_core/native/juce_osx_ObjCHelpers.h"
- #include "../juce_graphics/native/juce_mac_CoreGraphicsHelpers.h"
 
  #if JUCE_MAC
   #include "native/juce_mac_NSViewComponent.mm"
@@ -121,9 +165,8 @@ namespace juce
 
 //==============================================================================
 #elif JUCE_WINDOWS
- #include "../juce_core/native/juce_win32_ComSmartPtr.h"
- #include "../juce_events/native/juce_win32_HiddenMessageWindow.h"
  #include "native/juce_win32_ActiveXComponent.cpp"
+ #include "native/juce_win32_HWNDComponent.cpp"
  #if JUCE_WEB_BROWSER
   #include "native/juce_win32_WebBrowserComponent.cpp"
  #endif
@@ -131,22 +174,23 @@ namespace juce
 
 //==============================================================================
 #elif JUCE_LINUX
+ JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wzero-as-null-pointer-constant")
+
+ #include "native/juce_linux_XEmbedComponent.cpp"
+
  #if JUCE_WEB_BROWSER
-  #include "native/juce_linux_WebBrowserComponent.cpp"
+  #include "native/juce_linux_X11_WebBrowserComponent.cpp"
  #endif
- #include "native/juce_linux_SystemTrayIcon.cpp"
+
+ JUCE_END_IGNORE_WARNINGS_GCC_LIKE
+
+ #include "native/juce_linux_X11_SystemTrayIcon.cpp"
 
 //==============================================================================
 #elif JUCE_ANDROID
+ #include "native/juce_AndroidViewComponent.cpp"
+
  #if JUCE_WEB_BROWSER
   #include "native/juce_android_WebBrowserComponent.cpp"
  #endif
 #endif
-
-#if JUCE_WEB_BROWSER
- bool WebBrowserComponent::pageAboutToLoad (const String&)  { return true; }
- void WebBrowserComponent::pageFinishedLoading (const String&) {}
- void WebBrowserComponent::windowCloseRequest() {}
- void WebBrowserComponent::newWindowAttemptingToLoad (const String&) {}
-#endif
-}

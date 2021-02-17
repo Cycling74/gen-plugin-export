@@ -2,59 +2,59 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2020 - Raw Material Software Limited
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 6 End-User License
+   Agreement and JUCE Privacy Policy (both effective as of the 16th June 2020).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-6-licence
+   Privacy Policy: www.juce.com/juce-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_QUATERNION_H_INCLUDED
-#define JUCE_QUATERNION_H_INCLUDED
-
-#include "juce_Vector3D.h"
-#include "juce_Matrix3D.h"
+namespace juce
+{
 
 //==============================================================================
 /**
     Holds a quaternion (a 3D vector and a scalar value).
+
+    @tags{OpenGL}
 */
 template <typename Type>
 class Quaternion
 {
 public:
-    Quaternion() noexcept  : scalar() {}
-    Quaternion (const Quaternion& other) noexcept                                     : vector (other.vector), scalar (other.scalar) {}
-    Quaternion (const Vector3D<Type>& vectorPart, const Type& scalarPart) noexcept    : vector (vectorPart), scalar (scalarPart) {}
-    Quaternion (const Type& x, const Type& y, const Type& z, const Type& w) noexcept  : vector (x, y, z), scalar (w) {}
+    Quaternion() noexcept                                               : scalar() {}
+    Quaternion (const Quaternion& other) noexcept                       : vector (other.vector), scalar (other.scalar) {}
+    Quaternion (Vector3D<Type> vectorPart, Type scalarPart) noexcept    : vector (vectorPart), scalar (scalarPart) {}
+    Quaternion (Type x, Type y, Type z, Type w) noexcept                : vector (x, y, z), scalar (w) {}
 
     /** Creates a quaternion from an angle and an axis. */
-    static Quaternion fromAngle (const Type& angle, const Vector3D<Type>& axis) noexcept
+    static Quaternion fromAngle (Type angle, Vector3D<Type> axis) noexcept
     {
         return Quaternion (axis.normalised() * std::sin (angle / (Type) 2), std::cos (angle / (Type) 2));
     }
 
-    Quaternion& operator= (const Quaternion& other) noexcept
+    Quaternion& operator= (Quaternion other) noexcept
     {
         vector = other.vector;
         scalar = other.scalar;
         return *this;
     }
 
-    Quaternion& operator*= (const Quaternion& other) noexcept
+    Quaternion& operator*= (Quaternion other) noexcept
     {
         const Type oldScalar (scalar);
         scalar = (scalar * other.scalar) - (vector * other.vector);
@@ -95,5 +95,4 @@ public:
     Type scalar;
 };
 
-
-#endif   // JUCE_QUATERNION_H_INCLUDED
+} // namespace juce

@@ -2,29 +2,29 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2015 - ROLI Ltd.
+   Copyright (c) 2020 - Raw Material Software Limited
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 6 End-User License
+   Agreement and JUCE Privacy Policy (both effective as of the 16th June 2020).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-6-licence
+   Privacy Policy: www.juce.com/juce-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_PATH_H_INCLUDED
-#define JUCE_PATH_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -58,8 +58,10 @@
     be open or closed.
 
     @see PathFlatteningIterator, PathStrokeType, Graphics
+
+    @tags{Graphics}
 */
-class JUCE_API  Path
+class JUCE_API  Path  final
 {
 public:
     //==============================================================================
@@ -75,30 +77,33 @@ public:
     /** Copies this path from another one. */
     Path& operator= (const Path&);
 
-   #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
+    /** Move constructor */
     Path (Path&&) noexcept;
+
+    /** Move assignment operator */
     Path& operator= (Path&&) noexcept;
-   #endif
 
     bool operator== (const Path&) const noexcept;
     bool operator!= (const Path&) const noexcept;
+
+    static const float defaultToleranceForTesting;
+    static const float defaultToleranceForMeasurement;
 
     //==============================================================================
     /** Returns true if the path doesn't contain any lines or curves. */
     bool isEmpty() const noexcept;
 
-    /** Returns the smallest rectangle that contains all points within the path.
-    */
+    /** Returns the smallest rectangle that contains all points within the path. */
     Rectangle<float> getBounds() const noexcept;
 
     /** Returns the smallest rectangle that contains all points within the path
-        after it's been transformed with the given tranasform matrix.
+        after it's been transformed with the given transform matrix.
     */
     Rectangle<float> getBoundsTransformed (const AffineTransform& transform) const noexcept;
 
     /** Checks whether a point lies within the path.
 
-        This is only relevent for closed paths (see closeSubPath()), and
+        This is only relevant for closed paths (see closeSubPath()), and
         may produce false results if used on a path which has open sub-paths.
 
         The path's winding rule is taken into account by this method.
@@ -110,11 +115,11 @@ public:
         @see closeSubPath, setUsingNonZeroWinding
     */
     bool contains (float x, float y,
-                   float tolerance = 1.0f) const;
+                   float tolerance = defaultToleranceForTesting) const;
 
     /** Checks whether a point lies within the path.
 
-        This is only relevent for closed paths (see closeSubPath()), and
+        This is only relevant for closed paths (see closeSubPath()), and
         may produce false results if used on a path which has open sub-paths.
 
         The path's winding rule is taken into account by this method.
@@ -125,8 +130,8 @@ public:
 
         @see closeSubPath, setUsingNonZeroWinding
     */
-    bool contains (const Point<float> point,
-                   float tolerance = 1.0f) const;
+    bool contains (Point<float> point,
+                   float tolerance = defaultToleranceForTesting) const;
 
     /** Checks whether a line crosses the path.
 
@@ -138,8 +143,8 @@ public:
         so this method could return a false positive when your point is up to this distance
         outside the path's boundary.
     */
-    bool intersectsLine (const Line<float>& line,
-                         float tolerance = 1.0f);
+    bool intersectsLine (Line<float> line,
+                         float tolerance = defaultToleranceForTesting);
 
     /** Cuts off parts of a line to keep the parts that are either inside or
         outside this path.
@@ -153,12 +158,13 @@ public:
                                         that will be kept; if false its the section inside
                                         the path
     */
-    Line<float> getClippedLine (const Line<float>& line, bool keepSectionOutsidePath) const;
+    Line<float> getClippedLine (Line<float> line, bool keepSectionOutsidePath) const;
 
     /** Returns the length of the path.
         @see getPointAlongPath
     */
-    float getLength (const AffineTransform& transform = AffineTransform::identity) const;
+    float getLength (const AffineTransform& transform = AffineTransform(),
+                     float tolerance = defaultToleranceForMeasurement) const;
 
     /** Returns a point that is the specified distance along the path.
         If the distance is greater than the total length of the path, this will return the
@@ -166,15 +172,17 @@ public:
         @see getLength
     */
     Point<float> getPointAlongPath (float distanceFromStart,
-                                    const AffineTransform& transform = AffineTransform::identity) const;
+                                    const AffineTransform& transform = AffineTransform(),
+                                    float tolerance = defaultToleranceForMeasurement) const;
 
     /** Finds the point along the path which is nearest to a given position.
         This sets pointOnPath to the nearest point, and returns the distance of this point from the start
         of the path.
     */
-    float getNearestPoint (const Point<float> targetPoint,
+    float getNearestPoint (Point<float> targetPoint,
                            Point<float>& pointOnPath,
-                           const AffineTransform& transform = AffineTransform::identity) const;
+                           const AffineTransform& transform = AffineTransform(),
+                           float tolerance = defaultToleranceForMeasurement) const;
 
     //==============================================================================
     /** Removes all lines and curves, resetting the path completely. */
@@ -204,7 +212,7 @@ public:
 
         @see lineTo, quadraticTo, cubicTo, closeSubPath
     */
-    void startNewSubPath (const Point<float> start);
+    void startNewSubPath (Point<float> start);
 
     /** Closes a the current sub-path with a line back to its start-point.
 
@@ -240,7 +248,7 @@ public:
 
         @see startNewSubPath, quadraticTo, cubicTo, closeSubPath
     */
-    void lineTo (const Point<float> end);
+    void lineTo (Point<float> end);
 
     /** Adds a quadratic bezier curve from the shape's last position to a new position.
 
@@ -265,8 +273,8 @@ public:
 
         @see startNewSubPath, lineTo, cubicTo, closeSubPath
     */
-    void quadraticTo (const Point<float> controlPoint,
-                      const Point<float> endPoint);
+    void quadraticTo (Point<float> controlPoint,
+                      Point<float> endPoint);
 
     /** Adds a cubic bezier curve from the shape's last position to a new position.
 
@@ -293,9 +301,9 @@ public:
 
         @see startNewSubPath, lineTo, quadraticTo, closeSubPath
     */
-    void cubicTo (const Point<float> controlPoint1,
-                  const Point<float> controlPoint2,
-                  const Point<float> endPoint);
+    void cubicTo (Point<float> controlPoint1,
+                  Point<float> controlPoint2,
+                  Point<float> endPoint);
 
     /** Returns the last point that was added to the path by one of the drawing methods.
     */
@@ -313,10 +321,10 @@ public:
         @see addRoundedRectangle, addTriangle
     */
     template <typename ValueType>
-    void addRectangle (const Rectangle<ValueType>& rectangle)
+    void addRectangle (Rectangle<ValueType> rectangle)
     {
-        addRectangle (static_cast <float> (rectangle.getX()), static_cast <float> (rectangle.getY()),
-                      static_cast <float> (rectangle.getWidth()), static_cast <float> (rectangle.getHeight()));
+        addRectangle (static_cast<float> (rectangle.getX()), static_cast<float> (rectangle.getY()),
+                      static_cast<float> (rectangle.getWidth()), static_cast<float> (rectangle.getHeight()));
     }
 
     /** Adds a rectangle with rounded corners to the path.
@@ -348,10 +356,10 @@ public:
         @see addRectangle, addTriangle
     */
     template <typename ValueType>
-    void addRoundedRectangle (const Rectangle<ValueType>& rectangle, float cornerSizeX, float cornerSizeY)
+    void addRoundedRectangle (Rectangle<ValueType> rectangle, float cornerSizeX, float cornerSizeY)
     {
-        addRoundedRectangle (static_cast <float> (rectangle.getX()), static_cast <float> (rectangle.getY()),
-                             static_cast <float> (rectangle.getWidth()), static_cast <float> (rectangle.getHeight()),
+        addRoundedRectangle (static_cast<float> (rectangle.getX()), static_cast<float> (rectangle.getY()),
+                             static_cast<float> (rectangle.getWidth()), static_cast<float> (rectangle.getHeight()),
                              cornerSizeX, cornerSizeY);
     }
 
@@ -360,7 +368,7 @@ public:
         @see addRectangle, addTriangle
     */
     template <typename ValueType>
-    void addRoundedRectangle (const Rectangle<ValueType>& rectangle, float cornerSize)
+    void addRoundedRectangle (Rectangle<ValueType> rectangle, float cornerSize)
     {
         addRoundedRectangle (rectangle, cornerSize, cornerSize);
     }
@@ -431,7 +439,7 @@ public:
                             draw a curve clockwise from the 9 o'clock position to the 3 o'clock position via
                             12 o'clock, you'd use 1.5*Pi and 2.5*Pi as the start and finish points.
         @param startAsNewSubPath    if true, the arc will begin a new subpath from its starting point; if false,
-                            it will be added to the current sub-path, continuing from the current postition
+                            it will be added to the current sub-path, continuing from the current position
 
         @see addCentredArc, arcTo, addPieSegment, addEllipse
     */
@@ -458,7 +466,7 @@ public:
                             draw a curve clockwise from the 9 o'clock position to the 3 o'clock position via
                             12 o'clock, you'd use 1.5*Pi and 2.5*Pi as the start and finish points.
         @param startAsNewSubPath    if true, the arc will begin a new subpath from its starting point; if false,
-                            it will be added to the current sub-path, continuing from the current postition
+                            it will be added to the current sub-path, continuing from the current position
 
         @see addArc, arcTo
     */
@@ -527,13 +535,13 @@ public:
 
         @see addArrow
     */
-    void addLineSegment (const Line<float>& line, float lineThickness);
+    void addLineSegment (Line<float> line, float lineThickness);
 
     /** Adds a line with an arrowhead on the end.
         The arrow is added as a new closed sub-path. (Any currently open paths will be left open).
         @see PathStrokeType::createStrokeWithArrowheads
     */
-    void addArrow (const Line<float>& line,
+    void addArrow (Line<float> line,
                    float lineThickness,
                    float arrowheadWidth,
                    float arrowheadLength);
@@ -541,7 +549,7 @@ public:
     /** Adds a polygon shape to the path.
         @see addStar
     */
-    void addPolygon (const Point<float> centre,
+    void addPolygon (Point<float> centre,
                      int numberOfSides,
                      float radius,
                      float startAngle = 0.0f);
@@ -549,7 +557,7 @@ public:
     /** Adds a star shape to the path.
         @see addPolygon
     */
-    void addStar (const Point<float> centre,
+    void addStar (Point<float> centre,
                   int numberOfPoints,
                   float innerRadius,
                   float outerRadius,
@@ -565,8 +573,8 @@ public:
         @param cornerSize       the size of the rounded corners
         @param arrowBaseWidth   the width of the base of the arrow where it joins the main rectangle
     */
-    void addBubble (const Rectangle<float>& bodyArea,
-                    const Rectangle<float>& maximumArea,
+    void addBubble (Rectangle<float> bodyArea,
+                    Rectangle<float> maximumArea,
                     const Point<float> arrowTipPosition,
                     const float cornerSize,
                     const float arrowBaseWidth);
@@ -644,7 +652,7 @@ public:
         @param preserveProportions  if true, it will fit the path into the space without altering its
                                     horizontal/vertical scale ratio; if false, it will distort the
                                     path to fill the specified ratio both horizontally and vertically
-        @param justificationType    if the proportions are preseved, the resultant path may be smaller
+        @param justificationType    if the proportions are preserved, the resultant path may be smaller
                                     than the available rectangle, so this describes how it should be
                                     positioned within the space.
         @returns                    an appropriate transformation
@@ -662,7 +670,7 @@ public:
         @param preserveProportions  if true, it will fit the path into the space without altering its
                                     horizontal/vertical scale ratio; if false, it will distort the
                                     path to fill the specified ratio both horizontally and vertically
-        @param justificationType    if the proportions are preseved, the resultant path may be smaller
+        @param justificationType    if the proportions are preserved, the resultant path may be smaller
                                     than the available rectangle, so this describes how it should be
                                     positioned within the space.
         @returns                    an appropriate transformation
@@ -670,7 +678,7 @@ public:
         @see applyTransform, scaleToFit
 
     */
-    AffineTransform getTransformToScaleToFit (const Rectangle<float>& area,
+    AffineTransform getTransformToScaleToFit (Rectangle<float> area,
                                               bool preserveProportions,
                                               Justification justificationType = Justification::centred) const;
 
@@ -741,12 +749,12 @@ public:
 
         PathElementType elementType;
 
-        float x1, y1, x2, y2, x3, y3;
+        float x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0;
 
         //==============================================================================
     private:
         const Path& path;
-        size_t index;
+        const float* index;
 
         JUCE_DECLARE_NON_COPYABLE (Iterator)
     };
@@ -774,9 +782,7 @@ public:
     void loadPathFromData (const void* data, size_t numberOfBytes);
 
     /** Stores the path by writing it out to a stream.
-
         After writing out a path, you can reload it using loadPathFromStream().
-
         @see loadPathFromStream, loadPathFromData
     */
     void writePathToStream (OutputStream& destination) const;
@@ -796,8 +802,9 @@ private:
     //==============================================================================
     friend class PathFlatteningIterator;
     friend class Path::Iterator;
-    ArrayAllocationBase<float, DummyCriticalSection> data;
-    size_t numElements;
+    friend class EdgeTable;
+
+    Array<float> data;
 
     struct PathBounds
     {
@@ -806,13 +813,19 @@ private:
         void reset() noexcept;
         void reset (float, float) noexcept;
         void extend (float, float) noexcept;
-        void extend (float, float, float, float) noexcept;
 
-        float pathXMin, pathXMax, pathYMin, pathYMax;
+        template <typename... Coords>
+        void extend (float x, float y, Coords... coords) noexcept
+        {
+            extend (x, y);
+            extend (coords...);
+        }
+
+        float pathXMin = 0, pathXMax = 0, pathYMin = 0, pathYMax = 0;
     };
 
     PathBounds bounds;
-    bool useNonZeroWinding;
+    bool useNonZeroWinding = true;
 
     static const float lineMarker;
     static const float moveMarker;
@@ -823,4 +836,4 @@ private:
     JUCE_LEAK_DETECTOR (Path)
 };
 
-#endif   // JUCE_PATH_H_INCLUDED
+} // namespace juce

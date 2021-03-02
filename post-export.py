@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2015 Cycling '74
+# Copyright (c) 2021 Cycling '74
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ def which(program):
 currentdir = os.path.dirname(os.path.realpath(__file__))
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--type", type=str, default="VST", help='Plugin/Application type')
+parser.add_argument("--type", type=str, default="VST3", help='Plugin/Application type')
 parser.add_argument("--name", type=str, default="", help='Plugin/Application name')
 parser.add_argument("--channelconf", type=str, default="{1,1}, {2,2}", help='Plugin channel configuration')
 parser.add_argument("--configuration", type=str, default="Debug", help='Build configuration (Debug/Release)')
@@ -65,7 +65,7 @@ else:
 
 # now edit it to adapt it to our command line options
 
-xmldoc = minidom.parse(currentdir + "/Introjucer/" + jucername)
+xmldoc = minidom.parse(currentdir + "/Projucer/" + jucername)
 juceproject = xmldoc.getElementsByTagName("JUCERPROJECT")
 
 juceproject[0].attributes["name"] = args.name
@@ -91,35 +91,35 @@ if xcode_iphone:
 	conf = xcode_iphone[0].getElementsByTagName("CONFIGURATION")
 	conf[0].attributes["targetName"] = args.name
 
-vs2013 = exportformats[0].getElementsByTagName("VS2013")
-if vs2013:
-	conf = vs2013[0].getElementsByTagName("CONFIGURATION")
+vs2019 = exportformats[0].getElementsByTagName("VS2019")
+if vs2019:
+	conf = vs2019[0].getElementsByTagName("CONFIGURATION")
 	conf[0].attributes["targetName"] = args.name
 
 writetmpjucer = True
 
-tmpprojname = currentdir + "/Introjucer/tmp-" + jucername
+tmpprojname = currentdir + "/Projucer/tmp-" + jucername
 tmpprojpresent = os.path.isfile(tmpprojname)
 
 if tmpprojpresent:
 	tmpxmldoc = minidom.parse(tmpprojname)
 	if tmpxmldoc:
 		tmpjuceproj = tmpxmldoc.getElementsByTagName("JUCERPROJECT")
-		print("INTROJUCER PROJECT NAME: " + tmpjuceproj[0].attributes["name"].value)
-		print("INTROJUCER PROJECT CHANNELCONFIG: " + tmpjuceproj[0].attributes["pluginChannelConfigs"].value)
+		print("PROJUCER PROJECT NAME: " + tmpjuceproj[0].attributes["name"].value)
+		print("PROJUCER PROJECT CHANNELCONFIG: " + tmpjuceproj[0].attributes["pluginChannelConfigs"].value)
 		if tmpjuceproj and (tmpjuceproj[0].attributes["name"].value == args.name) and (tmpjuceproj[0].attributes["pluginChannelConfigs"].value == args.channelconf):
 			writetmpjucer = False
 else:
-	print("NO TEMP INTROJUCER PROJECT FOUND")
+	print("NO TEMP PROJUCER PROJECT FOUND")
 
 # write out tmp.jucer
 if writetmpjucer:
-	print("WRITING TEMP INTROJUCER PROJECT")
+	print("WRITING TEMP PROJUCER PROJECT")
 	fh = open(tmpprojname,"w")
 	xmldoc.writexml(fh)
 	fh.close()
 else:
-	print("USING CACHED INTROJUCER PROJECT")
+	print("USING CACHED PROJUCER PROJECT")
 
 print(sys.platform)
 
@@ -127,7 +127,7 @@ print(sys.platform)
 
 if sys.platform.startswith("darwin"):
 	if writetmpjucer:
-		cmd = "open -n "+ currentdir + "/Introjucer/Introjucer.app  --args --resave \"" + tmpprojname + "\""
+		cmd = "open -n "+ currentdir + "/Projucer/Projucer.app  --args --resave \"" + tmpprojname + "\""
 		print(cmd)
 		os.system(cmd)
 		time.sleep(2)
@@ -156,7 +156,7 @@ if sys.platform.startswith("darwin"):
 
 elif sys.platform.startswith("win"):
 	tmpprojname = tmpprojname.replace("/", "\\" )
-	cmd = '"' + currentdir + '\\Introjucer\\The Introjucer.exe" --resave ' + tmpprojname
+	cmd = '"' + currentdir + '\\Projucer\\Projucer.exe" --resave ' + tmpprojname
 	print(cmd)
 	os.system(cmd)
 
@@ -164,10 +164,8 @@ elif sys.platform.startswith("win"):
 
 	project = ""
 
-	if args.type == "VST":
-		project = currentdir + "/VST-Builds/VisualStudio2013/" + args.name + ".vcxproj"
-	elif args.type == "VST3":
-		project = currentdir + "/VST3-Builds/VisualStudio2013/" + args.name + ".vcxproj"
+	if args.type == "VST3":
+		project = currentdir + "/VST3-Builds/VisualStudio2019/" + args.name + ".vcxproj"
 
 	project = project.replace("/", "\\" )
 	print("trying to open project... " + project)

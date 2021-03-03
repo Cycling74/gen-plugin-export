@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 2,
-			"revision" : 0,
+			"minor" : 1,
+			"revision" : 8,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -48,7 +48,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 27.0, 69.0, 62.0, 64.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 131.0, 77.0, 165.0, 21.0 ],
+					"presentation_rect" : [ 131.0, 77.0, 166.0, 21.0 ],
 					"text" : "Edit dict for advanced options"
 				}
 
@@ -89,7 +89,7 @@
 				"box" : 				{
 					"data" : 					{
 						"type" : "VST3",
-						"name" : "C74GenPlugin",
+						"name" : "Freeverb",
 						"channelconf" : "{1,1}, {2,2}",
 						"configuration" : "Release"
 					}
@@ -256,8 +256,7 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 3.0, 3.0, 126.0, 22.0 ],
 					"rounded" : 0.0,
-					"text" : "C74GenPlugin",
-					"textjustification" : 0
+					"text" : "Freeverb"
 				}
 
 			}
@@ -265,7 +264,7 @@
 				"box" : 				{
 					"fontname" : "Lato",
 					"id" : "obj-26",
-					"items" : [ "VST3", ",", "AU" ],
+					"items" : [ "VST3", ",", "AU", ",", "iOS" ],
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,

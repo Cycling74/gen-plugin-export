@@ -85,10 +85,12 @@ maxApi.addHandlers({
 
         // Run the proper JUCER application to generate Xcode or VS projects.
         if (process.platform === "darwin") {
+            // Generate the Xcode project
             let cmd = "open -n " + currentdir + "/Projucer/Projucer.app --args --resave \"" + newJucer + "\"";
             maxApi.post(cmd);
             exec.exec(cmd);
 
+            // Try to build the project
             try {
                 let project = currentdir + "/" + args.type + "-Builds/MacOSX/" + args.name + ".xcodeproj";
                 let buildcmd = "xcodebuild -project " + project + " -configuration " + args.configuation;
@@ -99,7 +101,21 @@ maxApi.addHandlers({
             }
         }
         else if (process.platform === "win32") {
-            // TODO
+            // Generate the VS2019 project
+            newJucer = newJucer.replace("/", "\\");
+            let cmd = '"' + currentdir + "\\Projucer\\Projucer.exe\" --resave \"" + newJucer + "\"";
+            maxApi.post(cmd);
+            exec.exec(cmd);
+
+            // Just open the explorer to show the Visual Studio Solution
+            try {
+                let slndir = currentdir + "\\" + args.type + "-Builds\\VisualStudio2019\\";
+                let cmd = "explorer " + slndir;
+                maxApi.post(cmd);
+                exec.exec(cmd);
+            } catch (error) {
+                maxApi.post(error);
+            }
         }
     }
 });

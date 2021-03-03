@@ -1,0 +1,9 @@
+.DS_Store
+/source/node_modules/**
+/source/VST3-Builds/**
+/source/AU-Builds/**
+/source/App-Builds/**
+/source/build-results/**
+/source/exported-code/**
+/source/Projucer/tmp*.jucer
+/source/Projucer/JuceLibraryCode/**

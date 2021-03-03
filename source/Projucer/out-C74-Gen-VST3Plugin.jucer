@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT aaxIdentifier="com.cycling74.Gigaverb" buildAAX="0" buildAU="0" buildRTAS="0" buildVST="0" buildVST3="1" bundleIdentifier="com.cycling74.Gigaverb" id="TNkzSt" includeBinaryInAppConfig="1" name="Gigaverb" pluginAAXCategory="2" pluginAUExportPrefix="GigaverbAU" pluginChannelConfigs="{1,1}, {2,2}" pluginCode="Plug" pluginDesc="" pluginEditorRequiresKeys="0" pluginIsSynth="0" pluginManufacturer="c74" pluginManufacturerCode="CY74" pluginName="Gigaverb" pluginProducesMidiOut="0" pluginRTASCategory="" pluginSilenceInIsSilenceOut="0" pluginWantsMidiIn="0" projectType="audioplug" version="1.0.0" pluginFormats="buildVST3" displaySplashScreen="1" jucerFormatVersion="1" buildAUv3="0" buildStandalone="0" enableIAA="0">
+  <MAINGROUP id="j0DzSh" name="Gigaverb">
+    <GROUP id="{F0566F66-1E06-0640-9035-6D16F5EC007D}" name="Source">
+      <GROUP id="{8D6E7480-D2D6-CFA2-615B-25B9B99C4CEC}" name="exported-code">
+        <GROUP id="{54B7E54D-B865-A0D7-0C0D-29A08CDCE512}" name="gen_dsp">
+          <FILE id="T9CFQy" name="genlib.cpp" compile="1" resource="0" file="../exported-code/gen_dsp/genlib.cpp"/>
+          <FILE id="DINnjJ" name="genlib.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib.h"/>
+          <FILE id="SmxmxM" name="genlib_common.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib_common.h"/>
+          <FILE id="XjXBvi" name="genlib_common_win.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib_common_win.h"/>
+          <FILE id="Iis6AT" name="genlib_exportfunctions.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib_exportfunctions.h"/>
+          <FILE id="xB8rxt" name="genlib_ops.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib_ops.h"/>
+          <FILE id="cG4JJH" name="genlib_platform.h" compile="0" resource="0" file="../exported-code/gen_dsp/genlib_platform.h"/>
+          <FILE id="ffDms1" name="json.c" compile="1" resource="0" file="../exported-code/gen_dsp/json.c"/>
+          <FILE id="PwaWMp" name="json.h" compile="0" resource="0" file="../exported-code/gen_dsp/json.h"/>
+          <FILE id="ETQ7rS" name="json_builder.c" compile="1" resource="0" file="../exported-code/gen_dsp/json_builder.c"/>
+          <FILE id="IbjEx6" name="json_builder.h" compile="0" resource="0" file="../exported-code/gen_dsp/json_builder.h"/>
+        </GROUP>
+        <FILE id="wgj3wm" name="C74_GENPLUGIN.cpp" compile="1" resource="0" file="../exported-code/C74_GENPLUGIN.cpp"/>
+        <FILE id="XQa5GH" name="C74_GENPLUGIN.h" compile="0" resource="0" file="../exported-code/C74_GENPLUGIN.h"/>
+      </GROUP>
+      <FILE compile="1" file="../Source-Plugin/PluginProcessor.cpp" id="vZbc4u" name="PluginProcessor.cpp" resource="0"/>
+      <FILE compile="0" file="../Source-Plugin/PluginProcessor.h" id="SsF2q8" name="PluginProcessor.h" resource="0"/>
+      <FILE compile="1" file="../Source-Plugin/PluginEditor.cpp" id="j8yRAi" name="PluginEditor.cpp" resource="0"/>
+      <FILE compile="0" file="../Source-Plugin/PluginEditor.h" id="M9ClQO" name="PluginEditor.h" resource="0"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC postbuildCommand="
+# This script takes the build product and copies it to the AU, VST, VST3, RTAS and AAX folders, depending on 
+# which plugin types you've built
+
+original=$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME
+
+# this looks inside the binary to detect which platforms are needed.. 
+copyAU=`nm -g &quot;$CONFIGURATION_BUILD_DIR/$EXECUTABLE_PATH&quot; | grep -i 'AudioUnit' | wc -l`
+copyVST=`nm -g &quot;$CONFIGURATION_BUILD_DIR/$EXECUTABLE_PATH&quot; | grep -i 'VSTPlugin' | wc -l`
+copyVST3=`nm -g &quot;$CONFIGURATION_BUILD_DIR/$EXECUTABLE_PATH&quot; | grep -i 'GetPluginFactory' | wc -l`
+copyRTAS=`nm -g &quot;$CONFIGURATION_BUILD_DIR/$EXECUTABLE_PATH&quot; | grep -i 'CProcess' | wc -l`
+copyAAX=`nm -g &quot;$CONFIGURATION_BUILD_DIR/$EXECUTABLE_PATH&quot; | grep -i 'ACFStartup' | wc -l`
+
+if [ $copyAU -gt 0 ]; then
+  echo &quot;Copying to AudioUnit folder...&quot;
+  AU=$SOURCE_DIR/../../build-results/AU/$PRODUCT_NAME.component
+  if [ -d &quot;$AU&quot; ]; then 
+    rm -r &quot;$AU&quot;
+  fi
+
+  cp -r &quot;$original&quot; &quot;$AU&quot;
+  sed -i &quot;&quot; -e 's/TDMwPTul/BNDLPTul/g' &quot;$AU/Contents/PkgInfo&quot;
+  sed -i &quot;&quot; -e 's/TDMw/BNDL/g' &quot;$AU/Contents/$INFOPLIST_FILE&quot;
+
+  # Fix info.plist for AUs built with Xcode 3
+  if [ -f &quot;$DEVELOPER_DIR/Library/Developer/CoreAudio/AudioUnits/AUPublic/AUBase/AUPlugInDispatch.cpp&quot; ]; then
+    echo
+  else
+    echo &quot;Removing AudioComponents entry from Info.plist because this is not a new-format AU&quot;
+    /usr/libexec/PlistBuddy -c &quot;Delete AudioComponents&quot; &quot;$AU/Contents/Info.plist&quot;
+  fi
+fi
+
+if [ $copyVST -gt 0 ]; then
+  echo &quot;Copying to VST folder...&quot;
+  VST=$SOURCE_DIR/../../build-results/VST/$PRODUCT_NAME.vst
+  if [ -d &quot;$VST&quot; ]; then 
+    rm -r &quot;$VST&quot;
+  fi
+
+  cp -r &quot;$original&quot; &quot;$VST&quot;
+  sed -i &quot;&quot; -e 's/TDMwPTul/BNDLPTul/g' &quot;$VST/Contents/PkgInfo&quot;
+  sed -i &quot;&quot; -e 's/TDMw/BNDL/g' &quot;$VST/Contents/$INFOPLIST_FILE&quot;
+fi
+
+if [ $copyVST3 -gt 0 ]; then
+  echo &quot;Copying to VST3 folder...&quot;
+  VST3=$SOURCE_DIR/../../build-results/VST3/$PRODUCT_NAME.vst3
+  if [ -d &quot;$VST3&quot; ]; then 
+    rm -r &quot;$VST3&quot;
+  fi
+
+  cp -r &quot;$original&quot; &quot;$VST3&quot;
+  sed -i &quot;&quot; -e 's/TDMwPTul/BNDLPTul/g' &quot;$VST3/Contents/PkgInfo&quot;
+  sed -i &quot;&quot; -e 's/TDMw/BNDL/g' &quot;$VST3/Contents/$INFOPLIST_FILE&quot;
+fi
+
+if [ $copyRTAS -gt 0 ]; then
+  echo &quot;Copying to RTAS folder...&quot;
+  RTAS=$SOURCE_DIR/../../build-results/RTAS/$PRODUCT_NAME.dpm
+  if [ -d &quot;$RTAS&quot; ]; then
+    rm -r &quot;$RTAS&quot;
+  fi
+
+  cp -r &quot;$original&quot; &quot;$RTAS&quot;
+fi
+
+if [ $copyAAX -gt 0 ]; then
+  echo &quot;Copying to AAX folder...&quot;
+
+  if [ -d &quot;/Applications/ProTools_3PDev/Plug-Ins&quot; ]; then
+    AAX1=&quot;/Applications/ProTools_3PDev/Plug-Ins/$PRODUCT_NAME.aaxplugin&quot;
+
+    if [ -d &quot;$AAX1&quot; ]; then
+      rm -r &quot;$AAX1&quot;
+    fi
+
+    cp -R -H &quot;$original&quot; &quot;$AAX1&quot;
+  fi
+
+  if [ -d &quot;/Library/Application Support/Avid/Audio/Plug-Ins&quot; ]; then
+    AAX2=&quot;/Library/Application Support/Avid/Audio/Plug-Ins/$PRODUCT_NAME.aaxplugin&quot;
+
+    if [ -d &quot;$AAX2&quot; ]; then
+      rm -r &quot;$AAX2&quot;
+    fi
+
+    cp -R -H &quot;$original&quot; &quot;$AAX2&quot;
+  fi
+fi
+" prebuildCommand="if ! [ -d ~/SDKs/VST3\ SDK ]; then
+    echo &quot;please download and install the VST3 SDK&quot;
+    exit 1
+fi
+" targetFolder="../VST3-Builds/MacOSX" vst3Folder="~/SDKs/VST3 SDK" xcodeValidArchs="x86_64">
+      <CONFIGURATIONS>
+        <CONFIGURATION customXcodeFlags="				OTHER_REZFLAGS = &quot;-d ppc_$ppc -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I $(SOURCE_DIR)/../../../CoreAudioUtilityClasses/CoreAudio/AudioUnits/AUPublic/AUBase&quot; " headerPath="$(SOURCE_DIR)/../../exported-code
+$(SOURCE_DIR)/../../exported-code/gen_dsp" isDebug="1" name="Debug" optimisation="1" osxArchitecture="64BitUniversal" targetName="Gigaverb"/>
+        <CONFIGURATION customXcodeFlags="				OTHER_REZFLAGS = &quot;-d ppc_$ppc -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I $(SOURCE_DIR)/../../../CoreAudioUtilityClasses/CoreAudio/AudioUnits/AUPublic/AUBase&quot; " headerPath="$(SOURCE_DIR)/../../exported-code
+$(SOURCE_DIR)/../../exported-code/gen_dsp" isDebug="0" name="Release" optimisation="2" osxArchitecture="64BitUniversal" targetName="C74GenPlugin"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <VS2019 targetFolder="../VST3-Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Gigaverb" headerPath="$(ProjectDir)\..\..\exported-code
+$(ProjectDir)\..\..\exported-code\gen_dsp"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="C74GenPlugin" headerPath="$(ProjectDir)\..\..\exported-code
+$(ProjectDir)\..\..\exported-code\gen_dsp"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video"/>
+        <MODULEPATH id="juce_opengl"/>
+        <MODULEPATH id="juce_gui_extra"/>
+        <MODULEPATH id="juce_gui_basics"/>
+        <MODULEPATH id="juce_graphics"/>
+        <MODULEPATH id="juce_events"/>
+        <MODULEPATH id="juce_data_structures"/>
+        <MODULEPATH id="juce_cryptography"/>
+        <MODULEPATH id="juce_core"/>
+        <MODULEPATH id="juce_audio_processors"/>
+        <MODULEPATH id="juce_audio_plugin_client"/>
+        <MODULEPATH id="juce_audio_formats"/>
+        <MODULEPATH id="juce_audio_devices"/>
+        <MODULEPATH id="juce_audio_basics"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>

@@ -10,9 +10,9 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 357.0, 201.0, 688.0, 537.0 ],
+		"rect" : [ 72.0, 115.0, 691.0, 573.0 ],
 		"bglocked" : 0,
-		"openinpresentation" : 0,
+		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
 		"default_fontface" : 0,
 		"default_fontname" : "Arial",
@@ -43,6 +43,199 @@
 		"title" : "Gen Plugin Export",
 		"boxes" : [ 			{
 				"box" : 				{
+					"fontface" : 2,
+					"fontname" : "Lato",
+					"id" : "obj-9",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 403.0, 371.5, 242.0, 50.0 ],
+					"presentation" : 1,
+					"presentation_linecount" : 2,
+					"presentation_rect" : [ 97.0, 399.5, 483.0, 35.0 ],
+					"text" : "Please be aware that the JUCE has its own license terms (mostly GPL with the availability of commercial licenses)."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"bubblepoint" : 0.0,
+					"fontname" : "Lato",
+					"id" : "obj-52",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 284.0, 411.5, 147.0, 25.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 225.0, 5.5, 91.0, 25.0 ],
+					"text" : "Start here!"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Lato",
+					"fontsize" : 20.0,
+					"id" : "obj-7",
+					"maxclass" : "newobj",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "signal" ],
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 8,
+							"minor" : 2,
+							"revision" : 0,
+							"architecture" : "x64",
+							"modernui" : 1
+						}
+,
+						"classnamespace" : "dsp.gen",
+						"rect" : [ 59.0, 104.0, 600.0, 450.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 12.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 15.0, 15.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"assistshowspatchername" : 0,
+						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-1",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 50.0, 14.0, 28.0, 22.0 ],
+									"text" : "in 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-2",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 305.0, 14.0, 28.0, 22.0 ],
+									"text" : "in 2"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-3",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 176.0, 149.0, 29.5, 22.0 ],
+									"text" : "+"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-4",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 176.0, 418.0, 35.0, 22.0 ],
+									"text" : "out 1"
+								}
+
+							}
+ ],
+						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-3", 0 ],
+									"source" : [ "obj-1", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-3", 1 ],
+									"source" : [ "obj-2", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-4", 0 ],
+									"source" : [ "obj-3", 0 ]
+								}
+
+							}
+ ]
+					}
+,
+					"patching_rect" : [ 298.0, 432.0, 146.0, 32.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 255.0, 470.0, 139.0, 32.0 ],
+					"text" : "gen~"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Lato",
+					"fontsize" : 16.0,
+					"id" : "obj-3",
+					"linecount" : 14,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 72.5, 162.5, 433.0, 275.0 ],
+					"presentation" : 1,
+					"presentation_linecount" : 11,
+					"presentation_rect" : [ 97.0, 163.5, 483.0, 218.0 ],
+					"text" : "The gen~ code export option is a powerful feature for generating C++ source code that can be dropped into other projects.\n\nThis package is designed to help combine code exported from gen~ patches with the JUCE framework. This allows you to do all of your audio programming in gen~ and export to a desired target. \n\nIf you wish to add an (optional) GUI to your exported project, there are code stubs included in this package to help you get started. For more information on GUI design with these project stubs, please refer to the JUCE documentation."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Lato Heavy",
+					"fontsize" : 48.0,
+					"id" : "obj-4",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 13.0, 24.5, 421.0, 64.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 114.0, 74.5, 421.0, 64.0 ],
+					"text" : "gen~ Plugin Export",
+					"textjustification" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"hidden" : 1,
 					"id" : "obj-11",
 					"maxclass" : "newobj",
@@ -59,7 +252,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 688.0, 511.0 ],
+						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -118,7 +311,7 @@
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 2195.0, 412.0, 324.0, 293.0 ],
+										"rect" : [ 1322.0, 412.0, 324.0, 293.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -4865,8 +5058,8 @@
 , 							{
 								"name" : "rsliderGold",
 								"default" : 								{
-									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ],
-									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ]
+									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ],
+									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -4905,7 +5098,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 357.0, 227.0, 688.0, 511.0 ],
+						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -4942,7 +5135,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 361.0, 386.5, 205.0, 35.0 ],
+									"patching_rect" : [ 373.0, 394.5, 205.0, 35.0 ],
 									"text" : "Install Visual Studio 2019 Community Edition"
 								}
 
@@ -4956,7 +5149,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 127.0, 378.0, 214.0, 52.0 ],
+									"patching_rect" : [ 139.0, 386.0, 214.0, 52.0 ],
 									"text" : ";\rmax launchbrowser https://visualstudio.microsoft.com/vs/"
 								}
 
@@ -4968,7 +5161,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 361.0, 277.5, 210.0, 21.0 ],
+									"patching_rect" : [ 373.0, 285.5, 210.0, 21.0 ],
 									"text" : "Install Xcode"
 								}
 
@@ -4981,7 +5174,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 117.0, 340.0, 151.0, 21.0 ],
+									"patching_rect" : [ 129.0, 348.0, 151.0, 21.0 ],
 									"text" : "... or Windows build tools:"
 								}
 
@@ -4994,7 +5187,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 117.0, 101.0, 69.0, 21.0 ],
+									"patching_rect" : [ 129.0, 109.0, 69.0, 21.0 ],
 									"text" : "VST3 SDK:"
 								}
 
@@ -5021,7 +5214,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 127.0, 262.0, 214.0, 52.0 ],
+									"patching_rect" : [ 139.0, 270.0, 214.0, 52.0 ],
 									"text" : ";\rmax launchbrowser https://developer.apple.com/xcode/"
 								}
 
@@ -5034,7 +5227,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 117.0, 227.0, 112.0, 21.0 ],
+									"patching_rect" : [ 129.0, 235.0, 112.0, 21.0 ],
 									"text" : "MacOS build tools:"
 								}
 
@@ -5048,7 +5241,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 127.0, 134.0, 214.0, 52.0 ],
+									"patching_rect" : [ 139.0, 142.0, 214.0, 52.0 ],
 									"text" : ";\rmax launchbrowser https://new.steinberg.net/developers"
 								}
 
@@ -5061,7 +5254,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 361.0, 113.5, 210.0, 93.0 ],
+									"patching_rect" : [ 373.0, 121.5, 210.0, 93.0 ],
 									"text" : "Download and unzip the VST3 SDK.\n\nRename VST3_SDK to \"VST3 SDK\" and move it to:\n- (Mac) \"~/SDKs/VST3 SDK\"\n- (Windows) \"C:\\SDKs\\VST3 SDK\""
 								}
 
@@ -5170,8 +5363,8 @@
 , 							{
 								"name" : "rsliderGold",
 								"default" : 								{
-									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ],
-									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ]
+									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ],
+									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -5210,7 +5403,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 688.0, 511.0 ],
+						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -5242,13 +5435,52 @@
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Lato",
+									"id" : "obj-10",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 140.0, 226.5, 64.0, 23.0 ],
+									"text" : "script stop"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Lato",
+									"id" : "obj-7",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 68.0, 226.5, 65.0, 23.0 ],
+									"text" : "script start"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Lato",
+									"id" : "obj-3",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 215.0, 54.0, 145.0, 25.0 ],
+									"text" : "Adjust build settings"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Lato",
 									"fontsize" : 11.0,
 									"id" : "obj-12",
 									"linecount" : 6,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 5.0, 297.0, 269.0, 86.0 ],
+									"patching_rect" : [ 5.0, 333.0, 269.0, 86.0 ],
 									"text" : "MacOS: \nYour Xcode project should automatically build, but if anything goes wrong, you can open the .xcodeproj associated with your VST3/AU/App and manually build. Plugins will automatically be moved to the default plugin location."
 								}
 
@@ -5262,7 +5494,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 5.0, 388.0, 269.0, 112.0 ],
+									"patching_rect" : [ 5.0, 424.0, 269.0, 112.0 ],
 									"text" : "Windows: \n- Find and open the .sln that matches your plugin name. Visual Studio 2019 should start. \n- Build with \"Ctrl+Shift+B\".  If you see \"Build: 2 succeeded\" in the output window, everything worked.\n- Move the .vst3 that was created (in VST3-Builds/VisualStudio2019/x64/<Config>/VST3) to your VST3 location."
 								}
 
@@ -5282,7 +5514,7 @@
 									"numoutlets" : 1,
 									"offset" : [ 0.0, 0.0 ],
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 275.0, 280.0, 400.0, 220.0 ],
+									"patching_rect" : [ 275.0, 316.0, 400.0, 220.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -5290,12 +5522,13 @@
 , 							{
 								"box" : 								{
 									"bubble" : 1,
+									"bubbleside" : 2,
 									"fontname" : "Lato",
 									"id" : "obj-26",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 134.0, 201.0, 145.0, 25.0 ],
+									"patching_rect" : [ 457.0, 111.5, 145.0, 40.0 ],
 									"text" : "Build the JUCE project"
 								}
 
@@ -5308,7 +5541,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 104.75, 201.0, 24.0, 24.0 ]
+									"patching_rect" : [ 490.5, 154.5, 69.0, 69.0 ]
 								}
 
 							}
@@ -5321,7 +5554,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 141.0, 153.5, 281.0, 39.0 ],
+									"patching_rect" : [ 136.25, 169.5, 281.0, 39.0 ],
 									"text" : "If this is the first time you're running the script, you'll need to install some npm modules."
 								}
 
@@ -5334,7 +5567,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 39.75, 161.5, 98.0, 23.0 ],
+									"patching_rect" : [ 35.0, 177.5, 98.0, 23.0 ],
 									"text" : "script npm install"
 								}
 
@@ -5455,7 +5688,7 @@
 									"numoutlets" : 1,
 									"offset" : [ 0.0, 0.0 ],
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 10.0, 47.0, 301.0, 103.0 ],
+									"patching_rect" : [ 10.0, 48.5, 301.0, 103.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -5468,14 +5701,37 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 10.0, 237.5, 284.0, 23.0 ],
+									"patching_rect" : [ 10.0, 273.5, 284.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"autostart" : 1,
 										"defer" : 0,
+										"node_bin_path" : "",
+										"npm_bin_path" : "",
 										"watch" : 0
 									}
 ,
 									"text" : "node.script post-export.js @autostart 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"background" : 1,
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontface" : 1,
+									"hint" : "",
+									"id" : "obj-13",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 10.0, 311.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "4",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
 
 							}
@@ -5493,7 +5749,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 275.0, 20.0, 20.0 ],
+									"patching_rect" : [ 604.0, 111.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -5514,7 +5770,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 281.0, 201.0, 20.0, 20.0 ],
+									"patching_rect" : [ 362.0, 54.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -5535,7 +5791,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 424.0, 156.5, 20.0, 20.0 ],
+									"patching_rect" : [ 419.25, 172.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -5546,6 +5802,15 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
+									"midpoints" : [ 149.5, 262.0, 19.5, 262.0 ],
+									"source" : [ "obj-10", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-4", 0 ],
+									"midpoints" : [ 500.0, 261.0, 19.5, 261.0 ],
 									"source" : [ "obj-23", 0 ]
 								}
 
@@ -5561,6 +5826,14 @@
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
 									"source" : [ "obj-47", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-4", 0 ],
+									"midpoints" : [ 77.5, 261.0, 19.5, 261.0 ],
+									"source" : [ "obj-7", 0 ]
 								}
 
 							}
@@ -5674,8 +5947,8 @@
 , 							{
 								"name" : "rsliderGold",
 								"default" : 								{
-									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ],
-									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ]
+									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ],
+									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -5714,7 +5987,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 688.0, 511.0 ],
+						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -5842,7 +6115,7 @@
 									"numoutlets" : 8,
 									"offset" : [ 0.0, 0.0 ],
 									"outlettype" : [ "signal", "signal", "", "list", "int", "", "", "" ],
-									"patching_rect" : [ 233.0, 194.0, 428.0, 194.0 ],
+									"patching_rect" : [ 233.0, 194.0, 389.0, 191.0 ],
 									"save" : [ "#N", "vst~", "loaduniqueid", 0, "C74_VST3:/C74GenPlugin", ";" ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
@@ -5869,16 +6142,16 @@
 										"subtype" : "Undefined",
 										"embed" : 1,
 										"snapshot" : 										{
-											"pluginname" : "Gigaverb.vst3info",
-											"plugindisplayname" : "Gigaverb",
-											"pluginsavedname" : "C74_VST3:/Gigaverb",
+											"pluginname" : "C74GenPlugin.vst3",
+											"plugindisplayname" : "C74GenPlugin",
+											"pluginsavedname" : "~/Documents/Max 8/Packages-External/gen-plugin-export/source/VST3-Builds/MacOSX/build/Debug/C74GenPlugin.vst3",
 											"pluginsaveduniqueid" : 0,
 											"version" : 1,
 											"isbank" : 0,
 											"isbase64" : 1,
 											"sliderorder" : [  ],
 											"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
-											"blob" : "325.VMjLgvS....OVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCN43hMAgFRnUDago1XWokZQcjVn41PHY2LR0jbtfFRpUjUgY2ZrEVaIglSl4RZKIicBgDZPwlXzjDZNYFQosjc1IDRnQkUXg2cVQFZtMDR1MCZLAicBgDZHcUVwD0UZMWUrgTMtHESz4xPKYFRnIVc3XUX4sFajsVRn4jYhMUSz4xPKYFR3IlcIcUVmEEaHUiKnwTdyHTS2YVdMImKngjdEYkVxkDZNYlKosDdTMDRt3hKt3hKt3hKtXlTU0DUQAURWoULEYzXqEEUXoWQF4RPDYFTzDzUXkWSG4RPDYmKtnWPt3hKt3hKt3hKJUELPUTPqI1aYcEV5UkQQcVTWgEOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO.."
+											"blob" : "321.VMjLgfS....OVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCN13hMAgFRnUDago1XWokZQcjVn41PHY2LR0jbtfFRpUjUgY2ZrEVaIglSl4RZKIicBgDZPwlXzjDZNYFQosjc1IDRnQkUXg2cVQFZtMDR1MCZLAicBgDZHcUVwD0UZMWUrgTMtHESz4xPKYFRnIVc3XUX4sFajsVRn4jYhMUSz4xPKYFR3IlcIcUVmEEaHUiKnwTdyHDSx4BZHoWQVokbIglSl4RZKgGUCgjKt3hKt3hKt3hKlIUUMQUTPkzUZESQFM1ZQQEV5UjQtDDQlAEMAcEV40zQtDDQ14hK5EjKt3hKt3hKt3hRUACTEEzZh8VVWgkdUYTTmE0UXwyKIMzasA2atUlaz4COuX0TTMCTrU2Yo41TzEFck4C."
 										}
 ,
 										"snapshotlist" : 										{
@@ -5888,21 +6161,21 @@
 													"version" : 2,
 													"minorversion" : 0,
 													"name" : "myneatplugin",
-													"origin" : "Gigaverb.vst3info",
+													"origin" : "C74GenPlugin.vst3",
 													"type" : "VST3",
 													"subtype" : "AudioEffect",
 													"embed" : 1,
 													"snapshot" : 													{
-														"pluginname" : "Gigaverb.vst3info",
-														"plugindisplayname" : "Gigaverb",
-														"pluginsavedname" : "C74_VST3:/Gigaverb",
+														"pluginname" : "C74GenPlugin.vst3",
+														"plugindisplayname" : "C74GenPlugin",
+														"pluginsavedname" : "~/Documents/Max 8/Packages-External/gen-plugin-export/source/VST3-Builds/MacOSX/build/Debug/C74GenPlugin.vst3",
 														"pluginsaveduniqueid" : 0,
 														"version" : 1,
 														"isbank" : 0,
 														"isbase64" : 1,
 														"sliderorder" : [  ],
 														"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
-														"blob" : "325.VMjLgvS....OVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCN43hMAgFRnUDago1XWokZQcjVn41PHY2LR0jbtfFRpUjUgY2ZrEVaIglSl4RZKIicBgDZPwlXzjDZNYFQosjc1IDRnQkUXg2cVQFZtMDR1MCZLAicBgDZHcUVwD0UZMWUrgTMtHESz4xPKYFRnIVc3XUX4sFajsVRn4jYhMUSz4xPKYFR3IlcIcUVmEEaHUiKnwTdyHTS2YVdMImKngjdEYkVxkDZNYlKosDdTMDRt3hKt3hKt3hKtXlTU0DUQAURWoULEYzXqEEUXoWQF4RPDYFTzDzUXkWSG4RPDYmKtnWPt3hKt3hKt3hKJUELPUTPqI1aYcEV5UkQQcVTWgEOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO.."
+														"blob" : "321.VMjLgfS....OVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCN13hMAgFRnUDago1XWokZQcjVn41PHY2LR0jbtfFRpUjUgY2ZrEVaIglSl4RZKIicBgDZPwlXzjDZNYFQosjc1IDRnQkUXg2cVQFZtMDR1MCZLAicBgDZHcUVwD0UZMWUrgTMtHESz4xPKYFRnIVc3XUX4sFajsVRn4jYhMUSz4xPKYFR3IlcIcUVmEEaHUiKnwTdyHDSx4BZHoWQVokbIglSl4RZKgGUCgjKt3hKt3hKt3hKlIUUMQUTPkzUZESQFM1ZQQEV5UjQtDDQlAEMAcEV40zQtDDQ14hK5EjKt3hKt3hKt3hRUACTEEzZh8VVWgkdUYTTmE0UXwyKIMzasA2atUlaz4COuX0TTMCTrU2Yo41TzEFck4C."
 													}
 ,
 													"fileref" : 													{
@@ -5910,7 +6183,7 @@
 														"filename" : "myneatplugin.maxsnap",
 														"filepath" : "~/Documents/Max 8/Snapshots",
 														"filepos" : -1,
-														"snapshotfileid" : "c0c425a44737a17ffee0c1ed36d3a580"
+														"snapshotfileid" : "59d56d08e69da85c87e7d669548a5240"
 													}
 
 												}
@@ -6122,8 +6395,8 @@
 , 							{
 								"name" : "rsliderGold",
 								"default" : 								{
-									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ],
-									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ]
+									"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ],
+									"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -6336,8 +6609,8 @@
 , 			{
 				"name" : "rsliderGold",
 				"default" : 				{
-					"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ],
-					"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ]
+					"bgcolor" : [ 0.764706, 0.592157, 0.101961, 1.0 ],
+					"color" : [ 0.646639, 0.821777, 0.854593, 1.0 ]
 				}
 ,
 				"parentstyle" : "",

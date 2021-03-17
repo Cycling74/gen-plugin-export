@@ -206,14 +206,14 @@
 					"fontname" : "Lato",
 					"fontsize" : 16.0,
 					"id" : "obj-3",
-					"linecount" : 14,
+					"linecount" : 13,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 72.5, 162.5, 433.0, 275.0 ],
+					"patching_rect" : [ 72.5, 162.5, 436.0, 256.0 ],
 					"presentation" : 1,
 					"presentation_linecount" : 11,
-					"presentation_rect" : [ 97.0, 163.5, 483.0, 218.0 ],
+					"presentation_rect" : [ 97.0, 163.5, 484.0, 218.0 ],
 					"text" : "The gen~ code export option is a powerful feature for generating C++ source code that can be dropped into other projects.\n\nThis package is designed to help combine code exported from gen~ patches with the JUCE framework. This allows you to do all of your audio programming in gen~ and export to a desired target. \n\nIf you wish to add an (optional) GUI to your exported project, there are code stubs included in this package to help you get started. For more information on GUI design with these project stubs, please refer to the JUCE documentation."
 				}
 
@@ -5434,6 +5434,21 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Lato",
+									"id" : "obj-2",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 207.5, 214.5, 209.75, 39.0 ],
+									"presentation_linecount" : 2,
+									"text" : "You may need to restart the script after doing npm install."
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"fontname" : "Lato",
 									"id" : "obj-10",
 									"maxclass" : "message",
@@ -5705,8 +5720,6 @@
 									"saved_object_attributes" : 									{
 										"autostart" : 1,
 										"defer" : 0,
-										"node_bin_path" : "",
-										"npm_bin_path" : "",
 										"watch" : 0
 									}
 ,
@@ -6037,12 +6050,12 @@
 									"bubbleside" : 0,
 									"fontname" : "Lato",
 									"id" : "obj-3",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 29.5, 78.0, 129.0, 35.0 ],
-									"text" : "Restart Max to rescan plugin directories."
+									"patching_rect" : [ 29.5, 78.0, 129.0, 50.0 ],
+									"text" : "If you're on Windows, restart Max to rescan plugin directories."
 								}
 
 							}
@@ -6142,9 +6155,9 @@
 										"subtype" : "Undefined",
 										"embed" : 1,
 										"snapshot" : 										{
-											"pluginname" : "C74GenPlugin.vst3",
+											"pluginname" : "C74GenPlugin.vst3info",
 											"plugindisplayname" : "C74GenPlugin",
-											"pluginsavedname" : "~/Documents/Max 8/Packages-External/gen-plugin-export/source/VST3-Builds/MacOSX/build/Debug/C74GenPlugin.vst3",
+											"pluginsavedname" : "C74_VST3:/C74GenPlugin",
 											"pluginsaveduniqueid" : 0,
 											"version" : 1,
 											"isbank" : 0,
@@ -6161,14 +6174,14 @@
 													"version" : 2,
 													"minorversion" : 0,
 													"name" : "myneatplugin",
-													"origin" : "C74GenPlugin.vst3",
+													"origin" : "C74GenPlugin.vst3info",
 													"type" : "VST3",
 													"subtype" : "AudioEffect",
 													"embed" : 1,
 													"snapshot" : 													{
-														"pluginname" : "C74GenPlugin.vst3",
+														"pluginname" : "C74GenPlugin.vst3info",
 														"plugindisplayname" : "C74GenPlugin",
-														"pluginsavedname" : "~/Documents/Max 8/Packages-External/gen-plugin-export/source/VST3-Builds/MacOSX/build/Debug/C74GenPlugin.vst3",
+														"pluginsavedname" : "C74_VST3:/C74GenPlugin",
 														"pluginsaveduniqueid" : 0,
 														"version" : 1,
 														"isbank" : 0,
@@ -6183,7 +6196,25 @@
 														"filename" : "myneatplugin.maxsnap",
 														"filepath" : "~/Documents/Max 8/Snapshots",
 														"filepos" : -1,
-														"snapshotfileid" : "59d56d08e69da85c87e7d669548a5240"
+														"snapshotfileid" : "c7a5977495b70d78a11d99e0e88ede9d"
+													}
+
+												}
+, 												{
+													"filetype" : "C74Snapshot",
+													"version" : 2,
+													"minorversion" : 0,
+													"name" : "C74GenPlugin.vst",
+													"origin" : "C74GenPlugin.vst3info",
+													"type" : "VST3",
+													"subtype" : "AudioEffect",
+													"embed" : 0,
+													"fileref" : 													{
+														"name" : "C74GenPlugin.vst",
+														"filename" : "C74GenPlugin.vst_20210219.maxsnap",
+														"filepath" : "~/Documents/Max 8/Snapshots",
+														"filepos" : -1,
+														"snapshotfileid" : "d41df50b77923ae4390274b4a1d35848"
 													}
 
 												}

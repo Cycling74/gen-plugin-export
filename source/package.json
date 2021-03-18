@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Cycling74/gen-plugin-export#readme",
   "dependencies": {
-    "xmldom": "0.4.0"
+    "xmldom": "0.5.0"
   }
 }

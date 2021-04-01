@@ -37,200 +37,33 @@
 		"tags" : "",
 		"style" : "",
 		"subpatcher_template" : "",
-		"showontab" : 1,
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"assistshowspatchername" : 0,
 		"globalpatchername" : "Gen Plugin Export[1]",
 		"title" : "Gen Plugin Export",
 		"boxes" : [ 			{
 				"box" : 				{
-					"fontface" : 2,
-					"fontname" : "Lato",
-					"id" : "obj-9",
-					"linecount" : 3,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 403.0, 371.5, 242.0, 50.0 ],
-					"presentation" : 1,
-					"presentation_linecount" : 2,
-					"presentation_rect" : [ 97.0, 399.5, 483.0, 35.0 ],
-					"text" : "Please be aware that the JUCE has its own license terms (mostly GPL with the availability of commercial licenses)."
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bubble" : 1,
-					"bubblepoint" : 0.0,
-					"fontname" : "Lato",
-					"id" : "obj-52",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 284.0, 411.5, 147.0, 25.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 225.0, 5.5, 91.0, 25.0 ],
-					"text" : "Start here!"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Lato",
-					"fontsize" : 20.0,
-					"id" : "obj-7",
-					"maxclass" : "newobj",
+					"id" : "obj-4",
+					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
-					"outlettype" : [ "signal" ],
-					"patcher" : 					{
-						"fileversion" : 1,
-						"appversion" : 						{
-							"major" : 8,
-							"minor" : 2,
-							"revision" : 0,
-							"architecture" : "x64",
-							"modernui" : 1
-						}
-,
-						"classnamespace" : "dsp.gen",
-						"rect" : [ 59.0, 104.0, 600.0, 450.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
-						"default_fontsize" : 12.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
-						"gridsize" : [ 15.0, 15.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
-						"assistshowspatchername" : 0,
-						"boxes" : [ 							{
-								"box" : 								{
-									"id" : "obj-1",
-									"maxclass" : "newobj",
-									"numinlets" : 0,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 14.0, 28.0, 22.0 ],
-									"text" : "in 1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-2",
-									"maxclass" : "newobj",
-									"numinlets" : 0,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 305.0, 14.0, 28.0, 22.0 ],
-									"text" : "in 2"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-3",
-									"maxclass" : "newobj",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 176.0, 149.0, 29.5, 22.0 ],
-									"text" : "+"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-4",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 176.0, 418.0, 35.0, 22.0 ],
-									"text" : "out 1"
-								}
-
-							}
- ],
-						"lines" : [ 							{
-								"patchline" : 								{
-									"destination" : [ "obj-3", 0 ],
-									"source" : [ "obj-1", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-3", 1 ],
-									"source" : [ "obj-2", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-4", 0 ],
-									"source" : [ "obj-3", 0 ]
-								}
-
-							}
- ]
-					}
-,
-					"patching_rect" : [ 298.0, 432.0, 146.0, 32.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 255.0, 470.0, 139.0, 32.0 ],
-					"text" : "gen~"
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 161.0, 198.0, 137.0, 22.0 ],
+					"text" : "showrootpatcherontab 0"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Lato",
-					"fontsize" : 16.0,
-					"id" : "obj-3",
-					"linecount" : 13,
-					"maxclass" : "comment",
+					"id" : "obj-2",
+					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 72.5, 162.5, 436.0, 256.0 ],
-					"presentation" : 1,
-					"presentation_linecount" : 11,
-					"presentation_rect" : [ 97.0, 163.5, 484.0, 218.0 ],
-					"text" : "The gen~ code export option is a powerful feature for generating C++ source code that can be dropped into other projects.\n\nThis package is designed to help combine code exported from gen~ patches with the JUCE framework. This allows you to do all of your audio programming in gen~ and export to a desired target. \n\nIf you wish to add an (optional) GUI to your exported project, there are code stubs included in this package to help you get started. For more information on GUI design with these project stubs, please refer to the JUCE documentation."
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Lato Heavy",
-					"fontsize" : 48.0,
-					"id" : "obj-4",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 13.0, 24.5, 421.0, 64.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 114.0, 74.5, 421.0, 64.0 ],
-					"text" : "gen~ Plugin Export",
-					"textjustification" : 1
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 161.0, 239.0, 67.0, 22.0 ],
+					"save" : [ "#N", "thispatcher", ";", "#Q", "end", ";" ],
+					"text" : "thispatcher"
 				}
 
 			}
@@ -4865,7 +4698,7 @@
 									"patching_rect" : [ 187.0, 381.5, 65.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"autoexport" : 0,
-										"exportfolder" : "Macintosh HD:/Users/isabelkaspriskie/Documents/Max 8/Packages-External/gen-plugin-export/source/exported-code/",
+										"exportfolder" : "Macintosh HD:/Users/isabelkaspriskie/Documents/Max 8/Source/gen-plugin-export/source/exported-code/",
 										"exportname" : "C74_GENPLUGIN",
 										"exportscriptargs" : "\"$1\""
 									}
@@ -5039,8 +4872,8 @@
 , 							{
 								"name" : "newobjYellow-1",
 								"default" : 								{
-									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ],
-									"fontsize" : [ 12.059008 ]
+									"fontsize" : [ 12.059008 ],
+									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -5344,8 +5177,8 @@
 , 							{
 								"name" : "newobjYellow-1",
 								"default" : 								{
-									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ],
-									"fontsize" : [ 12.059008 ]
+									"fontsize" : [ 12.059008 ],
+									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -5442,7 +5275,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 207.5, 214.5, 209.75, 39.0 ],
-									"presentation_linecount" : 2,
 									"text" : "You may need to restart the script after doing npm install."
 								}
 
@@ -5941,8 +5773,8 @@
 , 							{
 								"name" : "newobjYellow-1",
 								"default" : 								{
-									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ],
-									"fontsize" : [ 12.059008 ]
+									"fontsize" : [ 12.059008 ],
+									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -6000,7 +5832,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
+						"rect" : [ 72.0, 141.0, 691.0, 547.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -6055,7 +5887,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 29.5, 78.0, 129.0, 50.0 ],
-									"text" : "If you're on Windows, restart Max to rescan plugin directories."
+									"text" : "You will likely need to restart Max to rescan your VST directory."
 								}
 
 							}
@@ -6407,8 +6239,8 @@
 , 							{
 								"name" : "newobjYellow-1",
 								"default" : 								{
-									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ],
-									"fontsize" : [ 12.059008 ]
+									"fontsize" : [ 12.059008 ],
+									"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -6449,7 +6281,14 @@
 
 			}
  ],
-		"lines" : [  ],
+		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-2", 0 ],
+					"source" : [ "obj-4", 0 ]
+				}
+
+			}
+ ],
 		"parameters" : 		{
 			"obj-6::obj-2" : [ "vst~", "vst~", 0 ],
 			"obj-6::obj-5::obj-21::obj-6" : [ "live.tab[3]", "live.tab[1]", 0 ],
@@ -6463,6 +6302,13 @@
 ,
 		"dependency_cache" : [ 			{
 				"name" : "myneatplugin.maxsnap",
+				"bootpath" : "~/Documents/Max 8/Snapshots",
+				"patcherrelativepath" : "../../../Snapshots",
+				"type" : "mx@s",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "C74GenPlugin.vst_20210219.maxsnap",
 				"bootpath" : "~/Documents/Max 8/Snapshots",
 				"patcherrelativepath" : "../../../Snapshots",
 				"type" : "mx@s",
@@ -6506,14 +6352,14 @@
 			}
 , 			{
 				"name" : "post-export.js",
-				"bootpath" : "~/Documents/Max 8/Packages-External/gen-plugin-export/source",
+				"bootpath" : "~/Documents/Max 8/Source/gen-plugin-export/source",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "arg-helper.maxpat",
-				"bootpath" : "~/Documents/Max 8/Packages-External/gen-plugin-export/source",
+				"bootpath" : "~/Documents/Max 8/Source/gen-plugin-export/source",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
@@ -6621,8 +6467,8 @@
 , 			{
 				"name" : "newobjYellow-1",
 				"default" : 				{
-					"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ],
-					"fontsize" : [ 12.059008 ]
+					"fontsize" : [ 12.059008 ],
+					"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ]
 				}
 ,
 				"parentstyle" : "",

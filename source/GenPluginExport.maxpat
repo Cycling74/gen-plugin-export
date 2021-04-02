@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 2,
-			"revision" : 0,
+			"minor" : 1,
+			"revision" : 10,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 72.0, 115.0, 691.0, 573.0 ],
+		"rect" : [ 101.0, 140.0, 732.0, 614.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -78,14 +78,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 2,
-							"revision" : 0,
+							"minor" : 1,
+							"revision" : 10,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
+						"rect" : [ 0.0, 26.0, 732.0, 588.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -121,7 +121,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 123.0, 112.0, 58.0, 22.0 ],
+									"patching_rect" : [ 154.0, 115.0, 58.0, 22.0 ],
 									"text" : "loadbang"
 								}
 
@@ -137,8 +137,8 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 2,
-											"revision" : 0,
+											"minor" : 1,
+											"revision" : 10,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -320,7 +320,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 123.0, 144.0, 105.0, 22.0 ],
+									"patching_rect" : [ 154.0, 147.0, 105.0, 22.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -340,7 +340,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 281.0, 334.5, 121.0, 25.0 ],
+									"patching_rect" : [ 312.0, 337.5, 121.0, 25.0 ],
 									"text" : "Export C++ code"
 								}
 
@@ -353,7 +353,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 254.0, 381.5, 147.0, 25.0 ],
+									"patching_rect" : [ 285.0, 384.5, 147.0, 25.0 ],
 									"text" : "Build your gen~ patch"
 								}
 
@@ -379,7 +379,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 403.0, 218.5, 238.0, 78.0 ],
+									"patching_rect" : [ 434.0, 221.5, 238.0, 78.0 ],
 									"text" : "Names of the *.cpp and *.h files to export. There's not much reason to change these, but if you do, you'll need to change all of the file references in the JUCE Projucer project accordingly. "
 								}
 
@@ -392,7 +392,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 297.0, 175.0, 344.0, 35.0 ],
+									"patching_rect" : [ 328.0, 178.0, 344.0, 35.0 ],
 									"text" : "Disable autoexport since building takes a while. You don't want to trigger it automatically every time gen~ recompiles."
 								}
 
@@ -406,7 +406,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 186.0, 246.0, 205.0, 23.0 ]
+									"patching_rect" : [ 217.0, 249.0, 205.0, 23.0 ]
 								}
 
 							}
@@ -419,7 +419,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 161.5, 181.0, 126.0, 23.0 ]
+									"patching_rect" : [ 192.5, 184.0, 126.0, 23.0 ]
 								}
 
 							}
@@ -431,7 +431,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 211.0, 334.5, 69.0, 23.0 ],
+									"patching_rect" : [ 242.0, 337.5, 69.0, 23.0 ],
 									"text" : "exportcode"
 								}
 
@@ -448,8 +448,8 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 2,
-											"revision" : 0,
+											"minor" : 1,
+											"revision" : 10,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -4695,10 +4695,10 @@
  ]
 									}
 ,
-									"patching_rect" : [ 187.0, 381.5, 65.0, 23.0 ],
+									"patching_rect" : [ 218.0, 384.5, 65.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"autoexport" : 0,
-										"exportfolder" : "Macintosh HD:/Users/isabelkaspriskie/Documents/Max 8/Source/gen-plugin-export/source/exported-code/",
+										"exportfolder" : "C:/Users/ikasp/Documents/Max 8/Packages/gen~ Plugin Export/source/exported-code/",
 										"exportname" : "C74_GENPLUGIN",
 										"exportscriptargs" : "\"$1\""
 									}
@@ -4721,7 +4721,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 404.0, 337.0, 20.0, 20.0 ],
+									"patching_rect" : [ 435.0, 340.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -4742,7 +4742,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 403.0, 384.0, 20.0, 20.0 ],
+									"patching_rect" : [ 434.0, 387.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -4753,7 +4753,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
-									"midpoints" : [ 171.0, 349.0, 196.5, 349.0 ],
+									"midpoints" : [ 202.0, 352.0, 227.5, 352.0 ],
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -4761,7 +4761,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
-									"midpoints" : [ 132.5, 370.0, 196.5, 370.0 ],
+									"midpoints" : [ 163.5, 373.0, 227.5, 373.0 ],
 									"source" : [ "obj-21", 0 ]
 								}
 
@@ -4776,7 +4776,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
-									"midpoints" : [ 220.5, 368.0, 196.5, 368.0 ],
+									"midpoints" : [ 251.5, 371.0, 227.5, 371.0 ],
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -4924,16 +4924,16 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 2,
-							"revision" : 0,
+							"minor" : 1,
+							"revision" : 10,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
+						"rect" : [ 101.0, 166.0, 732.0, 588.0 ],
 						"bglocked" : 0,
-						"openinpresentation" : 0,
+						"openinpresentation" : 1,
 						"default_fontsize" : 12.0,
 						"default_fontface" : 0,
 						"default_fontname" : "Arial",
@@ -4962,14 +4962,125 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"bubble" : 1,
 									"fontname" : "Lato",
-									"id" : "obj-10",
+									"id" : "obj-20",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 373.0, 394.5, 205.0, 35.0 ],
-									"text" : "Install Visual Studio 2019 Community Edition"
+									"patching_rect" : [ 368.0, 444.0, 208.0, 39.0 ],
+									"presentation" : 1,
+									"presentation_linecount" : 2,
+									"presentation_rect" : [ 416.0, 467.0, 169.0, 39.0 ],
+									"text" : "Open a link to the Visual Studio download page"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Lato",
+									"id" : "obj-19",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 370.0, 385.0, 208.0, 39.0 ],
+									"presentation" : 1,
+									"presentation_linecount" : 2,
+									"presentation_rect" : [ 334.0, 404.5, 146.0, 39.0 ],
+									"text" : "Open a link to the Xcode download page"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Lato",
+									"id" : "obj-18",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 190.0, 144.5, 210.0, 39.0 ],
+									"presentation" : 1,
+									"presentation_linecount" : 2,
+									"presentation_rect" : [ 455.0, 99.0, 146.0, 39.0 ],
+									"text" : "Open a link to the SDK download page"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Lato",
+									"id" : "obj-17",
+									"linecount" : 9,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 341.0, 202.0, 241.0, 136.0 ],
+									"presentation" : 1,
+									"presentation_linecount" : 7,
+									"presentation_rect" : [ 180.0, 261.0, 412.0, 107.0 ],
+									"text" : "The supported version of JUCE is included with this package, but the Projucer (which generates JUCE projects) needs to be able to locate the JUCE folder.\n\nMove the JUCE folder from <Max 8 Packages>/gen~ Plugin Export/JUCE to\n- (Mac) ~\\JUCE\n- (Windows) C:\\JUCE"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontface" : 1,
+									"fontname" : "Lato",
+									"id" : "obj-16",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 128.0, 206.0, 138.0, 21.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 180.0, 238.0, 137.0, 21.0 ],
+									"text" : "Set up the JUCE library"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-15",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 98.0, 438.0, 24.0, 24.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 388.0, 476.0, 24.0, 24.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-14",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 103.0, 377.0, 24.0, 24.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 305.0, 412.0, 24.0, 24.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-12",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 120.0, 86.0, 24.0, 24.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 422.0, 106.5, 24.0, 24.0 ]
 								}
 
 							}
@@ -4982,20 +5093,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 139.0, 386.0, 214.0, 52.0 ],
-									"text" : ";\rmax launchbrowser https://visualstudio.microsoft.com/vs/"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Lato",
-									"id" : "obj-7",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 373.0, 285.5, 210.0, 21.0 ],
-									"text" : "Install Xcode"
+									"patching_rect" : [ 138.0, 493.0, 214.0, 52.0 ],
+									"text" : ";\r\nmax launchbrowser https://visualstudio.microsoft.com/vs/"
 								}
 
 							}
@@ -5004,11 +5103,14 @@
 									"fontface" : 1,
 									"fontname" : "Lato",
 									"id" : "obj-6",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 129.0, 348.0, 151.0, 21.0 ],
-									"text" : "... or Windows build tools:"
+									"patching_rect" : [ 128.0, 455.0, 191.0, 35.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 180.0, 476.0, 194.0, 21.0 ],
+									"text" : "... or Visual Studio 2019 (Windows)"
 								}
 
 							}
@@ -5020,8 +5122,10 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 129.0, 109.0, 69.0, 21.0 ],
-									"text" : "VST3 SDK:"
+									"patching_rect" : [ 145.0, 87.5, 121.0, 21.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 180.0, 99.0, 121.0, 21.0 ],
+									"text" : "Install the VST3 SDK"
 								}
 
 							}
@@ -5034,6 +5138,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 5.0, 5.0, 272.0, 35.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 5.0, 5.0, 272.0, 35.0 ],
 									"text" : "Prerequisites"
 								}
 
@@ -5047,8 +5153,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 139.0, 270.0, 214.0, 52.0 ],
-									"text" : ";\rmax launchbrowser https://developer.apple.com/xcode/"
+									"patching_rect" : [ 138.0, 377.0, 214.0, 52.0 ],
+									"text" : ";\r\nmax launchbrowser https://developer.apple.com/xcode/"
 								}
 
 							}
@@ -5060,8 +5166,10 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 129.0, 235.0, 112.0, 21.0 ],
-									"text" : "MacOS build tools:"
+									"patching_rect" : [ 128.0, 342.0, 151.0, 21.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 180.0, 413.5, 112.0, 21.0 ],
+									"text" : "Install Xcode (Mac)"
 								}
 
 							}
@@ -5074,8 +5182,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 139.0, 142.0, 214.0, 52.0 ],
-									"text" : ";\rmax launchbrowser https://new.steinberg.net/developers"
+									"patching_rect" : [ 120.0, 120.0, 214.0, 52.0 ],
+									"text" : ";\r\nmax launchbrowser https://new.steinberg.net/developers"
 								}
 
 							}
@@ -5087,13 +5195,106 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 373.0, 121.5, 210.0, 93.0 ],
+									"patching_rect" : [ 345.0, 79.0, 210.0, 93.0 ],
+									"presentation" : 1,
+									"presentation_linecount" : 5,
+									"presentation_rect" : [ 180.0, 116.0, 279.0, 78.0 ],
 									"text" : "Download and unzip the VST3 SDK.\n\nRename VST3_SDK to \"VST3 SDK\" and move it to:\n- (Mac) \"~/SDKs/VST3 SDK\"\n- (Windows) \"C:\\SDKs\\VST3 SDK\""
 								}
 
 							}
+, 							{
+								"box" : 								{
+									"background" : 1,
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontface" : 1,
+									"hint" : "",
+									"id" : "obj-13",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 81.5, 338.5, 20.0, 20.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 146.5, 413.5, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "3",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"background" : 1,
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontface" : 1,
+									"hint" : "",
+									"id" : "obj-9",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 81.5, 202.0, 20.0, 20.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 142.5, 237.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "2",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"background" : 1,
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontface" : 1,
+									"hint" : "",
+									"id" : "obj-31",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 83.5, 70.0, 20.0, 20.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 142.5, 98.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "1",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
  ],
-						"lines" : [  ],
+						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-2", 0 ],
+									"source" : [ "obj-12", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"source" : [ "obj-14", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-8", 0 ],
+									"source" : [ "obj-15", 0 ]
+								}
+
+							}
+ ],
 						"styles" : [ 							{
 								"name" : "AudioStatus_Menu",
 								"default" : 								{
@@ -5229,14 +5430,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 2,
-							"revision" : 0,
+							"minor" : 1,
+							"revision" : 10,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 691.0, 547.0 ],
+						"rect" : [ 0.0, 26.0, 732.0, 588.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -5266,6 +5467,38 @@
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
+								"box" : 								{
+									"fontname" : "Lato",
+									"fontsize" : 11.0,
+									"id" : "obj-16",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 388.0, 310.0, 324.0, 33.0 ],
+									"presentation_linecount" : 3,
+									"text" : "C:/Users/user/Documents/Max 8/Packages/gen~ Plugin Export/source/VST3-Builds/VisualStudio2019",
+									"textjustification" : 2
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Lato",
+									"fontsize" : 11.0,
+									"id" : "obj-6",
+									"linecount" : 4,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 472.0, 249.0, 240.0, 59.0 ],
+									"presentation_linecount" : 4,
+									"text" : "This will create Xcode or Visual Studio workspaces for your gen~ export in this package's directory. For instance, for a Windows VST3 Visual Studio project will be created in:",
+									"textjustification" : 2
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"bubble" : 1,
 									"fontname" : "Lato",
@@ -5327,7 +5560,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 5.0, 333.0, 269.0, 86.0 ],
+									"patching_rect" : [ 26.0, 350.0, 267.0, 86.0 ],
 									"text" : "MacOS: \nYour Xcode project should automatically build, but if anything goes wrong, you can open the .xcodeproj associated with your VST3/AU/App and manually build. Plugins will automatically be moved to the default plugin location."
 								}
 
@@ -5337,11 +5570,11 @@
 									"fontname" : "Lato",
 									"fontsize" : 11.0,
 									"id" : "obj-5",
-									"linecount" : 8,
+									"linecount" : 9,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 5.0, 424.0, 269.0, 112.0 ],
+									"patching_rect" : [ 26.0, 442.0, 267.0, 125.0 ],
 									"text" : "Windows: \n- Find and open the .sln that matches your plugin name. Visual Studio 2019 should start. \n- Build with \"Ctrl+Shift+B\".  If you see \"Build: 2 succeeded\" in the output window, everything worked.\n- Move the .vst3 that was created (in VST3-Builds/VisualStudio2019/x64/<Config>/VST3) to your VST3 location."
 								}
 
@@ -5361,7 +5594,7 @@
 									"numoutlets" : 1,
 									"offset" : [ 0.0, 0.0 ],
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 275.0, 316.0, 400.0, 220.0 ],
+									"patching_rect" : [ 312.0, 350.0, 400.0, 220.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -5388,7 +5621,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 490.5, 154.5, 69.0, 69.0 ]
+									"patching_rect" : [ 497.5, 154.5, 69.0, 69.0 ]
 								}
 
 							}
@@ -5443,8 +5676,8 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 2,
-											"revision" : 0,
+											"minor" : 1,
+											"revision" : 10,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -5483,6 +5716,7 @@
 													"fontname" : "Lato Heavy",
 													"fontsize" : 18.0,
 													"id" : "obj-4",
+													"linecount" : 2,
 													"maxclass" : "comment",
 													"numinlets" : 1,
 													"numoutlets" : 0,
@@ -5508,7 +5742,7 @@
 										"lines" : [  ]
 									}
 ,
-									"patching_rect" : [ 457.0, 60.0, 150.0, 23.0 ],
+									"patching_rect" : [ 556.0, 54.0, 150.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -5548,7 +5782,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 10.0, 273.5, 284.0, 23.0 ],
+									"patching_rect" : [ 10.0, 273.5, 321.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"autostart" : 1,
 										"defer" : 0,
@@ -5573,7 +5807,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 311.0, 20.0, 20.0 ],
+									"patching_rect" : [ 31.0, 323.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -5655,7 +5889,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"midpoints" : [ 500.0, 261.0, 19.5, 261.0 ],
+									"midpoints" : [ 507.0, 261.0, 19.5, 261.0 ],
 									"source" : [ "obj-23", 0 ]
 								}
 
@@ -5825,14 +6059,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 2,
-							"revision" : 0,
+							"minor" : 1,
+							"revision" : 10,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 72.0, 141.0, 691.0, 547.0 ],
+						"rect" : [ 0.0, 26.0, 732.0, 588.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -5960,7 +6194,7 @@
 									"numoutlets" : 8,
 									"offset" : [ 0.0, 0.0 ],
 									"outlettype" : [ "signal", "signal", "", "list", "int", "", "", "" ],
-									"patching_rect" : [ 233.0, 194.0, 389.0, 191.0 ],
+									"patching_rect" : [ 233.0, 194.0, 178.0, 22.0 ],
 									"save" : [ "#N", "vst~", "loaduniqueid", 0, "C74_VST3:/C74GenPlugin", ";" ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
@@ -6029,24 +6263,6 @@
 														"filepath" : "~/Documents/Max 8/Snapshots",
 														"filepos" : -1,
 														"snapshotfileid" : "c7a5977495b70d78a11d99e0e88ede9d"
-													}
-
-												}
-, 												{
-													"filetype" : "C74Snapshot",
-													"version" : 2,
-													"minorversion" : 0,
-													"name" : "C74GenPlugin.vst",
-													"origin" : "C74GenPlugin.vst3info",
-													"type" : "VST3",
-													"subtype" : "AudioEffect",
-													"embed" : 0,
-													"fileref" : 													{
-														"name" : "C74GenPlugin.vst",
-														"filename" : "C74GenPlugin.vst_20210219.maxsnap",
-														"filepath" : "~/Documents/Max 8/Snapshots",
-														"filepos" : -1,
-														"snapshotfileid" : "d41df50b77923ae4390274b4a1d35848"
 													}
 
 												}
@@ -6301,20 +6517,6 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "myneatplugin.maxsnap",
-				"bootpath" : "~/Documents/Max 8/Snapshots",
-				"patcherrelativepath" : "../../../Snapshots",
-				"type" : "mx@s",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "C74GenPlugin.vst_20210219.maxsnap",
-				"bootpath" : "~/Documents/Max 8/Snapshots",
-				"patcherrelativepath" : "../../../Snapshots",
-				"type" : "mx@s",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "demosound.maxpat",
 				"bootpath" : "C74:/help/msp",
 				"type" : "JSON",
@@ -6352,14 +6554,14 @@
 			}
 , 			{
 				"name" : "post-export.js",
-				"bootpath" : "~/Documents/Max 8/Source/gen-plugin-export/source",
+				"bootpath" : "~/Documents/Max 8/Packages/gen~ Plugin Export/source",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "arg-helper.maxpat",
-				"bootpath" : "~/Documents/Max 8/Source/gen-plugin-export/source",
+				"bootpath" : "~/Documents/Max 8/Packages/gen~ Plugin Export/source",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1

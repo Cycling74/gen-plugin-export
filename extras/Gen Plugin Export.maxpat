@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 2,
-			"revision" : 0,
+			"minor" : 1,
+			"revision" : 10,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 99.0, 114.0, 556.0, 531.0 ],
+		"rect" : [ 20.0, 108.0, 556.0, 531.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -40,24 +40,41 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"fontface" : 2,
+					"fontname" : "Lato",
+					"id" : "obj-8",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 31.0, 373.5, 242.0, 50.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 42.5, 479.0, 465.0, 21.0 ],
+					"text" : "Open ~/Documents/Max 8/Packages/gen~ Plugin Export/Source/GenPluginExport.maxpat"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-6",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 244.0, 534.0, 204.0, 22.0 ],
+					"text" : "loadunique GenPluginExport.maxpat"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-5",
 					"maxclass" : "button",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 245.0, 546.0, 24.0, 24.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-16",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 376.0, 591.0, 82.0, 20.0 ],
-					"text" : "Format name"
+					"patching_rect" : [ 244.0, 502.0, 24.0, 24.0 ]
 				}
 
 			}
@@ -67,20 +84,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 296.0, 641.0, 70.0, 20.0 ],
+					"patching_rect" : [ 304.0, 562.0, 70.0, 20.0 ],
 					"text" : "Load patch"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-1",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 236.0, 611.0, 240.0, 22.0 ],
-					"text" : "sprintf loadunique GenPluginExport.maxpat"
 				}
 
 			}
@@ -91,7 +96,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 236.0, 641.0, 53.0, 22.0 ],
+					"patching_rect" : [ 244.0, 562.0, 53.0, 22.0 ],
 					"text" : "pcontrol"
 				}
 
@@ -108,7 +113,7 @@
 					"parameter_enable" : 0,
 					"patching_rect" : [ 202.0, 462.0, 100.0, 20.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 188.0, 409.0, 156.0, 64.0 ],
+					"presentation_rect" : [ 197.0, 405.0, 156.0, 64.0 ],
 					"rounded" : 27.0,
 					"style" : "igk",
 					"text" : "Get started",
@@ -170,13 +175,6 @@
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"destination" : [ "obj-14", 0 ],
-					"source" : [ "obj-1", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-5", 0 ],
 					"source" : [ "obj-26", 1 ]
 				}
@@ -184,8 +182,15 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-1", 0 ],
+					"destination" : [ "obj-6", 0 ],
 					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-14", 0 ],
+					"source" : [ "obj-6", 0 ]
 				}
 
 			}
@@ -275,8 +280,8 @@
 , 			{
 				"name" : "newobjYellow-1",
 				"default" : 				{
-					"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ],
-					"fontsize" : [ 12.059008 ]
+					"fontsize" : [ 12.059008 ],
+					"accentcolor" : [ 0.82517, 0.78181, 0.059545, 1.0 ]
 				}
 ,
 				"parentstyle" : "",

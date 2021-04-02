@@ -19,6 +19,6 @@
         "copyright" : "Copyright (c) 2021 Cycling '74"
     },
     "tags" : [ ],
-    "version" : "2.0.0",
+    "version" : "2.0.1",
     "website" : "https://github.com/Cycling74/gen-plugin-export"
 }

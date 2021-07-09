@@ -1,24 +1,36 @@
 {
-    "author" : "Cycling '74",
-    "description" : "Export VSTs, Audio Units, and iOS applications from gen~ using the JUCE framework.",
-    "homepatcher" : "GenPluginExport.maxpat",
-    "max_version_min" : "8.0", "max_version_max" : "none",
-    "name" : "gen~ Plugin Export",
-    "os" : {
-        "macintosh" : {
-            "platform" : [ "x64" ],
-            "min_version" : "none"
-        },
-        "windows" : {
-            "platform" : [ "x64" ],
-            "min_version" : "none"
-        }
-    },
-    "package_extra" : {
-        "reverse_domain" : "com.cycling74",
-        "copyright" : "Copyright (c) 2021 Cycling '74"
-    },
-    "tags" : [ ],
-    "version" : "2.0.1",
-    "website" : "https://github.com/Cycling74/gen-plugin-export"
+	"name" : "gen~ Plugin Export",
+	"displayname" : "",
+	"version" : "2.0.3",
+	"author" : "Cycling '74",
+	"authors" : [  ],
+	"description" : "Export VSTs, Audio Units, and iOS applications from gen~ using the JUCE framework.",
+	"tags" : [  ],
+	"website" : "https://github.com/Cycling74/gen-plugin-export",
+	"extends" : "",
+	"extensible" : 0,
+	"max_version_min" : "8.0",
+	"max_version_max" : "none",
+	"os" : 	{
+		"macintosh" : 		{
+			"min_version" : "none",
+			"platform" : [ "x64" ]
+		}
+,
+		"windows" : 		{
+			"min_version" : "none",
+			"platform" : [ "x64" ]
+		}
+
+	}
+,
+	"homepatcher" : "GenPluginExport.maxpat",
+	"package_extra" : 	{
+		"reverse_domain" : "com.cycling74",
+		"copyright" : "Copyright (c) 2021 Cycling '74"
+	}
+,
+	"filelist" : 	{
+		"extras" : [ "GenPluginExport.maxpat" ]
+	}
 }

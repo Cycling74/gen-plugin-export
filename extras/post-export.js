@@ -8,10 +8,10 @@ const DICT_ID = "args";
 maxApi.addHandlers({
     bang: async () => {
         let args = await maxApi.getDict(DICT_ID);
-        let currentdir = process.cwd();
+        let sourcedir = process.cwd().split("extras")[0] + "source/";
         let jucername = "";
 
-        maxApi.post(currentdir);
+        maxApi.post(sourcedir);
         maxApi.post(args);
         
         if (args.name === "") {
@@ -34,7 +34,7 @@ maxApi.addHandlers({
         }
 
         // Grab the .jucer file which we can traverse and edit
-        let jucerfile = currentdir + "/Projucer/" + jucername;
+        let jucerfile = sourcedir + "/Projucer/" + jucername;
         maxApi.post("Using .jucer file: " + jucerfile);
         let xmlfile = fs.readFileSync(jucerfile, 'utf8');
         let xmldoc = new xml.DOMParser().parseFromString(xmlfile);
@@ -79,20 +79,20 @@ maxApi.addHandlers({
         }
 
         // Write XML back to a file
-        let newJucer = currentdir + "/Projucer/out-" + jucername;
+        let newJucer = sourcedir + "/Projucer/out-" + jucername;
         fs.writeFileSync(newJucer, new xml.XMLSerializer().serializeToString(xmldoc));
         maxApi.post("New .jucer file written to " + newJucer);
 
         // Run the proper JUCER application to generate Xcode or VS projects.
         if (process.platform === "darwin") {
             // Generate the Xcode project
-            let cmd = "open -n \"" + currentdir + "/Projucer/Projucer.app\" --args --resave \"" + newJucer + "\"";
+            let cmd = "open -n \"" + sourcedir + "/Projucer/Projucer.app\" --args --resave \"" + newJucer + "\"";
             maxApi.post(cmd);
             exec.exec(cmd);
 
             // Try to build the project
             try {
-                let project = currentdir + "/" + args.type + "-Builds/MacOSX/" + args.name + ".xcodeproj";
+                let project = sourcedir + "/" + args.type + "-Builds/MacOSX/" + args.name + ".xcodeproj";
                 let buildcmd = "xcodebuild -project \"" + project + "\" -configuration " + args.configuation;
                 maxApi.post(buildcmd);
                 exec.exec(buildcmd);
@@ -103,13 +103,13 @@ maxApi.addHandlers({
         else if (process.platform === "win32") {
             // Generate the VS2019 project
             newJucer = newJucer.replace("/", "\\");
-            let cmd = '"' + currentdir + "\\Projucer\\Projucer.exe\" --resave \"" + newJucer + "\"";
+            let cmd = '"' + sourcedir + "\\Projucer\\Projucer.exe\" --resave \"" + newJucer + "\"";
             maxApi.post(cmd);
             exec.exec(cmd);
 
             // Just open the explorer to show the Visual Studio Solution
             try {
-                let slndir = currentdir + "\\" + args.type + "-Builds\\VisualStudio2019\\";
+                let slndir = sourcedir + "\\" + args.type + "-Builds\\VisualStudio2019\\";
                 let cmd = "explorer " + slndir;
                 maxApi.post(cmd);
                 exec.exec(cmd);

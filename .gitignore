@@ -1,4 +1,5 @@
 .DS_Store
+/extras/node_modules/**
 /source/node_modules/**
 /source/VST3-Builds/**
 /source/AU-Builds/**

@@ -1,5 +1,6 @@
 .DS_Store
 build/
+!/misc/build/.gitkeep
 VST3-Builds/**
 AU-Builds/**
 App-Builds/**

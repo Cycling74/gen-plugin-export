@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 201.0, 390.0, 738.0, 495.0 ],
+		"rect" : [ -1426.0, 959.0, 771.0, 557.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -59,7 +59,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 738.0, 469.0 ],
+						"rect" : [ 0.0, 26.0, 771.0, 531.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -98,7 +98,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 231.0, 91.0, 251.0, 93.0 ],
+									"patching_rect" : [ 227.0, 131.0, 251.0, 93.0 ],
 									"rounded" : 10.0,
 									"text" : "Cycling '74 Forums",
 									"textoncolor" : [ 1.0, 1.0, 1.0, 1.0 ]
@@ -115,8 +115,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 289.0, 163.0, 274.0, 37.0 ],
-									"presentation_linecount" : 3,
+									"patching_rect" : [ 285.0, 203.0, 274.0, 37.0 ],
 									"text" : ";\rmax launchbrowser https://cycling74.com/forums/"
 								}
 
@@ -145,7 +144,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 231.0, 237.0, 251.0, 99.0 ],
+									"patching_rect" : [ 227.0, 277.0, 251.0, 99.0 ],
 									"rounded" : 10.0,
 									"text" : "GitHub Issues",
 									"textoncolor" : [ 1.0, 1.0, 1.0, 1.0 ]
@@ -162,7 +161,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 409.0, 258.0, 177.0, 66.0 ],
+									"patching_rect" : [ 405.0, 298.0, 177.0, 66.0 ],
 									"text" : ";\rmax launchbrowser https://github.com/Cycling74/gen-plugin-export/issues"
 								}
 
@@ -331,7 +330,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 738.0, 469.0 ],
+						"rect" : [ 0.0, 26.0, 771.0, 531.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -370,7 +369,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 515.0, 130.0, 177.0, 35.0 ],
+									"patching_rect" : [ 540.0, 165.0, 177.0, 35.0 ],
 									"rounded" : 10.0,
 									"text" : "Install CMake",
 									"textoncolor" : [ 1.0, 1.0, 1.0, 1.0 ]
@@ -387,7 +386,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 515.0, 130.0, 142.0, 52.0 ],
+									"patching_rect" : [ 540.0, 165.0, 142.0, 52.0 ],
 									"text" : ";\rmax launchbrowser https://cmake.org/install/"
 								}
 
@@ -400,7 +399,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 572.5, 88.0, 62.0, 26.0 ],
+									"patching_rect" : [ 597.5, 123.0, 62.0, 26.0 ],
 									"text" : "Prereqs"
 								}
 
@@ -412,7 +411,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 515.0, 292.0, 58.0, 21.0 ],
+									"patching_rect" : [ 540.0, 327.0, 58.0, 21.0 ],
 									"text" : "Windows"
 								}
 
@@ -424,7 +423,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 515.0, 221.0, 31.0, 21.0 ],
+									"patching_rect" : [ 540.0, 256.0, 31.0, 21.0 ],
 									"text" : "Mac"
 								}
 
@@ -439,7 +438,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 515.0, 315.0, 177.0, 40.0 ],
+									"patching_rect" : [ 540.0, 350.0, 177.0, 40.0 ],
 									"rounded" : 10.0,
 									"text" : "Install Visual Studio",
 									"textoncolor" : [ 1.0, 1.0, 1.0, 1.0 ]
@@ -456,7 +455,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 515.0, 244.0, 177.0, 35.0 ],
+									"patching_rect" : [ 540.0, 279.0, 177.0, 35.0 ],
 									"rounded" : 10.0,
 									"text" : "Install Xcode",
 									"textoncolor" : [ 1.0, 1.0, 1.0, 1.0 ]
@@ -473,7 +472,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 515.0, 323.0, 214.0, 52.0 ],
+									"patching_rect" : [ 540.0, 358.0, 214.0, 52.0 ],
 									"text" : ";\rmax launchbrowser https://visualstudio.microsoft.com/vs/"
 								}
 
@@ -488,7 +487,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 515.0, 244.0, 214.0, 52.0 ],
+									"patching_rect" : [ 540.0, 279.0, 214.0, 52.0 ],
 									"text" : ";\rmax launchbrowser https://developer.apple.com/xcode/"
 								}
 
@@ -502,7 +501,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 13.0, 376.5, 446.0, 35.0 ],
+									"patching_rect" : [ 38.0, 411.5, 446.0, 35.0 ],
 									"text" : "Please be aware that the JUCE has its own license terms (mostly GPL with the availability of commercial licenses)."
 								}
 
@@ -516,7 +515,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 13.0, 108.0, 446.0, 256.0 ],
+									"patching_rect" : [ 38.0, 143.0, 446.0, 256.0 ],
 									"text" : "The gen~ code export option is a powerful feature for generating C++ source code that can be dropped into other projects.\n\nThis package is designed to help combine code exported from gen~ patches with the JUCE framework. This allows you to do all of your audio programming in gen~ and export to a desired target. \n\nIf you wish to add an (optional) GUI to your exported project, there are code stubs included in this package to help you get started. For more information on GUI design with these project stubs, please refer to the JUCE documentation."
 								}
 
@@ -529,7 +528,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 13.0, 24.5, 421.0, 64.0 ],
+									"patching_rect" : [ 38.0, 59.5, 421.0, 64.0 ],
 									"text" : "gen~ Plugin Export",
 									"textjustification" : 1
 								}
@@ -549,7 +548,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 479.0, 276.0, 20.0, 20.0 ],
+									"patching_rect" : [ 504.0, 311.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -570,7 +569,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 479.0, 137.5, 20.0, 20.0 ],
+									"patching_rect" : [ 504.0, 172.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -749,7 +748,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 201.0, 416.0, 738.0, 469.0 ],
+						"rect" : [ -1426.0, 985.0, 771.0, 531.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -780,6 +779,20 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"fontname" : "Arial",
+									"id" : "obj-6",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 24.0, 485.0, 387.0, 33.0 ],
+									"presentation_linecount" : 4,
+									"text" : "The final builds can be found in the \ngen~ Plugin Export/misc/build/C74GenPlugin_artefacts/Release folder."
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"fontface" : 3,
 									"fontname" : "Lato",
 									"fontsize" : 18.0,
@@ -799,7 +812,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 178.0, 217.0, 130.0, 20.0 ],
+									"patching_rect" : [ 209.0, 220.0, 130.0, 20.0 ],
 									"text" : "Edit your gen~ patcher"
 								}
 
@@ -813,7 +826,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 24.0, 374.0, 317.0, 33.0 ],
-									"presentation_linecount" : 2,
 									"text" : "On Windows, open the PowerShell app and run the following by copying, pasting, and then hitting \"Enter\""
 								}
 
@@ -827,8 +839,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 24.0, 409.0, 485.0, 42.0 ],
-									"presentation_linecount" : 4,
-									"text" : "cd && cd \"Documents/Max 8/Packages/gen~ Plugin Export/misc/build\"\ncmake ..\ncmake --build ."
+									"text" : "cd && cd \"Documents/Max 8/Packages/gen~ Plugin Export/misc/build\"\ncmake ..\ncmake --build --config Release ."
 								}
 
 							}
@@ -855,7 +866,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 24.0, 309.0, 448.0, 42.0 ],
-									"text" : "cd \"~/Documents/Max 8/Packages/gen~ Plugin Export/misc/build\"\ncmake ..\ncmake --build ."
+									"text" : "cd \"~/Documents/Max 8/Packages/gen~ Plugin Export/misc/build\"\ncmake ..\ncmake --build --config Release ."
 								}
 
 							}
@@ -867,7 +878,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 360.0, 111.5, 247.0, 33.0 ],
+									"patching_rect" : [ 391.0, 114.5, 247.0, 33.0 ],
 									"text" : "Turn off autoexport to avoid exporting more frequently than you need to."
 								}
 
@@ -880,7 +891,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 429.0, 154.5, 278.0, 47.0 ],
+									"patching_rect" : [ 460.0, 157.5, 278.0, 47.0 ],
 									"text" : "This names the export files, not the plugin name. There should be no need to change this parameter."
 								}
 
@@ -893,7 +904,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 206.0, 46.5, 321.0, 33.0 ],
+									"patching_rect" : [ 237.0, 49.5, 321.0, 33.0 ],
 									"text" : "Export to:\n~/Max 8/Packages/gen~ Plugin Export/misc/exported-code"
 								}
 
@@ -1075,7 +1086,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 123.0, 217.0, 49.0, 22.0 ],
+									"patching_rect" : [ 154.0, 220.0, 49.0, 22.0 ],
 									"saved_object_attributes" : 									{
 										"autoexport" : 0,
 										"exportfolder" : "Macintosh HD:/Users/isabelkaspriskie/Documents/Max 8/Packages/gen-plugin-export/misc/exported-code/",
@@ -1094,7 +1105,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 123.0, 52.0, 71.0, 22.0 ],
+									"patching_rect" : [ 154.0, 55.0, 71.0, 22.0 ],
 									"text" : "exportcode"
 								}
 
@@ -1108,7 +1119,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 206.0, 160.0, 224.0, 22.0 ]
+									"patching_rect" : [ 237.0, 163.0, 224.0, 22.0 ]
 								}
 
 							}
@@ -1121,7 +1132,28 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 205.0, 117.0, 153.0, 22.0 ]
+									"patching_rect" : [ 236.0, 120.0, 153.0, 22.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"background" : 1,
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontface" : 1,
+									"hint" : "",
+									"id" : "obj-4",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 10.0, 463.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "4",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
 
 							}
@@ -1160,7 +1192,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 190.0, 22.0, 20.0, 20.0 ],
+									"patching_rect" : [ 221.0, 25.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1181,7 +1213,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 314.0, 217.0, 20.0, 20.0 ],
+									"patching_rect" : [ 345.0, 220.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1332,7 +1364,6 @@
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
-						"fontname" : "Arial",
 						"globalpatchername" : "",
 						"tags" : ""
 					}

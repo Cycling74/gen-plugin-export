@@ -1,7 +1,7 @@
 {
 	"name" : "gen~ Plugin Export",
 	"displayname" : "",
-	"version" : "2.0.4",
+	"version" : "2.1.0",
 	"author" : "Cycling '74",
 	"authors" : [  ],
 	"description" : "Export VSTs, Audio Units, and iOS applications from gen~ using the JUCE framework.",

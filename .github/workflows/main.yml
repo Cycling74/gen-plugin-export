@@ -1,6 +1,9 @@
 name: Release
 
 on:
+  create:
+    tags:
+      - v*
   workflow_dispatch:
 
 jobs:

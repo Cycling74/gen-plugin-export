@@ -55,6 +55,4 @@ In short here are the steps:
 
 Plugin building is based on the [JUCE Framework](http://www.juce.com/). Please refer to tutorials from JUCE on building UIs, for instance.
 
-- If you want to add or remove files from your Xcode or Visual Studio project, do not edit the projects directly (they will be rebuilt on each export), but use the Projucer files in the root folder.
-
 Enjoy!

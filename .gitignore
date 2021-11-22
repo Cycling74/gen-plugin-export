@@ -7,3 +7,5 @@ App-Builds/**
 build-results/**
 /extras/node_modules/**
 misc/exported-code/**
+.vscode/
+.idea/

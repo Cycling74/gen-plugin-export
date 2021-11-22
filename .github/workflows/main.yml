@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  package:
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: benjlevesque/short-sha@v1.2
+      id: short-sha
+      with:
+        length: 7
+
+    - name: package
+      env:
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_SHA: ${{ github.sha }}
+      run: |
+        PACKAGE_NAME=`echo $GITHUB_REPOSITORY | sed 's/.*\///g'`
+        PACKAGE_REV=`echo $GITHUB_SHA | sed -e 's/^[[:alnum:]]\{7\}/&-/g' | sed 's/-.*//'`
+        mkdir -p $PACKAGE_NAME
+        if [ -e package-info.json ]; then cp package-info.json $PACKAGE_NAME; fi
+        for f in *.md; do [ -e "$f" ] && cp "$f" $PACKAGE_NAME ; done
+        if [ -e icon.png ]; then cp icon.png $PACKAGE_NAME; fi
+        if [ -e CMakeLists.txt ]; then cp CMakeLists.txt $PACKAGE_NAME; fi
+        if [ -d code ]; then cp -r code $PACKAGE_NAME; fi
+        if [ -d docs ]; then cp -r docs $PACKAGE_NAME; fi
+        if [ -d examples ]; then cp -r examples $PACKAGE_NAME; fi
+        if [ -d extensions ]; then cp -r extensions $PACKAGE_NAME; fi
+        if [ -d externals ]; then cp -r externals $PACKAGE_NAME; fi
+        if [ -d extras ]; then cp -r extras $PACKAGE_NAME; fi
+        if [ -d help ]; then cp -r help $PACKAGE_NAME; fi
+        if [ -d init ]; then cp -r init $PACKAGE_NAME; fi
+        if [ -d interfaces ]; then cp -r interfaces $PACKAGE_NAME; fi
+        if [ -d java-classes ]; then cp -r java-classes $PACKAGE_NAME; fi
+        if [ -d java-doc ]; then cp -r java-doc $PACKAGE_NAME; fi
+        if [ -d javascript ]; then cp -r javascript $PACKAGE_NAME; fi
+        if [ -d jsextensions ]; then cp -r jsextensions $PACKAGE_NAME; fi
+        if [ -d jsui ]; then cp -r jsui $PACKAGE_NAME; fi
+        if [ -d media ]; then cp -r media $PACKAGE_NAME; fi
+        if [ -d misc ]; then cp -r misc $PACKAGE_NAME; fi
+        if [ -d patchers ]; then cp -r patchers $PACKAGE_NAME; fi
+        if [ -d script ]; then cp -r script $PACKAGE_NAME; fi
+        if [ -d support ]; then cp -r support $PACKAGE_NAME; fi
+        if [ -d source ]; then cp -r source $PACKAGE_NAME; fi
+        if [ -d tests ]; then cp -r tests $PACKAGE_NAME; fi
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ github.event.repository.name }}-${{ steps.short-sha.outputs.sha }}
+        path: ${{ github.event.repository.name }}

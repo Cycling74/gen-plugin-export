@@ -33,7 +33,7 @@ maxApi.addHandlers({
 
         // Now run CMake in release mode
         try {
-            let cmd = "cd ../misc/build && " + cmake + " .. && " + cmake + "--build --config Release .";
+            let cmd = "cd ../misc/build && " + cmake + " -DCMAKE_BUILD_TYPE=Release .. && " + cmake + "--build .";
             exec.exec(cmd, (error, stdout, stderr) => {
                 maxApi.post(stdout);
             });

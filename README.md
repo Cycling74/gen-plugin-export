@@ -69,6 +69,10 @@ appropriate string for your Visual Studio version.
 
 5. Now you can build with `cmake --build misc/build --config Release`.
 
+6. Once the build step completes, you should be able to find your build artifact in
+   `misc/build/C74GenPlugin_artefacts/Release`. Copy the plugin file to wherever you
+   keep your plugins, and test your new plugin out!
+
 ## File structure
 
 Most of the code is located within the `misc/` directory. So that the launch

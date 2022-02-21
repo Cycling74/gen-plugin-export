@@ -9,6 +9,9 @@ It is based on the JUCE Framework. Please be aware that the JUCE has its own
 license terms (mostly GPL with the availability of commercial licenses). See
 their [website](http://www.juce.com/) for further details.
 
+With the release of Max 7.2.6 the licensing terms of code exported from gen also changed.
+[This article](https://support.cycling74.com/hc/en-us/articles/360050779193-Gen-Code-Export-Licensing-FAQ) addresses this change and will help you understand how it might affect you.
+
 ## CMake
 
 As of v2.1.0 (`f2de092ea`), `gen-plugin-export` uses CMake to build plugins.

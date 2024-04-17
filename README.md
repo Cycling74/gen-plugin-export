@@ -38,7 +38,7 @@ In short here are the steps:
 1. Begin with a `gen~` patcher. ***Important! In the inspector, change the export name
    attribute to `C74_GENPLUGIN`.***
 ![gen patcher with inspector shown](docs/res/inspector.png)
-2. Export the C++ code from `gen~` using the `codeexport` message. Export to
+2. Export the C++ code from `gen~` using the `exportcode` message. Export to
 the `misc/exported-code` directory of this package. You should eventually see 
    - `misc/exported-code/gen_dsp/`
    - `misc/exported-code/C74_GENPLUGIN.cpp`

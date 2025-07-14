@@ -100,6 +100,13 @@ target_compile_definitions("${PROJECT_NAME}"
     JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
     JUCE_VST3_CAN_REPLACE_VST2=0)
 
+# No exceptions for JUCE
+if(MSVC)
+    target_compile_options("${PROJECT_NAME}" PRIVATE /EHs-c-)
+else()
+    target_compile_options("${PROJECT_NAME}" PRIVATE -fno-exceptions)
+endif()
+
 target_link_libraries("${PROJECT_NAME}"
     PRIVATE
     # Assets
